@@ -1,0 +1,65 @@
+provider:
+  name: coolify
+
+resources:
+  server:
+    create:
+      path: /servers
+      method: POST
+    read:
+      path: /servers/{uuid}
+      method: GET
+    update:
+      path: /servers/{uuid}
+      method: PATCH
+    delete:
+      path: /servers/{uuid}
+      method: DELETE
+  project:
+    create:
+      path: /projects
+      method: POST
+    read:
+      path: /projects/{uuid}
+      method: GET
+    update:
+      path: /projects/{uuid}
+      method: PATCH
+    delete:
+      path: /projects/{uuid}
+      method: DELETE
+  # environment:
+  #   read:
+  #     path: /projects/{uuid}/{environment_name}
+
+  private_key:
+    create:
+      path: /security/keys
+      method: POST
+    read:
+      path: /security/keys/{uuid}
+      method: GET
+    update:
+      path: /security/keys/{uuid}
+      method: PATCH
+    delete:
+      path: /security/keys/{uuid}
+      method: DELETE
+
+data_sources:
+  server:
+    read:
+      path: /servers/{uuid}
+      method: GET
+  servers:
+    read:
+      path: /servers
+      method: GET
+  projects:
+    read:
+      path: /projects
+      method: GET
+  private_keys:
+    read:
+      path: /security/keys
+      method: GET

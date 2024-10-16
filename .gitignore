@@ -1,0 +1,10 @@
+.vscode/
+
+terraform.tfplan
+terraform.tfstate
+.terraform/
+*.tfstate
+*.backup
+*.lock.hcl
+
+*_gen.go
