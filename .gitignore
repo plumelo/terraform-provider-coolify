@@ -6,5 +6,3 @@ terraform.tfstate
 *.tfstate
 *.backup
 *.lock.hcl
-
-*_gen.go

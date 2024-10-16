@@ -1,0 +1,1226 @@
+{
+	"datasources": [
+		{
+			"name": "private_keys",
+			"schema": {
+				"attributes": [
+					{
+						"name": "private_keys",
+						"set_nested": {
+							"computed_optional_required": "computed",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "created_at",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "description",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "id",
+										"int64": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "is_git_related",
+										"bool": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "name",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "private_key",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "team_id",
+										"int64": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "updated_at",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "uuid",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									}
+								]
+							}
+						}
+					}
+				]
+			}
+		},
+		{
+			"name": "projects",
+			"schema": {
+				"attributes": [
+					{
+						"name": "projects",
+						"set_nested": {
+							"computed_optional_required": "computed",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "description",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "environments",
+										"list_nested": {
+											"computed_optional_required": "computed",
+											"nested_object": {
+												"attributes": [
+													{
+														"name": "created_at",
+														"string": {
+															"computed_optional_required": "computed"
+														}
+													},
+													{
+														"name": "description",
+														"string": {
+															"computed_optional_required": "computed"
+														}
+													},
+													{
+														"name": "id",
+														"int64": {
+															"computed_optional_required": "computed"
+														}
+													},
+													{
+														"name": "name",
+														"string": {
+															"computed_optional_required": "computed"
+														}
+													},
+													{
+														"name": "project_id",
+														"int64": {
+															"computed_optional_required": "computed"
+														}
+													},
+													{
+														"name": "updated_at",
+														"string": {
+															"computed_optional_required": "computed"
+														}
+													}
+												]
+											},
+											"description": "The environments of the project."
+										}
+									},
+									{
+										"name": "id",
+										"int64": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "name",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "uuid",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									}
+								]
+							}
+						}
+					}
+				]
+			}
+		},
+		{
+			"name": "server",
+			"schema": {
+				"attributes": [
+					{
+						"name": "uuid",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "Server's Uuid"
+						}
+					},
+					{
+						"name": "description",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "high_disk_usage_notification_sent",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "id",
+						"int64": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "ip",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "log_drain_notification_sent",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "name",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "port",
+						"int64": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "proxy",
+						"single_nested": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "settings",
+						"single_nested": {
+							"computed_optional_required": "computed",
+							"attributes": [
+								{
+									"name": "cleanup_after_percentage",
+									"int64": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "concurrent_builds",
+									"int64": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "created_at",
+									"string": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "dynamic_timeout",
+									"int64": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "force_disabled",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "id",
+									"int64": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_build_server",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_cloudflare_tunnel",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_jump_server",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_logdrain_axiom_enabled",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_logdrain_custom_enabled",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_logdrain_highlight_enabled",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_logdrain_newrelic_enabled",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_metrics_enabled",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_reachable",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_server_api_enabled",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_swarm_manager",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_swarm_worker",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_usable",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "logdrain_axiom_api_key",
+									"string": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "logdrain_axiom_dataset_name",
+									"string": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "logdrain_custom_config",
+									"string": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "logdrain_custom_config_parser",
+									"string": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "logdrain_highlight_project_id",
+									"string": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "logdrain_newrelic_base_uri",
+									"string": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "logdrain_newrelic_license_key",
+									"string": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "metrics_history_days",
+									"int64": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "metrics_refresh_rate_seconds",
+									"int64": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "metrics_token",
+									"string": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "server_id",
+									"int64": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "updated_at",
+									"string": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "wildcard_domain",
+									"string": {
+										"computed_optional_required": "computed"
+									}
+								}
+							],
+							"description": "Server Settings model"
+						}
+					},
+					{
+						"name": "swarm_cluster",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "unreachable_count",
+						"int64": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "unreachable_notification_sent",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "user",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "validation_logs",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					}
+				]
+			}
+		},
+		{
+			"name": "servers",
+			"schema": {
+				"attributes": [
+					{
+						"name": "servers",
+						"set_nested": {
+							"computed_optional_required": "computed",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "description",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "high_disk_usage_notification_sent",
+										"bool": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "id",
+										"int64": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "ip",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "log_drain_notification_sent",
+										"bool": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "name",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "port",
+										"int64": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "proxy",
+										"single_nested": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "settings",
+										"single_nested": {
+											"computed_optional_required": "computed",
+											"attributes": [
+												{
+													"name": "cleanup_after_percentage",
+													"int64": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "concurrent_builds",
+													"int64": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "created_at",
+													"string": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "dynamic_timeout",
+													"int64": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "force_disabled",
+													"bool": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "id",
+													"int64": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "is_build_server",
+													"bool": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "is_cloudflare_tunnel",
+													"bool": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "is_jump_server",
+													"bool": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "is_logdrain_axiom_enabled",
+													"bool": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "is_logdrain_custom_enabled",
+													"bool": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "is_logdrain_highlight_enabled",
+													"bool": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "is_logdrain_newrelic_enabled",
+													"bool": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "is_metrics_enabled",
+													"bool": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "is_reachable",
+													"bool": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "is_server_api_enabled",
+													"bool": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "is_swarm_manager",
+													"bool": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "is_swarm_worker",
+													"bool": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "is_usable",
+													"bool": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "logdrain_axiom_api_key",
+													"string": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "logdrain_axiom_dataset_name",
+													"string": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "logdrain_custom_config",
+													"string": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "logdrain_custom_config_parser",
+													"string": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "logdrain_highlight_project_id",
+													"string": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "logdrain_newrelic_base_uri",
+													"string": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "logdrain_newrelic_license_key",
+													"string": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "metrics_history_days",
+													"int64": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "metrics_refresh_rate_seconds",
+													"int64": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "metrics_token",
+													"string": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "server_id",
+													"int64": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "updated_at",
+													"string": {
+														"computed_optional_required": "computed"
+													}
+												},
+												{
+													"name": "wildcard_domain",
+													"string": {
+														"computed_optional_required": "computed"
+													}
+												}
+											],
+											"description": "Server Settings model"
+										}
+									},
+									{
+										"name": "swarm_cluster",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "unreachable_count",
+										"int64": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "unreachable_notification_sent",
+										"bool": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "user",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "uuid",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "validation_logs",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									}
+								]
+							}
+						}
+					}
+				]
+			}
+		}
+	],
+	"provider": {
+		"name": "coolify"
+	},
+	"resources": [
+		{
+			"name": "private_key",
+			"schema": {
+				"attributes": [
+					{
+						"name": "description",
+						"string": {
+							"computed_optional_required": "computed_optional"
+						}
+					},
+					{
+						"name": "name",
+						"string": {
+							"computed_optional_required": "computed_optional"
+						}
+					},
+					{
+						"name": "private_key",
+						"string": {
+							"computed_optional_required": "required"
+						}
+					},
+					{
+						"name": "uuid",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "Private Key Uuid"
+						}
+					},
+					{
+						"name": "created_at",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "id",
+						"int64": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "is_git_related",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "team_id",
+						"int64": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "updated_at",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					}
+				]
+			}
+		},
+		{
+			"name": "project",
+			"schema": {
+				"attributes": [
+					{
+						"name": "description",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "The description of the project."
+						}
+					},
+					{
+						"name": "name",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "The name of the project."
+						}
+					},
+					{
+						"name": "uuid",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "The UUID of the project."
+						}
+					},
+					{
+						"name": "environments",
+						"list_nested": {
+							"computed_optional_required": "computed",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "created_at",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "description",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "id",
+										"int64": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "name",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "project_id",
+										"int64": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "updated_at",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									}
+								]
+							},
+							"description": "The environments of the project."
+						}
+					},
+					{
+						"name": "id",
+						"int64": {
+							"computed_optional_required": "computed"
+						}
+					}
+				]
+			}
+		},
+		{
+			"name": "server",
+			"schema": {
+				"attributes": [
+					{
+						"name": "description",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "The description of the server."
+						}
+					},
+					{
+						"name": "instant_validate",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Instant validate."
+						}
+					},
+					{
+						"name": "ip",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "The IP of the server."
+						}
+					},
+					{
+						"name": "is_build_server",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Is build server."
+						}
+					},
+					{
+						"name": "name",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "The name of the server."
+						}
+					},
+					{
+						"name": "port",
+						"int64": {
+							"computed_optional_required": "computed_optional",
+							"description": "The port of the server."
+						}
+					},
+					{
+						"name": "private_key_uuid",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "The UUID of the private key."
+						}
+					},
+					{
+						"name": "user",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "The user of the server."
+						}
+					},
+					{
+						"name": "uuid",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "The UUID of the server."
+						}
+					},
+					{
+						"name": "high_disk_usage_notification_sent",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "id",
+						"int64": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "log_drain_notification_sent",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "proxy",
+						"single_nested": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "settings",
+						"single_nested": {
+							"computed_optional_required": "computed",
+							"attributes": [
+								{
+									"name": "cleanup_after_percentage",
+									"int64": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "concurrent_builds",
+									"int64": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "created_at",
+									"string": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "dynamic_timeout",
+									"int64": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "force_disabled",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "id",
+									"int64": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_build_server",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_cloudflare_tunnel",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_jump_server",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_logdrain_axiom_enabled",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_logdrain_custom_enabled",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_logdrain_highlight_enabled",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_logdrain_newrelic_enabled",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_metrics_enabled",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_reachable",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_server_api_enabled",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_swarm_manager",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_swarm_worker",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "is_usable",
+									"bool": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "logdrain_axiom_api_key",
+									"string": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "logdrain_axiom_dataset_name",
+									"string": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "logdrain_custom_config",
+									"string": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "logdrain_custom_config_parser",
+									"string": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "logdrain_highlight_project_id",
+									"string": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "logdrain_newrelic_base_uri",
+									"string": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "logdrain_newrelic_license_key",
+									"string": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "metrics_history_days",
+									"int64": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "metrics_refresh_rate_seconds",
+									"int64": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "metrics_token",
+									"string": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "server_id",
+									"int64": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "updated_at",
+									"string": {
+										"computed_optional_required": "computed"
+									}
+								},
+								{
+									"name": "wildcard_domain",
+									"string": {
+										"computed_optional_required": "computed"
+									}
+								}
+							],
+							"description": "Server Settings model"
+						}
+					},
+					{
+						"name": "swarm_cluster",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "unreachable_count",
+						"int64": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "unreachable_notification_sent",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "validation_logs",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					}
+				]
+			}
+		}
+	],
+	"version": "0.1"
+}
