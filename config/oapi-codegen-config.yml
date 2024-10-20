@@ -4,6 +4,6 @@ package: api
 generate:
   client: true
   models: true
-output: internal/api/api_gen.go
+output: ../internal/api/api_gen.go
 output-options:
   nullable-type: true
