@@ -2,52 +2,59 @@ package api_test
 
 import (
 	"context"
-	"log"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"terraform-provider-coolify/internal/api"
 )
 
-func TestClient_canCall(t *testing.T) {
-	// custom HTTP client
-	hc := http.Client{}
+const MOCK_TOKEN = "valid-token"
 
-	// with a raw http.Response
-	{
-		c, err := api.NewClient("http://192.168.0.4:8001/api/v1", api.WithHTTPClient(&hc))
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		resp, err := c.N8a5d8d3ccbbcef54ed0e913a27faea9d(context.TODO())
-
-		// resp, err := c.GetClient(context.TODO())
-		if err != nil {
-			log.Fatal(err)
-		}
-		if resp.StatusCode != http.StatusOK {
-			log.Fatalf("Expected HTTP 200 but received %d", resp.StatusCode)
-		}
+// MockHandler simulates API responses based on the request.
+func MockHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Header.Get("Authorization") != "Bearer "+MOCK_TOKEN {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	if r.Header.Get("Accept") != "application/json" {
+		w.WriteHeader(http.StatusNotAcceptable)
+		return
+	}
+	if r.Header.Get("User-Agent") != api.UserAgentPrefix+"/test" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
-	// or to get a struct with the parsed response body
-	{
-		// c, err := api.NewClientWithResponses("http://localhost:1234", api.WithHTTPClient(&hc))
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
+	switch r.URL.Path {
+	case "/version":
+		// Simulate a successful response
+		w.Header().Set("Content-Type", "text/plain")
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`9.9.9-beta.999`))
+	default:
+		// Simulate a 404 not found
+		w.WriteHeader(http.StatusNotFound)
+	}
+}
 
-		// resp, err := c.GetClientWithResponse(context.TODO())
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-		// if resp.StatusCode() != http.StatusOK {
-		// 	log.Fatalf("Expected HTTP 200 but received %d", resp.StatusCode())
-		// }
+func TestAPIClient(t *testing.T) {
+	mockServer := httptest.NewServer(http.HandlerFunc(MockHandler))
+	defer mockServer.Close()
 
-		// fmt.Printf("resp.JSON200: %v\n", resp.JSON200)
+	client := api.NewAPIClient("test", mockServer.URL, MOCK_TOKEN)
+
+	resp, err := client.VersionWithResponse(context.Background())
+	if err != nil {
+		t.Fatalf("Failed to get version: %v", err)
+	}
+
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
+
+	if resp.HTTPResponse.StatusCode != http.StatusOK {
+		t.Errorf("Expected status %d, got %d", http.StatusOK, resp.HTTPResponse.StatusCode)
 	}
 
 }
