@@ -76,8 +76,8 @@ func TestProtocol6ProviderServerSchemaVersion(t *testing.T) {
 }
 
 func TestProtocol6ProviderServerConfigure(t *testing.T) {
-	if os.Getenv("TF_ACC") != "" {
-		return
+	if os.Getenv("TF_ACC") != "1" {
+		t.SkipNow() // Skip if not running acceptance tests
 	}
 
 	tests := map[string]struct {
