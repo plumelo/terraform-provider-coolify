@@ -7,13 +7,13 @@ fetch-schema:
 install:
 	@go install .
 
-generate: fetch-schema
+generate:
 	cd tools; go generate ./...
 
 test:
-	go test -v -cover -timeout=120s -parallel=10 ./...
+	go test -v -cover -timeout=2m -parallel=10 ./...
 
 testacc:
-	TF_ACC=1 go test -v -cover -timeout 120m ./...
+	TF_ACC=1 go test -v -cover -timeout 10m ./...
 
 .PHONY: fetch-schema install generate test testacc
