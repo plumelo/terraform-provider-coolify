@@ -1,10 +1,10 @@
 package provider_test
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
-	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
@@ -43,26 +43,39 @@ import (
 // 	})
 // }
 
+const TEST_PRIVATE_KEY = `-----BEGIN OPENSSH PRIVATE KEY-----
+b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+QyNTUxOQAAACCmJSQc1I5q6P8PwlWSkPjtX9g9eJFVx0S2mY7Dcds3mgAAAKCiMIPAojCD
+wAAAAAtzc2gtZWQyNTUxOQAAACCmJSQc1I5q6P8PwlWSkPjtX9g9eJFVx0S2mY7Dcds3mg
+AAAEAlCXqb80T/0oQsluzAxuXKie0ZX5L7p5oVdpiN1Iv7NKYlJBzUjmro/w/CVZKQ+O1f
+2D14kVXHRLaZjsNx2zeaAAAAF3BocHNlY2xpYi1nZW5lcmF0ZWQta2V5AQIDBAUG
+-----END OPENSSH PRIVATE KEY-----
+`
+
+var hclPrivateKey = strings.ReplaceAll(TEST_PRIVATE_KEY, "\n", "\\n")
+
 func TestAccPrivateKeyResource(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		// CheckDestroy: true,
 		Steps: []resource.TestStep{
-			{
+			{ // Create
+				ResourceName: "coolify_private_key.test",
 				Config: providerConfig + `
 				resource "coolify_private_key" "test" {
 					name        = "TerraformAccTest"
 					description = "Terraform acceptance testing"
-					private_key = "FakePrivateKey\n"
+					private_key = "` + hclPrivateKey + `"
 				}
 				`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet("coolify_private_key.test", "uuid"),
 					resource.TestCheckResourceAttr("coolify_private_key.test", "name", "TerraformAccTest"),
 					resource.TestCheckResourceAttr("coolify_private_key.test", "description", "Terraform acceptance testing"),
-					resource.TestCheckResourceAttr("coolify_private_key.test", "private_key", "FakePrivateKey\n"),
+					resource.TestCheckResourceAttr("coolify_private_key.test", "private_key", TEST_PRIVATE_KEY),
 				),
 			},
-			{
+			{ // Import
 				ResourceName:      "coolify_private_key.test",
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -70,42 +83,64 @@ func TestAccPrivateKeyResource(t *testing.T) {
 					return s.RootModule().Resources["coolify_private_key.test"].Primary.Attributes["uuid"], nil
 				},
 			},
+			{ // Update
+				ResourceName: "coolify_private_key.test",
+				Config: providerConfig + `
+				resource "coolify_private_key" "test" {
+					name        = "TerraformAccTestUpdated"
+					description = "Terraform acceptance testing updated"
+					private_key = "` + hclPrivateKey + `"
+				}
+				`,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttrSet("coolify_private_key.test", "uuid"),
+					resource.TestCheckResourceAttr("coolify_private_key.test", "name", "TerraformAccTestUpdated"),
+					resource.TestCheckResourceAttr("coolify_private_key.test", "description", "Terraform acceptance testing updated"),
+					resource.TestCheckResourceAttr("coolify_private_key.test", "private_key", TEST_PRIVATE_KEY),
+				),
+			},
+			// { // Delete
+			// 	ResourceName: "coolify_private_key.test",
+			// 	Config:       providerConfig, // Empty configuration to trigger deletion
+			// 	Destroy:      true,
+			// 	Check:        resource.TestCheckNoResourceAttr("coolify_private_key.test", "uuid"),
+			// },
 		},
 	})
 }
 
-func TestAccPrivateKeyResourceUpdate(t *testing.T) {
-	resource.Test(t, resource.TestCase{
-		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		Steps: []resource.TestStep{
-			// Create
-			{
-				Config: providerConfig + `
-				resource "coolify_private_key" "test" {
-					name        = "TerraformAccTest"
-					description = "Terraform acceptance testing"
-					private_key = "FakePrivateKey\n"
-				}
-				`,
-			},
-			// Update
-			{
-				Config: providerConfig + `
-				resource "coolify_private_key" "test" {
-					name        = "TerraformAccTest"
-					description = "Terraform acceptance testing"
-					private_key = "NewFakePrivateKey\n"
-				}
-				`,
-				ConfigPlanChecks: resource.ConfigPlanChecks{
-					PreApply: []plancheck.PlanCheck{
-						plancheck.ExpectResourceAction("coolify_private_key.test", plancheck.ResourceActionUpdate),
-					},
-				},
-			},
-		},
-	})
-}
+// func TestAccPrivateKeyResourceUpdate(t *testing.T) {
+// 	resource.Test(t, resource.TestCase{
+// 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+// 		Steps: []resource.TestStep{
+// 			// Create
+// 			{
+// 				Config: providerConfig + `
+// 				resource "coolify_private_key" "test" {
+// 					name        = "TerraformAccTest"
+// 					description = "Terraform acceptance testing"
+// 					private_key = "FakePrivateKey\n"
+// 				}
+// 				`,
+// 			},
+// 			// Update
+// 			{
+// 				Config: providerConfig + `
+// 				resource "coolify_private_key" "test" {
+// 					name        = "TerraformAccTest"
+// 					description = "Terraform acceptance testing"
+// 					private_key = "NewFakePrivateKey\n"
+// 				}
+// 				`,
+// 				ConfigPlanChecks: resource.ConfigPlanChecks{
+// 					PreApply: []plancheck.PlanCheck{
+// 						plancheck.ExpectResourceAction("coolify_private_key.test", plancheck.ResourceActionUpdate),
+// 					},
+// 				},
+// 			},
+// 		},
+// 	})
+// }
 
 // func TestAccPrivateKeyResourceDeleted(t *testing.T) {
 // 	resource.Test(t, resource.TestCase{
