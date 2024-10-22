@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
+	"github.com/hashicorp/terraform-plugin-framework/function"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
@@ -17,16 +18,21 @@ import (
 	"terraform-provider-coolify/internal/api"
 )
 
-var _ provider.Provider = (*CoolifyProvider)(nil)
+var _ provider.Provider = &CoolifyProvider{}
+var _ provider.ProviderWithFunctions = &CoolifyProvider{}
 
+// CoolifyProvider defines the provider implementation.
 type CoolifyProvider struct {
+	// version is set to the provider version on release, "dev" when the
+	// provider is built and ran locally, and "test" when running acceptance
+	// testing.
 	version string
 }
 
-// type coolifyClient struct {
-// 	endpoint string
-// 	client   *api.APIClient
-// }
+type CoolifyProviderData struct {
+	endpoint string
+	client   *api.APIClient
+}
 
 type CoolifyProviderModel struct {
 	Endpoint types.String `tfsdk:"endpoint"`
@@ -41,18 +47,23 @@ func New(version string) func() provider.Provider {
 	}
 }
 
+func (p *CoolifyProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
+	resp.TypeName = "coolify"
+	resp.Version = p.version
+}
+
 func (p *CoolifyProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"endpoint": schema.StringAttribute{
-				Required:            os.Getenv("COOLIFY_ENDPOINT") == "",
-				Description:         "The endpoint for the Coolify API",
+				Required: os.Getenv("COOLIFY_ENDPOINT") == "",
+				// Description:         "The endpoint for the Coolify API",
 				MarkdownDescription: "The endpoint for the Coolify API",
 			},
 			"token": schema.StringAttribute{
-				Required:            os.Getenv("COOLIFY_TOKEN") == "",
-				Sensitive:           true,
-				Description:         "The API key for authenticating with Coolify",
+				Required:  os.Getenv("COOLIFY_TOKEN") == "",
+				Sensitive: true,
+				// Description:         "The API key for authenticating with Coolify",
 				MarkdownDescription: "The API key for authenticating with Coolify",
 			},
 		},
@@ -97,10 +108,10 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 		return
 	}
 
-	client := api.NewAPIClient(apiEndpoint, apiToken)
+	client := api.NewAPIClient(p.version, apiEndpoint, apiToken)
 
 	// GET /version
-	versionResp, err := client.N187b37139844731110757711ee71c215WithResponse(ctx)
+	versionResp, err := client.VersionWithResponse(ctx)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Failed to connect to Coolify API",
@@ -118,7 +129,7 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 	}
 
 	currentVersion := string(versionResp.Body)
-	minVersion := "4.0.0-beta.318"
+	minVersion := "4.0.0-beta.360"
 
 	if !isVersionCompatible(currentVersion, minVersion) {
 		resp.Diagnostics.AddError(
@@ -139,9 +150,10 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 	resp.DataSourceData = providerData
 }
 
-func (p *CoolifyProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
-	resp.TypeName = "coolify"
-	resp.Version = p.version
+func (p *CoolifyProvider) Resources(ctx context.Context) []func() resource.Resource {
+	return []func() resource.Resource{
+		NewPrivateKeyResource,
+	}
 }
 
 func (p *CoolifyProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
@@ -150,10 +162,6 @@ func (p *CoolifyProvider) DataSources(ctx context.Context) []func() datasource.D
 	}
 }
 
-func (p *CoolifyProvider) Resources(ctx context.Context) []func() resource.Resource {
-	return []func() resource.Resource{
-		NewServerResource,
-		NewProjectResource,
-		NewPrivateKeyResource,
-	}
+func (p *CoolifyProvider) Functions(ctx context.Context) []func() function.Function {
+	return []func() function.Function{}
 }
