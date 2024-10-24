@@ -1,13 +1,16 @@
-# Terraform Provider testing workflow.
 name: Tests
 
+# Allow renovate branches to CI on push for noise-reduction on auto-merges
 on:
   pull_request:
-    paths-ignore:
-      - "README.md"
+    branches-ignore:
+      - "renovate/**"
   push:
     paths-ignore:
       - "README.md"
+    branches:
+      - main
+      - "renovate/**"
 
 permissions:
   contents: read
