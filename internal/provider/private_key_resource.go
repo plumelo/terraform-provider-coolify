@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -14,12 +15,10 @@ import (
 	"terraform-provider-coolify/internal/provider/util"
 )
 
-var _ resource.Resource = (*privateKeyResource)(nil)
-
 var (
-	_ resource.Resource                = (*privateKeyResource)(nil)
-	_ resource.ResourceWithConfigure   = (*privateKeyResource)(nil)
-	_ resource.ResourceWithImportState = (*privateKeyResource)(nil)
+	_ resource.Resource                = &privateKeyResource{}
+	_ resource.ResourceWithConfigure   = &privateKeyResource{}
+	_ resource.ResourceWithImportState = &privateKeyResource{}
 )
 
 func NewPrivateKeyResource() resource.Resource {
@@ -43,25 +42,22 @@ func (r *privateKeyResource) Configure(ctx context.Context, req resource.Configu
 }
 
 func (r *privateKeyResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var state resource_private_key.PrivateKeyModel
+	var plan resource_private_key.PrivateKeyModel
 
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &state)...)
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	body := api.CreatePrivateKeyJSONRequestBody{
-		PrivateKey: state.PrivateKey.ValueString(),
-	}
-	if state.Description.ValueString() != "" {
-		body.Description = state.Description.ValueStringPointer()
-	}
-	if state.Name.ValueString() != "" {
-		body.Name = state.Name.ValueStringPointer()
-	}
+	tflog.Debug(ctx, "Creating private key", map[string]interface{}{
+		"name": plan.Name.ValueString(),
+	})
+	createResp, err := r.providerData.client.CreatePrivateKeyWithResponse(ctx, api.CreatePrivateKeyJSONRequestBody{
+		Description: plan.Description.ValueStringPointer(),
+		Name:        plan.Name.ValueStringPointer(),
+		PrivateKey:  plan.PrivateKey.ValueString(),
+	})
 
-	tflog.Debug(ctx, "Creating private key")
-	createResp, err := r.providerData.client.CreatePrivateKeyWithResponse(ctx, body)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error creating private key",
@@ -78,35 +74,8 @@ func (r *privateKeyResource) Create(ctx context.Context, req resource.CreateRequ
 		return
 	}
 
-	assignStr(createResp.JSON201.Uuid, &state.Uuid)
-
-	readResp, err := r.providerData.client.GetPrivateKeyByUuidWithResponse(ctx, state.Uuid.ValueString())
-	if err != nil {
-		resp.Diagnostics.AddError(
-			fmt.Sprintf("Error reading private key: uuid=%s", state.Uuid.ValueString()),
-			err.Error(),
-		)
-		return
-	}
-
-	if readResp.StatusCode() != http.StatusOK {
-		resp.Diagnostics.AddError(
-			"Unexpected HTTP status code reading private key",
-			fmt.Sprintf("Received %s for private key: uuid=%s. Details: %s", readResp.Status(), state.Uuid.ValueString(), readResp.Body))
-		return
-	}
-
-	assignStr(readResp.JSON200.CreatedAt, &state.CreatedAt)
-	assignStr(readResp.JSON200.Description, &state.Description)
-	assignInt(readResp.JSON200.Id, &state.Id)
-	assignBool(readResp.JSON200.IsGitRelated, &state.IsGitRelated)
-	assignStr(readResp.JSON200.Name, &state.Name)
-	assignStr(readResp.JSON200.PrivateKey, &state.PrivateKey)
-	assignInt(readResp.JSON200.TeamId, &state.TeamId)
-	assignStr(readResp.JSON200.UpdatedAt, &state.UpdatedAt)
-	assignStr(readResp.JSON200.Uuid, &state.Uuid)
-
-	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+	data := r.ReadFromAPI(ctx, &resp.Diagnostics, *createResp.JSON201.Uuid)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
 func (r *privateKeyResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
@@ -117,77 +86,52 @@ func (r *privateKeyResource) Read(ctx context.Context, req resource.ReadRequest,
 		return
 	}
 
-	tflog.Debug(ctx, fmt.Sprintf("Reading security key: uuid=%s", state.Uuid.ValueString()))
+	tflog.Debug(ctx, "Reading private key", map[string]interface{}{
+		"uuid": state.Uuid.ValueString(),
+	})
 	if state.Uuid.ValueString() == "" {
 		resp.Diagnostics.AddError("Invalid State", "No UUID found in state")
 		return
 	}
 
-	readResp, err := r.providerData.client.GetPrivateKeyByUuidWithResponse(ctx, state.Uuid.ValueString())
-	if err != nil {
-		resp.Diagnostics.AddError(
-			fmt.Sprintf("Error reading private key: uuid=%s", state.Uuid.ValueString()),
-			err.Error(),
-		)
-		return
-	}
-
-	if readResp.StatusCode() != http.StatusOK {
-		resp.Diagnostics.AddError(
-			"Unexpected HTTP status code reading private key",
-			fmt.Sprintf("Received %s for private key: uuid=%s. Details: %s", readResp.Status(), state.Uuid.ValueString(), readResp.Body))
-		return
-	}
-
-	assignStr(readResp.JSON200.CreatedAt, &state.CreatedAt)
-	assignStr(readResp.JSON200.Description, &state.Description)
-	assignInt(readResp.JSON200.Id, &state.Id)
-	assignBool(readResp.JSON200.IsGitRelated, &state.IsGitRelated)
-	assignStr(readResp.JSON200.Name, &state.Name)
-	assignStr(readResp.JSON200.PrivateKey, &state.PrivateKey)
-	assignInt(readResp.JSON200.TeamId, &state.TeamId)
-	assignStr(readResp.JSON200.UpdatedAt, &state.UpdatedAt)
-	assignStr(readResp.JSON200.Uuid, &state.Uuid)
-
-	// Save updated data into Terraform state
-	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+	data := r.ReadFromAPI(ctx, &resp.Diagnostics, state.Uuid.ValueString())
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
 func (r *privateKeyResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var state resource_private_key.PrivateKeyModel
 	var plan resource_private_key.PrivateKeyModel
-
-	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
+	var state resource_private_key.PrivateKeyModel
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	if state.Uuid.ValueString() == "" {
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	uuid := state.Uuid.ValueString()
+
+	if uuid == "" {
 		resp.Diagnostics.AddError("Invalid State", "No UUID found in state")
 		return
 	}
 
 	// Update API call logic
-	body := api.UpdatePrivateKeyJSONRequestBody{
-		PrivateKey: plan.PrivateKey.ValueString(),
-	}
-	if state.Description.ValueString() != "" {
-		body.Description = plan.Description.ValueStringPointer()
-	}
-	if state.Name.ValueString() != "" {
-		body.Name = plan.Name.ValueStringPointer()
-	}
+	tflog.Debug(ctx, "Updating private key", map[string]interface{}{
+		"uuid": uuid,
+	})
+	updateResp, err := r.providerData.client.UpdatePrivateKeyWithResponse(ctx, uuid, api.UpdatePrivateKeyJSONRequestBody{
+		Name:        plan.Name.ValueStringPointer(),
+		Description: plan.Description.ValueStringPointer(),
+		PrivateKey:  plan.PrivateKey.ValueString(),
+	})
 
-	tflog.Debug(ctx, fmt.Sprintf("Updating private key: uuid=%s", state.Uuid.ValueString()))
-	updateResp, err := r.providerData.client.UpdatePrivateKeyWithResponse(ctx, state.Uuid.ValueString(), body)
 	if err != nil {
 		resp.Diagnostics.AddError(
-			fmt.Sprintf("Error updating private key: uuid=%s", state.Uuid.ValueString()),
+			fmt.Sprintf("Error updating private key: uuid=%s", uuid),
 			err.Error(),
 		)
 		return
@@ -196,40 +140,13 @@ func (r *privateKeyResource) Update(ctx context.Context, req resource.UpdateRequ
 	if updateResp.StatusCode() != http.StatusCreated {
 		resp.Diagnostics.AddError(
 			"Unexpected HTTP status code updating private key",
-			fmt.Sprintf("Received %s updating private key: uuid=%s. Details: %s", updateResp.Status(), state.Uuid.ValueString(), updateResp.Body))
+			fmt.Sprintf("Received %s updating private key: uuid=%s. Details: %s", updateResp.Status(), uuid, updateResp.Body))
 		return
 	}
 
-	assignStr(updateResp.JSON201.Uuid, &state.Uuid)
-
-	readResp, err := r.providerData.client.GetPrivateKeyByUuidWithResponse(ctx, state.Uuid.ValueString())
-	if err != nil {
-		resp.Diagnostics.AddError(
-			fmt.Sprintf("Error reading private key: uuid=%s", state.Uuid.ValueString()),
-			err.Error(),
-		)
-		return
-	}
-
-	if readResp.StatusCode() != http.StatusOK {
-		resp.Diagnostics.AddError(
-			"Unexpected HTTP status code reading private key",
-			fmt.Sprintf("Received %s for private key: uuid=%s. Details: %s", readResp.Status(), state.Uuid.ValueString(), readResp.Body))
-		return
-	}
-
-	assignStr(readResp.JSON200.CreatedAt, &state.CreatedAt)
-	assignStr(readResp.JSON200.Description, &state.Description)
-	assignInt(readResp.JSON200.Id, &state.Id)
-	assignBool(readResp.JSON200.IsGitRelated, &state.IsGitRelated)
-	assignStr(readResp.JSON200.Name, &state.Name)
-	assignStr(readResp.JSON200.PrivateKey, &state.PrivateKey)
-	assignInt(readResp.JSON200.TeamId, &state.TeamId)
-	assignStr(readResp.JSON200.UpdatedAt, &state.UpdatedAt)
-	assignStr(readResp.JSON200.Uuid, &state.Uuid)
-
-	// Save updated data into Terraform state
-	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+	// TODO: BUG: All computed fields are being recalculated, even if they are not updated. May have to do with this.
+	data := r.ReadFromAPI(ctx, &resp.Diagnostics, uuid)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
 func (r *privateKeyResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
@@ -242,6 +159,9 @@ func (r *privateKeyResource) Delete(ctx context.Context, req resource.DeleteRequ
 		return
 	}
 
+	tflog.Debug(ctx, "Deleting private key", map[string]interface{}{
+		"uuid": state.Uuid.ValueString(),
+	})
 	deleteResp, err := r.providerData.client.DeletePrivateKeyByUuidWithResponse(ctx, state.Uuid.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete private key, got error: %s", err))
@@ -250,12 +170,54 @@ func (r *privateKeyResource) Delete(ctx context.Context, req resource.DeleteRequ
 
 	if deleteResp.JSON200 == nil {
 		resp.Diagnostics.AddError(
-			"Unexpected HTTP status code deleting firewall",
-			fmt.Sprintf("Received %s deleting firewall: %s. Details: %s", deleteResp.Status(), state, deleteResp.Body))
+			"Unexpected HTTP status code deleting private key",
+			fmt.Sprintf("Received %s deleting private key: %s. Details: %s", deleteResp.Status(), state, deleteResp.Body))
 		return
 	}
 }
 
 func (r *privateKeyResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("uuid"), req, resp)
+}
+
+func (r *privateKeyResource) ReadFromAPI(
+	ctx context.Context,
+	diags *diag.Diagnostics,
+	uuid string,
+) resource_private_key.PrivateKeyModel {
+	readResp, err := r.providerData.client.GetPrivateKeyByUuidWithResponse(ctx, uuid)
+	if err != nil {
+		diags.AddError(
+			fmt.Sprintf("Error reading private key: uuid=%s", uuid),
+			err.Error(),
+		)
+		return resource_private_key.PrivateKeyModel{}
+	}
+
+	if readResp.StatusCode() != http.StatusOK {
+		diags.AddError(
+			"Unexpected HTTP status code reading private key",
+			fmt.Sprintf("Received %s for private key: uuid=%s. Details: %s", readResp.Status(), uuid, readResp.Body))
+		return resource_private_key.PrivateKeyModel{}
+	}
+
+	return r.ApiToModel(ctx, diags, readResp.JSON200)
+}
+
+func (r *privateKeyResource) ApiToModel(
+	ctx context.Context,
+	diags *diag.Diagnostics,
+	response *api.PrivateKey,
+) resource_private_key.PrivateKeyModel {
+	return resource_private_key.PrivateKeyModel{
+		Id:           optionalInt64(response.Id),
+		Uuid:         optionalString(response.Uuid),
+		Name:         optionalString(response.Name),
+		Description:  optionalString(response.Description),
+		PrivateKey:   optionalString(response.PrivateKey),
+		IsGitRelated: optionalBool(response.IsGitRelated),
+		TeamId:       optionalInt64(response.TeamId),
+		CreatedAt:    optionalString(response.CreatedAt),
+		UpdatedAt:    optionalString(response.UpdatedAt),
+	}
 }
