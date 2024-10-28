@@ -16,18 +16,6 @@ import (
 	"terraform-provider-coolify/internal/provider"
 )
 
-const (
-	accEndpoint = "http://localhost:8000/api/v1"
-	accToken    = "1|Ey3eX9TNOeUv7W1E5XX6Uf4OJxgq9TPcIFHf7yDbe09e497d"
-
-	providerConfig = `
-	provider "coolify" {
-		endpoint = "` + accEndpoint + `"
-		token 	= "` + accToken + `"
-	}
-	`
-)
-
 var (
 	testAccProtoV6ProviderFactories = map[string]func() (tfprotov6.ProviderServer, error){
 		"coolify": providerserver.NewProtocol6WithError(provider.New("test")()),
@@ -35,9 +23,17 @@ var (
 )
 
 func testAccPreCheck(t *testing.T) {
-	// You can add code here to run prior to any test case execution, for example assertions
-	// about the appropriate environment variables being set are common to see in a pre-check
-	// function.
+	variables := []string{
+		"COOLIFY_ENDPOINT",
+		"COOLIFY_TOKEN",
+	}
+
+	for _, variable := range variables {
+		value := os.Getenv(variable)
+		if value == "" {
+			t.Fatalf("`%s` must be set for acceptance tests!", variable)
+		}
+	}
 }
 
 func providerConfigDynamicValue(config map[string]interface{}) (tfprotov6.DynamicValue, error) {
@@ -79,6 +75,9 @@ func TestProtocol6ProviderServerConfigure(t *testing.T) {
 	if os.Getenv("TF_ACC") != "1" {
 		t.SkipNow() // Skip if not running acceptance tests
 	}
+
+	accEndpoint := os.Getenv("COOLIFY_ENDPOINT")
+	accToken := os.Getenv("COOLIFY_TOKEN")
 
 	tests := map[string]struct {
 		config          map[string]interface{}
@@ -137,6 +136,8 @@ func TestProtocol6ProviderServerConfigure(t *testing.T) {
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			t.Setenv("COOLIFY_ENDPOINT", "")
+			t.Setenv("COOLIFY_TOKEN", "")
 			for key, value := range test.env {
 				t.Setenv(key, value)
 			}
@@ -165,25 +166,6 @@ func TestProtocol6ProviderServerConfigure(t *testing.T) {
 }
 
 // ---------------------
-
-// func TestAccPreCheck(t *testing.T) {
-
-// 	if v := os.Getenv("COOLIFY_ENDPOINT"); v == "" {
-// 		t.Fatal("COOLIFY_ENDPOINT must be set for acceptance tests")
-// 	}
-
-// 	if v := os.Getenv("COOLIFY_TOKEN"); v == "" {
-// 		t.Fatal("COOLIFY_TOKEN must be set for acceptance tests")
-// 	}
-// }
-
-// func GetTestAccEndpoint() string {
-// 	return os.Getenv("COOLIFY_ENDPOINT")
-// }
-
-// func GetTestAccToken() string {
-// 	return os.Getenv("COOLIFY_TOKEN")
-// }
 
 const TestAccNamePrefix = "tf-acc"
 

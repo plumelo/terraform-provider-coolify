@@ -18,6 +18,7 @@ import (
 	"terraform-provider-coolify/internal/api"
 )
 
+// Ensure the implementation satisfies the expected interfaces.
 var _ provider.Provider = &CoolifyProvider{}
 var _ provider.ProviderWithFunctions = &CoolifyProvider{}
 
@@ -53,15 +54,19 @@ func (p *CoolifyProvider) Metadata(ctx context.Context, req provider.MetadataReq
 }
 
 func (p *CoolifyProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
+	hasEnvEndpoint := os.Getenv("COOLIFY_ENDPOINT") != ""
+	hasEnvToken := os.Getenv("COOLIFY_TOKEN") != ""
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"endpoint": schema.StringAttribute{
-				Required: os.Getenv("COOLIFY_ENDPOINT") == "",
+				Required: !hasEnvEndpoint,
+				Optional: hasEnvEndpoint,
 				// Description:         "The endpoint for the Coolify API",
 				MarkdownDescription: "The endpoint for the Coolify API",
 			},
 			"token": schema.StringAttribute{
-				Required:  os.Getenv("COOLIFY_TOKEN") == "",
+				Required:  !hasEnvToken,
+				Optional:  hasEnvToken,
 				Sensitive: true,
 				// Description:         "The API key for authenticating with Coolify",
 				MarkdownDescription: "The API key for authenticating with Coolify",
