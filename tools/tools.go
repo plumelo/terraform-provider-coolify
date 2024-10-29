@@ -23,4 +23,4 @@ import (
 //go:generate terraform fmt -recursive ../examples/
 
 // * Run the docs generation tool, check its repository for more information on how it works and how docs can be customized.
-// go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs generate -provider-name coolify ../
+//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs generate -provider-name coolify --provider-dir ../
