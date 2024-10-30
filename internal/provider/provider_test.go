@@ -110,6 +110,13 @@ func TestProtocol6ProviderServerConfigure(t *testing.T) {
 			},
 			expectedSuccess: false,
 		},
+		"config: endpoint,token(invalid)": {
+			config: map[string]interface{}{
+				"endpoint": accEndpoint,
+				"token":    "invalid_token",
+			},
+			expectedSuccess: false,
+		},
 		"env: endpoint": {
 			env: map[string]string{
 				"COOLIFY_ENDPOINT": accEndpoint,

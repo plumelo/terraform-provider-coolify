@@ -32,7 +32,7 @@ type CoolifyProvider struct {
 
 type CoolifyProviderData struct {
 	endpoint string
-	client   *api.APIClient
+	client   *api.ClientWithResponses
 }
 
 type CoolifyProviderModel struct {
@@ -54,21 +54,17 @@ func (p *CoolifyProvider) Metadata(ctx context.Context, req provider.MetadataReq
 }
 
 func (p *CoolifyProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
-	hasEnvEndpoint := os.Getenv("COOLIFY_ENDPOINT") != ""
 	hasEnvToken := os.Getenv("COOLIFY_TOKEN") != ""
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"endpoint": schema.StringAttribute{
-				Required: !hasEnvEndpoint,
-				Optional: hasEnvEndpoint,
-				// Description:         "The endpoint for the Coolify API",
+				Optional:            true,
 				MarkdownDescription: "The endpoint for the Coolify API",
 			},
 			"token": schema.StringAttribute{
-				Required:  !hasEnvToken,
-				Optional:  hasEnvToken,
-				Sensitive: true,
-				// Description:         "The API key for authenticating with Coolify",
+				Required:            !hasEnvToken,
+				Optional:            hasEnvToken,
+				Sensitive:           true,
 				MarkdownDescription: "The API key for authenticating with Coolify",
 			},
 		},
@@ -89,7 +85,7 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 	} else if apiEndpointFromEnv, found := os.LookupEnv("COOLIFY_ENDPOINT"); found {
 		apiEndpoint = apiEndpointFromEnv
 	} else {
-		apiEndpoint = api.DefaultServerURL
+		apiEndpoint = "https://app.coolify.io/api/v1"
 	}
 
 	if apiEndpoint == "" {
@@ -113,7 +109,14 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 		return
 	}
 
-	client := api.NewAPIClient(p.version, apiEndpoint, apiToken)
+	client, err := api.NewAPIClient(p.version, apiEndpoint, apiToken)
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Failed to create API client",
+			err.Error(),
+		)
+		return
+	}
 
 	// GET /version
 	versionResp, err := client.VersionWithResponse(ctx)

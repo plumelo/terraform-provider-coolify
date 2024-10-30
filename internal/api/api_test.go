@@ -9,7 +9,7 @@ import (
 	"terraform-provider-coolify/internal/api"
 )
 
-const MOCK_TOKEN = "valid-token"
+const MOCK_TOKEN = "1|validToken"
 
 // MockHandler simulates API responses based on the request.
 func MockHandler(w http.ResponseWriter, r *http.Request) {
@@ -42,19 +42,48 @@ func TestAPIClient(t *testing.T) {
 	mockServer := httptest.NewServer(http.HandlerFunc(MockHandler))
 	defer mockServer.Close()
 
-	client := api.NewAPIClient("test", mockServer.URL, MOCK_TOKEN)
+	// Test with valid token
+	client, err := api.NewAPIClient("test", mockServer.URL, MOCK_TOKEN)
+	if err != nil {
+		t.Fatalf("Failed to create API client: %v", err)
+	}
 
 	resp, err := client.VersionWithResponse(context.Background())
 	if err != nil {
 		t.Fatalf("Failed to get version: %v", err)
 	}
 
-	if err != nil {
-		t.Errorf("Unexpected error: %v", err)
-	}
-
 	if resp.HTTPResponse.StatusCode != http.StatusOK {
 		t.Errorf("Expected status %d, got %d", http.StatusOK, resp.HTTPResponse.StatusCode)
 	}
 
+	// Test with invalid token
+	invalidToken := "invalid_token"
+	_, err = api.NewAPIClient("test", mockServer.URL, invalidToken)
+	if err == nil {
+		t.Fatalf("Expected error when creating API client with invalid token, got none")
+	}
+}
+
+func TestValidateTokenFormat(t *testing.T) {
+	tests := []struct {
+		token   string
+		wantErr bool
+	}{
+		{"12345|validToken", false},
+		{"7|anotherValidToken", false},
+		{"invalid_token", true},
+		{"12345|", true},
+		{"|token", true},
+		{"12345|token with spaces", true},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.token, func(t *testing.T) {
+			err := api.ValidateTokenFormat(tt.token)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("ValidateTokenFormat(%q) error = %v, wantErr %v", tt.token, err, tt.wantErr)
+			}
+		})
+	}
 }

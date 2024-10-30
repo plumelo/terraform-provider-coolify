@@ -3,21 +3,19 @@ package api
 import (
 	"context"
 	"fmt"
-	"log"
 	"net/http"
+	"regexp"
 )
 
-const DefaultServerURL = "https://app.coolify.io/api/v1"
 const UserAgentPrefix = "terraform-provider-coolify"
 
-type APIClient struct {
-	*ClientWithResponses
-	httpClient *http.Client
-}
+func NewAPIClient(version, server, apiToken string) (*ClientWithResponses, error) {
+	if err := ValidateTokenFormat(apiToken); err != nil {
+		return nil, err
+	}
 
-func NewAPIClient(version, server, apiToken string) *APIClient {
 	httpClient := http.Client{}
-	apiClient, err := NewClientWithResponses(server,
+	return NewClientWithResponses(server,
 		WithHTTPClient(&httpClient),
 		WithRequestEditorFn(func(ctx context.Context, req *http.Request) error {
 			req.Header.Set("Authorization", "Bearer "+apiToken)
@@ -26,13 +24,12 @@ func NewAPIClient(version, server, apiToken string) *APIClient {
 			return nil
 		}),
 	)
+}
 
-	if err != nil {
-		log.Fatal(err)
+func ValidateTokenFormat(token string) error {
+	matched, _ := regexp.MatchString(`^\d+\|\w+$`, token)
+	if !matched {
+		return fmt.Errorf("invalid token format")
 	}
-
-	return &APIClient{
-		httpClient:          &httpClient,
-		ClientWithResponses: apiClient,
-	}
+	return nil
 }
