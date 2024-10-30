@@ -1,17 +1,22 @@
 {
-	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
-	"extends": [
-		"local>SierraJC/renovate-config"
-	],
-	"automergeType": "branch",
-	"packageRules": [
-		{
-			"matchUpdateTypes": [
-				"minor",
-				"patch"
-			],
-			"matchCurrentVersion": "!/^0/",
-			"automerge": true
-		}
-	]
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "local>SierraJC/renovate-config"
+  ],
+  "automergeType": "branch",
+  "packageRules": [
+    {
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      // Exclude v0.x.x versions, which are considered unstable
+      "matchCurrentVersion": "!/^v?0./",
+      "automerge": true
+    }
+  ],
+  "postUpdateOptions": [
+    "gomodTidy",
+    "gomodUpdateImportPaths"
+  ]
 }
