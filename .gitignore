@@ -1,6 +1,11 @@
 .vscode/
 .env
 
+# Testing
+junit.xml
+coverage.txt
+
+# Terraform
 terraform.tfplan
 terraform.tfstate
 .terraform/

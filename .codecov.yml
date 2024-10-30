@@ -1,0 +1,8 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 30%
+
+ignore:
+  - "internal/**/*_gen.go" # Generated files
