@@ -17,7 +17,3 @@ resources:
       method: DELETE
 
 data_sources:
-  private_keys:
-    read:
-      path: /security/keys
-      method: GET
