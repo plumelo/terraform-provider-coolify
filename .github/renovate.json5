@@ -1,9 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "local>SierraJC/renovate-config"
+    "local>SierraJC/renovate-config",
+    ":automergeBranch"
   ],
-  "automergeType": "branch",
   "packageRules": [
     {
       "matchUpdateTypes": [
@@ -14,9 +14,5 @@
       "matchCurrentVersion": "!/^v?0./",
       "automerge": true
     }
-  ],
-  "postUpdateOptions": [
-    "gomodTidy",
-    "gomodUpdateImportPaths"
   ]
 }
