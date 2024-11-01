@@ -1,8 +1,8 @@
 default: generate
 
 fetch-schema:
-	# @curl -s https://raw.githubusercontent.com/coollabsio/coolify/main/openapi.yaml > config/coolify_openapi.yml
-	@cp ../coolify/openapi.yaml config/coolify_openapi.yml
+	# @curl -s https://raw.githubusercontent.com/coollabsio/coolify/main/openapi.yaml > tools/openapi.yml
+	@cp ../coolify/openapi.yaml tools/openapi.yml
 
 install:
 	@go install .
