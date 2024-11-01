@@ -1,3 +1,3 @@
-internal/api_gen.go linguist-generated=true
+internal/api/api_gen.go linguist-generated=true
 internal/provider/generated/ linguist-generated=true
 docs/ linguist-documentation=true
