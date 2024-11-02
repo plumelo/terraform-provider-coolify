@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
+	"github.com/hashicorp/terraform-plugin-framework/ephemeral"
 	"github.com/hashicorp/terraform-plugin-framework/function"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
@@ -21,6 +22,7 @@ import (
 // Ensure the implementation satisfies the expected interfaces.
 var _ provider.Provider = &CoolifyProvider{}
 var _ provider.ProviderWithFunctions = &CoolifyProvider{}
+var _ provider.ProviderWithEphemeralResources = &CoolifyProvider{}
 
 // CoolifyProvider defines the provider implementation.
 type CoolifyProvider struct {
@@ -170,4 +172,8 @@ func (p *CoolifyProvider) DataSources(ctx context.Context) []func() datasource.D
 
 func (p *CoolifyProvider) Functions(ctx context.Context) []func() function.Function {
 	return []func() function.Function{}
+}
+
+func (p *CoolifyProvider) EphemeralResources(ctx context.Context) []func() ephemeral.EphemeralResource {
+	return []func() ephemeral.EphemeralResource{}
 }
