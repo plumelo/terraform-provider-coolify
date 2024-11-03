@@ -24,8 +24,8 @@ var (
 
 func testAccPreCheck(t *testing.T) {
 	variables := []string{
-		"COOLIFY_ENDPOINT",
-		"COOLIFY_TOKEN",
+		provider.ENV_KEY_ENDPOINT,
+		provider.ENV_KEY_TOKEN,
 	}
 
 	for _, variable := range variables {
@@ -76,8 +76,8 @@ func TestProtocol6ProviderServerConfigure(t *testing.T) {
 		t.SkipNow() // Skip if not running acceptance tests
 	}
 
-	accEndpoint := os.Getenv("COOLIFY_ENDPOINT")
-	accToken := os.Getenv("COOLIFY_TOKEN")
+	accEndpoint := os.Getenv(provider.ENV_KEY_ENDPOINT)
+	accToken := os.Getenv(provider.ENV_KEY_TOKEN)
 
 	tests := map[string]struct {
 		config          map[string]interface{}
@@ -119,14 +119,14 @@ func TestProtocol6ProviderServerConfigure(t *testing.T) {
 		},
 		"env: endpoint": {
 			env: map[string]string{
-				"COOLIFY_ENDPOINT": accEndpoint,
+				provider.ENV_KEY_ENDPOINT: accEndpoint,
 			},
 			expectedSuccess: false,
 		},
 		"env: endpoint,token": {
 			env: map[string]string{
-				"COOLIFY_ENDPOINT": accEndpoint,
-				"COOLIFY_TOKEN":    accToken,
+				provider.ENV_KEY_ENDPOINT: accEndpoint,
+				provider.ENV_KEY_TOKEN:    accToken,
 			},
 			expectedSuccess: true,
 		},
@@ -135,7 +135,7 @@ func TestProtocol6ProviderServerConfigure(t *testing.T) {
 				"endpoint": accEndpoint,
 			},
 			env: map[string]string{
-				"COOLIFY_TOKEN": accToken,
+				provider.ENV_KEY_TOKEN: accToken,
 			},
 			expectedSuccess: true,
 		},
@@ -143,8 +143,8 @@ func TestProtocol6ProviderServerConfigure(t *testing.T) {
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			t.Setenv("COOLIFY_ENDPOINT", "")
-			t.Setenv("COOLIFY_TOKEN", "")
+			t.Setenv(provider.ENV_KEY_ENDPOINT, "")
+			t.Setenv(provider.ENV_KEY_TOKEN, "")
 			for key, value := range test.env {
 				t.Setenv(key, value)
 			}
