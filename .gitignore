@@ -6,9 +6,8 @@ junit.xml
 coverage.txt
 
 # Terraform
-terraform.tfplan
-terraform.tfstate
 .terraform/
+terraform.tfplan
 *.tfstate
-*.backup
+*.tfstate.*
 *.lock.hcl

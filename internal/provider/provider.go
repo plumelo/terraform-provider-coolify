@@ -176,7 +176,9 @@ func (p *CoolifyProvider) Resources(ctx context.Context) []func() resource.Resou
 }
 
 func (p *CoolifyProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
-	return []func() datasource.DataSource{}
+	return []func() datasource.DataSource{
+		NewPrivateKeysDataSource,
+	}
 }
 
 func (p *CoolifyProvider) Functions(ctx context.Context) []func() function.Function {
