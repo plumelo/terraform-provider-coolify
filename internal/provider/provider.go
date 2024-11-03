@@ -58,16 +58,20 @@ func (p *CoolifyProvider) Metadata(ctx context.Context, req provider.MetadataReq
 func (p *CoolifyProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	hasEnvToken := os.Getenv("COOLIFY_TOKEN") != ""
 	resp.Schema = schema.Schema{
+		MarkdownDescription: "" +
+			"The \"coolify\" provider facilitates interaction with resources supported by [Coolify](https://coolify.io/). " +
+			"Before using this provider, you must configure it with your credentials, typically by setting the environment variable `COOLIFY_TOKEN`. " +
+			"For instructions on obtaining an API token, refer to Coolify's [API documentation](https://coolify.io/docs/api-reference/authorization#generate).",
 		Attributes: map[string]schema.Attribute{
 			"endpoint": schema.StringAttribute{
 				Optional:            true,
-				MarkdownDescription: "The endpoint for the Coolify API",
+				MarkdownDescription: "Coolify endpoint. If not set, checks env for `COOLIFY_ENDPOINT`. Default: `https://app.coolify.io/api/v1`",
 			},
 			"token": schema.StringAttribute{
 				Required:            !hasEnvToken,
 				Optional:            hasEnvToken,
 				Sensitive:           true,
-				MarkdownDescription: "The API key for authenticating with Coolify",
+				MarkdownDescription: "Coolify token. If not set, checks env for `COOLIFY_TOKEN`.",
 			},
 		},
 	}
