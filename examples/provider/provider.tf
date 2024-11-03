@@ -15,7 +15,4 @@ provider "coolify" {
   token = "Your API token"
 }
 
-# Create a server
-resource "coolify_server" "vps" {
-  # ...
-}
+# ...
