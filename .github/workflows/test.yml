@@ -5,7 +5,7 @@ on:
   push:
     # Allow renovate branches to CI on push for noise-reduction on auto-merges
     paths-ignore:
-      - "README.md"
+      - "**/*.md"
     branches:
       - main
       - "renovate/**"
