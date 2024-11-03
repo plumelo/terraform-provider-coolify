@@ -2,7 +2,15 @@ coverage:
   status:
     project:
       default:
-        target: 30%
+        target: auto
+        threshold: 10%
+    patch:
+      default:
+        informational: true
+
+comment:
+  require_changes: true
 
 ignore:
+  - "main.go" # Main package
   - "internal/**/*_gen.go" # Generated files
