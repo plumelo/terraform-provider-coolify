@@ -22,6 +22,9 @@ import (
 const (
 	ENV_KEY_ENDPOINT = "COOLIFY_ENDPOINT"
 	ENV_KEY_TOKEN    = "COOLIFY_TOKEN"
+
+	DEFAULT_COOLIFY_ENDPOINT = "https://app.coolify.io/api/v1"
+	MIN_COOLIFY_VERSION      = "4.0.0-beta.360"
 )
 
 // Ensure the implementation satisfies the expected interfaces.
@@ -64,13 +67,13 @@ func (p *CoolifyProvider) Schema(ctx context.Context, req provider.SchemaRequest
 	hasEnvToken := os.Getenv(ENV_KEY_TOKEN) != ""
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "" +
-			"The \"coolify\" provider facilitates interaction with resources supported by [Coolify](https://coolify.io/). " +
-			"Before using this provider, you must configure it with your credentials, typically by setting the environment variable `" + ENV_KEY_TOKEN + "`. " +
+			"The \"coolify\" provider facilitates interaction with resources supported by [Coolify](https://coolify.io/) v" + MIN_COOLIFY_VERSION + " and later.\n\n" +
+			"Before using this provider, you must configure it with your credentials, typically by setting the environment variable `" + ENV_KEY_TOKEN + "`.\n\n" +
 			"For instructions on obtaining an API token, refer to Coolify's [API documentation](https://coolify.io/docs/api-reference/authorization#generate).",
 		Attributes: map[string]schema.Attribute{
 			"endpoint": schema.StringAttribute{
 				Optional:            true,
-				MarkdownDescription: "Coolify endpoint. If not set, checks env for `" + ENV_KEY_ENDPOINT + "`. Default: `https://app.coolify.io/api/v1`",
+				MarkdownDescription: "Coolify endpoint. If not set, checks env for `" + ENV_KEY_ENDPOINT + "`. Default: `" + DEFAULT_COOLIFY_ENDPOINT + "`.",
 			},
 			"token": schema.StringAttribute{
 				Required:            !hasEnvToken,
@@ -96,7 +99,7 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 	} else if apiEndpointFromEnv, found := os.LookupEnv("COOLIFY_ENDPOINT"); found {
 		apiEndpoint = apiEndpointFromEnv
 	} else {
-		apiEndpoint = "https://app.coolify.io/api/v1"
+		apiEndpoint = DEFAULT_COOLIFY_ENDPOINT
 	}
 
 	if apiEndpoint == "" {
@@ -148,12 +151,11 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 	}
 
 	currentVersion := string(versionResp.Body)
-	minVersion := "4.0.0-beta.360"
 
-	if !isVersionCompatible(currentVersion, minVersion) {
+	if !isVersionCompatible(currentVersion, MIN_COOLIFY_VERSION) {
 		resp.Diagnostics.AddError(
 			"Unsupported API version",
-			fmt.Sprintf("The Coolify API version %s is not supported. The minimum supported version is %s", currentVersion, minVersion),
+			fmt.Sprintf("The Coolify API version %s is not supported. The minimum supported version is %s", currentVersion, MIN_COOLIFY_VERSION),
 		)
 		return
 	}
