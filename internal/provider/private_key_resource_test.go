@@ -1,17 +1,22 @@
 package provider_test
 
 import (
+	"context"
 	"crypto/ed25519"
 	"crypto/x509"
 	"encoding/pem"
 	"strings"
 	"testing"
 
+	tfresource "github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/knownvalue"
 	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/hashicorp/terraform-plugin-testing/tfjsonpath"
+
+	"terraform-provider-coolify/internal/provider"
 )
 
 func TestAccPrivateKeyResource(t *testing.T) {
@@ -82,6 +87,19 @@ func TestAccPrivateKeyResource(t *testing.T) {
 			},
 		},
 	})
+}
+
+func TestPrivatekeyResourceSchema(t *testing.T) {
+	ctx := context.Background()
+	rs := provider.NewPrivateKeyResource()
+	resp := &tfresource.SchemaResponse{}
+	rs.Schema(ctx, tfresource.SchemaRequest{}, resp)
+
+	// Test private_key sensitivity
+	privateKeyAttr := resp.Schema.Attributes["private_key"].(schema.StringAttribute)
+	if !privateKeyAttr.Sensitive {
+		t.Error("private_key field should be marked as sensitive in schema")
+	}
 }
 
 func generatePrivateKey(t *testing.T) string {

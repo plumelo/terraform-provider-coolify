@@ -3,12 +3,12 @@
 page_title: "coolify_private_key Resource - coolify"
 subcategory: ""
 description: |-
-  
+  Create, read, update, and delete a Coolify private key resource.
 ---
 
 # coolify_private_key (Resource)
 
-
+Create, read, update, and delete a Coolify private key resource.
 
 ## Example Usage
 
@@ -34,7 +34,7 @@ output "public_key" {
 
 ### Required
 
-- `private_key` (String)
+- `private_key` (String, Sensitive)
 
 ### Optional
 
