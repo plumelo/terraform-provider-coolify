@@ -88,6 +88,10 @@ func (d *privateKeysDataSource) Read(ctx context.Context, req datasource.ReadReq
 	state, diag := d.apiToModel(ctx, listResponse.JSON200, plan.Filter)
 	resp.Diagnostics.Append(diag...)
 
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
 
