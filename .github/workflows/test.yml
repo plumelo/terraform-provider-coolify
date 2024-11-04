@@ -41,8 +41,8 @@ jobs:
       - uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
         with:
           go-version-file: "tools/go.mod"
-          cache: true
           cache-dependency-path: "tools/go.sum"
+          cache: true
       # We need the latest version of Terraform for our documentation generation to use
       - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
         with:
@@ -64,7 +64,10 @@ jobs:
           go-version-file: "go.mod"
           cache: true
       - run: go install github.com/jstemmer/go-junit-report/v2@latest
-      - run: go test -v -cover -coverprofile=coverage.txt -covermode=atomic ./... 2>&1 | go-junit-report -set-exit-code > junit.xml
+      - run: |
+          go test -v \
+          -cover -coverprofile=coverage.txt -covermode=atomic \
+          ./... 2>&1 | go-junit-report -set-exit-code > junit.xml
 
       - uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
         with:
@@ -109,7 +112,11 @@ jobs:
           version: 1.76.1
 
       - run: go install github.com/jstemmer/go-junit-report/v2@latest
-      - run: go test -v -cover -coverprofile=coverage.txt -covermode=atomic ./internal/provider/ 2>&1 | go-junit-report -set-exit-code > junit.xml
+      - run: |
+          go test -v \
+          -cover -coverprofile=coverage.txt -covermode=atomic \
+          -run '^(TestAcc|TestProtocol6ProviderServerConfigure)' \
+          ./internal/provider/ 2>&1 | go-junit-report -set-exit-code > junit.xml
         env:
           TF_ACC: "1"
           COOLIFY_ENDPOINT: ${{ secrets.ACC_COOLIFY_ENDPOINT }}

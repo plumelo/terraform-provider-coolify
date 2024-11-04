@@ -1,8 +1,17 @@
+define setup_env
+    $(eval ENV_FILE := .env)
+    $(eval include .env)
+    $(eval export)
+endef
+
 default: fmt lint install generate
 
 # @curl -s https://raw.githubusercontent.com/coollabsio/coolify/main/openapi.yaml > tools/openapi.yml
 fetch-schema:
 	@cp ../coolify/openapi.yaml tools/openapi.yml
+
+loadEnv:
+	$(call setup_env)
 
 build:
 	go build -v ./...
@@ -22,7 +31,7 @@ fmt:
 test:
 	go test -v -cover -timeout=2m -parallel=10 ./...
 
-testacc:
-	TF_ACC=1 go test -v -cover -timeout 10m ./internal/provider/...
+testacc: loadEnv
+	TF_ACC=1 go test -v -cover -timeout 10m -run '^(TestAcc|TestProtocol6ProviderServerConfigure)' ./internal/provider/...
 
-.PHONY: fetch-schema fmt lint test testacc build install generate
+.PHONY: fetch-schema loadEnv fmt lint test testacc build install generate

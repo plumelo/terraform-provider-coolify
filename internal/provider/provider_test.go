@@ -23,6 +23,10 @@ var (
 )
 
 func testAccPreCheck(t *testing.T) {
+	if os.Getenv("TF_ACC") != "1" {
+		t.Skip("Acceptance tests skipped unless env 'TF_ACC' set")
+	}
+
 	variables := []string{
 		provider.ENV_KEY_ENDPOINT,
 		provider.ENV_KEY_TOKEN,
@@ -72,9 +76,7 @@ func TestProtocol6ProviderServerSchemaVersion(t *testing.T) {
 }
 
 func TestProtocol6ProviderServerConfigure(t *testing.T) {
-	if os.Getenv("TF_ACC") != "1" {
-		t.SkipNow() // Skip if not running acceptance tests
-	}
+	testAccPreCheck(t)
 
 	accEndpoint := os.Getenv(provider.ENV_KEY_ENDPOINT)
 	accToken := os.Getenv(provider.ENV_KEY_TOKEN)
