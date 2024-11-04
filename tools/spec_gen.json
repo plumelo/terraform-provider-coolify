@@ -1,6 +1,68 @@
 {
 	"datasources": [
 		{
+			"name": "private_key",
+			"schema": {
+				"attributes": [
+					{
+						"name": "uuid",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "Private Key UUID"
+						}
+					},
+					{
+						"name": "created_at",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "description",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "id",
+						"int64": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "is_git_related",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "name",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "private_key",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "team_id",
+						"int64": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "updated_at",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					}
+				]
+			}
+		},
+		{
 			"name": "private_keys",
 			"schema": {
 				"attributes": [
