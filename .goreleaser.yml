@@ -1,10 +1,6 @@
 # Visit https://goreleaser.com for documentation on how to customize this
 # behavior.
 version: 2
-before:
-  hooks:
-    # this is just an example and not a requirement for provider building/publishing
-    - go mod tidy
 builds:
   - env:
       # goreleaser does not work with CGO, it could also complicate
@@ -53,8 +49,49 @@ signs:
       - "${artifact}"
 release:
   draft: true
+  replace_existing_draft: true
   extra_files:
     - glob: "terraform-registry-manifest.json"
       name_template: "{{ .ProjectName }}_{{ .Version }}_manifest.json"
+  footer: |
+    **Full Changelog**: https://github.com/SierraJC/terraform-provider-coolify/compare/{{ .PreviousTag }}...{{ if .IsNightly }}nightly{{ else }}{{ .Tag }}{{ end }}
+
 changelog:
-  use: github-native
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - "^test:"
+      - "^test\\("
+      - "^ci:"
+      - "^ci\\("
+      - "^build:"
+      - "^build\\("
+      - "^chore\\(deps\\):" # dev tools only
+      - "^merge"
+      - "^Merge"
+  groups:
+    - title: ⚠️ Breaking Changes
+      regexp: "^.*\\w[(\\w)]*!:+.*$"
+      order: 0
+    - title: ✨ New Features
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 100
+    - title: 🔒 Security updates
+      # Match any commit that contains [SECURITY] (ie renovate bot)
+      regexp: "^.*\\[(?i)SECURITY\\]$"
+      order: 150
+    - title: 🐛 Bug fixes
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 200
+    - title: 📦 Dependency updates
+      regexp: "^.*(feat|fix)\\(deps\\)*:+.*$"
+      order: 300
+    - title: 📝 Documentation updates
+      regexp: "^.*docs[(\\w)]*:+.*$"
+      order: 400
+    - title: 🔧 Build process updates
+      regexp: "^.*?(build|ci)[(\\w)]*:+.*$"
+      order: 450
+    - title: 📑 Other changes
+      order: 9999
