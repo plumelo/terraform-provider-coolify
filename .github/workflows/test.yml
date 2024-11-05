@@ -84,6 +84,8 @@ jobs:
     timeout-minutes: 15
     if: ${{ !contains(github.event.head_commit.message, '[skip acc]') }}
     strategy:
+      # todo: parallelism isn't working due to acceptance test resource name collision
+      max-parallel: 1
       fail-fast: false
       matrix:
         terraform:
