@@ -38,7 +38,7 @@ Before you begin using the Coolify Terraform Provider, ensure you have completed
 
 | Feature                    | Resource | Data Source |
 | -------------------------- | -------- | ----------- |
-| Teams                      | ⛔       | ❌          |
+| Teams                      | ⛔       | ️✔️         |
 | Private Keys               | ✔️       | ✔️          |
 | Servers                    | ❌       | ❌          |
 | Projects                   | ❌       | ❌          |

@@ -181,6 +181,7 @@ func (p *CoolifyProvider) DataSources(ctx context.Context) []func() datasource.D
 	return []func() datasource.DataSource{
 		NewPrivateKeyDataSource,
 		NewPrivateKeysDataSource,
+		NewTeamDataSource,
 	}
 }
 
