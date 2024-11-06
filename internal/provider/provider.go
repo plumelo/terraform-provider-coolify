@@ -182,6 +182,7 @@ func (p *CoolifyProvider) DataSources(ctx context.Context) []func() datasource.D
 		NewPrivateKeyDataSource,
 		NewPrivateKeysDataSource,
 		NewTeamDataSource,
+		NewTeamsDataSource,
 	}
 }
 

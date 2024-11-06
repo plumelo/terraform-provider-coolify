@@ -25,6 +25,10 @@ data_sources:
     read:
       path: /security/keys/{uuid}
       method: GET
+  teams:
+    read:
+      path: /teams
+      method: GET
   team:
     read:
       path: /teams/{id}
