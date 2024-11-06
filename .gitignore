@@ -1,6 +1,7 @@
 .bruno/
 .vscode/
 .env
+examples/playground/
 
 # Testing
 junit.xml
