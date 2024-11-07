@@ -546,16 +546,13 @@ type Project struct {
 
 // Server Server model
 type Server struct {
-	DeleteUnusedNetworks          *bool                   `json:"delete_unused_networks,omitempty"`
-	DeleteUnusedVolumes           *bool                   `json:"delete_unused_volumes,omitempty"`
-	Description                   *string                 `json:"description,omitempty"`
-	HighDiskUsageNotificationSent *bool                   `json:"high_disk_usage_notification_sent,omitempty"`
-	Id                            *int                    `json:"id,omitempty"`
-	Ip                            *string                 `json:"ip,omitempty"`
-	LogDrainNotificationSent      *bool                   `json:"log_drain_notification_sent,omitempty"`
-	Name                          *string                 `json:"name,omitempty"`
-	Port                          *int                    `json:"port,omitempty"`
-	Proxy                         *map[string]interface{} `json:"proxy,omitempty"`
+	Description                   *string `json:"description,omitempty"`
+	HighDiskUsageNotificationSent *bool   `json:"high_disk_usage_notification_sent,omitempty"`
+	Id                            *int    `json:"id,omitempty"`
+	Ip                            *string `json:"ip,omitempty"`
+	LogDrainNotificationSent      *bool   `json:"log_drain_notification_sent,omitempty"`
+	Name                          *string `json:"name,omitempty"`
+	Port                          *string `json:"port,omitempty"`
 
 	// Settings Server Settings model
 	Settings                    *ServerSetting `json:"settings,omitempty"`
@@ -571,6 +568,8 @@ type Server struct {
 type ServerSetting struct {
 	ConcurrentBuilds           *int    `json:"concurrent_builds,omitempty"`
 	CreatedAt                  *string `json:"created_at,omitempty"`
+	DeleteUnusedNetworks       *bool   `json:"delete_unused_networks,omitempty"`
+	DeleteUnusedVolumes        *bool   `json:"delete_unused_volumes,omitempty"`
 	DockerCleanupFrequency     *string `json:"docker_cleanup_frequency,omitempty"`
 	DockerCleanupThreshold     *int    `json:"docker_cleanup_threshold,omitempty"`
 	DynamicTimeout             *int    `json:"dynamic_timeout,omitempty"`
@@ -2748,7 +2747,7 @@ type CreateServerJSONBody struct {
 	Name *string `json:"name,omitempty"`
 
 	// Port The port of the server.
-	Port *int `json:"port,omitempty"`
+	Port *string `json:"port,omitempty"`
 
 	// PrivateKeyUuid The UUID of the private key.
 	PrivateKeyUuid string `json:"private_key_uuid"`
@@ -2775,7 +2774,7 @@ type UpdateServerByUuidJSONBody struct {
 	Name *string `json:"name,omitempty"`
 
 	// Port The port of the server.
-	Port *int `json:"port,omitempty"`
+	Port *string `json:"port,omitempty"`
 
 	// PrivateKeyUuid The UUID of the private key.
 	PrivateKeyUuid *string `json:"private_key_uuid,omitempty"`
@@ -9551,7 +9550,7 @@ func (r GetServerByUuidResponse) StatusCode() int {
 type UpdateServerByUuidResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *[]Server
+	JSON201      *Server
 	JSON400      *N400
 	JSON401      *N401
 	JSON404      *N404
@@ -13482,7 +13481,7 @@ func ParseUpdateServerByUuidResponse(rsp *http.Response) (*UpdateServerByUuidRes
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest []Server
+		var dest Server
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

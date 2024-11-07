@@ -3567,8 +3567,8 @@ paths:
                   example: 127.0.0.1
                   description: 'The IP of the server.'
                 port:
-                  type: integer
-                  example: 22
+                  type: string
+                  example: '22'
                   description: 'The port of the server.'
                 user:
                   type: string
@@ -3699,7 +3699,7 @@ paths:
                   type: string
                   description: 'The IP of the server.'
                 port:
-                  type: integer
+                  type: string
                   description: 'The port of the server.'
                 user:
                   type: string
@@ -3720,9 +3720,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Server'
+                $ref: '#/components/schemas/Server'
         '401':
           $ref: '#/components/responses/401'
         '400':
@@ -4931,9 +4929,7 @@ components:
         user:
           type: string
         port:
-          type: integer
-        proxy:
-          type: object
+          type: string
         high_disk_usage_notification_sent:
           type: boolean
         unreachable_notification_sent:
@@ -4948,10 +4944,6 @@ components:
           type: string
         settings:
           $ref: '#/components/schemas/ServerSetting'
-        delete_unused_volumes:
-          type: boolean
-        delete_unused_networks:
-          type: boolean
       type: object
     ServerSetting:
       description: 'Server Settings model'
@@ -5024,6 +5016,10 @@ components:
           type: string
         updated_at:
           type: string
+        delete_unused_volumes:
+          type: boolean
+        delete_unused_networks:
+          type: boolean
       type: object
     Service:
       description: 'Service model'
