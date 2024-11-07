@@ -445,6 +445,72 @@
 			}
 		},
 		{
+			"name": "server_resources",
+			"schema": {
+				"attributes": [
+					{
+						"name": "uuid",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "Server's UUID"
+						}
+					},
+					{
+						"name": "server_resources",
+						"set_nested": {
+							"computed_optional_required": "computed",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "created_at",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "id",
+										"int64": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "name",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "status",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "type",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "updated_at",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "uuid",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									}
+								]
+							}
+						}
+					}
+				]
+			}
+		},
+		{
 			"name": "servers",
 			"schema": {
 				"attributes": [
