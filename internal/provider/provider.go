@@ -174,6 +174,7 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 func (p *CoolifyProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewPrivateKeyResource,
+		NewServerResource,
 	}
 }
 

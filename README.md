@@ -40,7 +40,7 @@ Before you begin using the Coolify Terraform Provider, ensure you have completed
 | -------------------------- | -------- | ----------- |
 | Teams                      | ⛔       | ️✔️         |
 | Private Keys               | ✔️       | ✔️          |
-| Servers                    | ❌       | ❌          |
+| Servers                    | ✔️       | ❌          |
 | Projects                   | ❌       | ❌          |
 | - Project Environments     | ⛔       | ⛔          |
 | - Project Resources        | ⛔       | ⛔          |

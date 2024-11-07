@@ -15,6 +15,19 @@ resources:
     delete:
       path: /security/keys/{uuid}
       method: DELETE
+  server:
+    create:
+      path: /servers
+      method: POST
+    read:
+      path: /servers/{uuid}
+      method: GET
+    update:
+      path: /servers/{uuid}
+      method: PATCH
+    delete:
+      path: /servers/{uuid}
+      method: DELETE
 
 data_sources:
   private_keys:
@@ -33,3 +46,11 @@ data_sources:
     read:
       path: /teams/{id}
       method: GET
+  # server:
+  #   read:
+  #     path: /servers/{uuid}
+  #     method: GET
+  # servers:
+  #   read:
+  #     path: /servers
+  #     method: GET
