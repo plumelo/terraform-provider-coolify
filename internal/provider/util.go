@@ -1,7 +1,9 @@
 package provider
 
 import (
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 )
 
 func optionalString(value *string) types.String {
@@ -23,4 +25,18 @@ func optionalBool(value *bool) types.Bool {
 		return types.BoolNull()
 	}
 	return types.BoolValue(*value)
+}
+
+// optionalStringListValue converts a list of strings to a ListValue.
+func optionalStringListValue(values *[]string) basetypes.ListValue {
+	if values == nil {
+		return types.ListNull(types.StringType)
+	}
+
+	elems := make([]attr.Value, len(*values))
+	for i, v := range *values {
+		elems[i] = types.StringValue(v)
+	}
+
+	return types.ListValueMust(types.StringType, elems)
 }
