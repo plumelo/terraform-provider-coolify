@@ -46,10 +46,10 @@ data_sources:
     read:
       path: /teams/{id}
       method: GET
-  # server:
-  #   read:
-  #     path: /servers/{uuid}
-  #     method: GET
+  server:
+    read:
+      path: /servers/{uuid}
+      method: GET
   # servers:
   #   read:
   #     path: /servers
