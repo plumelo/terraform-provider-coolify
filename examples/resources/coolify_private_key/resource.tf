@@ -5,7 +5,7 @@ resource "tls_private_key" "example" {
 resource "coolify_private_key" "example" {
   name        = "Example Terraformed Key"
   description = "Managed by Terraform"
-  private_key = tls_private_key.test.private_key_pem
+  private_key = tls_private_key.example.private_key_pem
 }
 
 output "public_key" {
