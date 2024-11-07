@@ -142,6 +142,39 @@ func TestFilterOnAttributes(t *testing.T) {
 			},
 			expected: false,
 		},
+		{
+			name: "MultipleValuesInFilter_OR_Logic",
+			attributes: map[string]attr.Value{
+				"field1": basetypes.NewStringValue("value1"),
+			},
+			filters: []filterBlockModel{
+				{
+					Name: basetypes.NewStringValue("field1"),
+					Values: basetypes.NewListValueMust(types.StringType, []attr.Value{
+						basetypes.NewStringValue("value2"),
+						basetypes.NewStringValue("value1"),
+						basetypes.NewStringValue("value3"),
+					}),
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "MultipleValuesInFilter_NoMatch",
+			attributes: map[string]attr.Value{
+				"field1": basetypes.NewStringValue("value1"),
+			},
+			filters: []filterBlockModel{
+				{
+					Name: basetypes.NewStringValue("field1"),
+					Values: basetypes.NewListValueMust(types.StringType, []attr.Value{
+						basetypes.NewStringValue("value2"),
+						basetypes.NewStringValue("value3"),
+					}),
+				},
+			},
+			expected: false,
+		},
 	}
 
 	for _, tt := range tests {
