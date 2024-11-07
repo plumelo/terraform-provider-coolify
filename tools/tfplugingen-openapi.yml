@@ -58,3 +58,7 @@ data_sources:
     read:
       path: /servers/{uuid}/resources
       method: GET
+  server_domains:
+    read:
+      path: /servers/{uuid}/domains
+      method: GET

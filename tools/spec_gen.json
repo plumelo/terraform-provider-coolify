@@ -445,6 +445,45 @@
 			}
 		},
 		{
+			"name": "server_domains",
+			"schema": {
+				"attributes": [
+					{
+						"name": "uuid",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "Server's UUID"
+						}
+					},
+					{
+						"name": "server_domains",
+						"set_nested": {
+							"computed_optional_required": "computed",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "domains",
+										"list": {
+											"computed_optional_required": "computed",
+											"element_type": {
+												"string": {}
+											}
+										}
+									},
+									{
+										"name": "ip",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									}
+								]
+							}
+						}
+					}
+				]
+			}
+		},
+		{
 			"name": "server_resources",
 			"schema": {
 				"attributes": [
