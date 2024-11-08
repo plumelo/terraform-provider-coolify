@@ -62,3 +62,7 @@ data_sources:
     read:
       path: /servers/{uuid}/domains
       method: GET
+  project:
+    read:
+      path: /projects/{uuid}
+      method: GET
