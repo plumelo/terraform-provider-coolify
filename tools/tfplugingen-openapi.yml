@@ -66,3 +66,7 @@ data_sources:
     read:
       path: /projects/{uuid}
       method: GET
+  projects:
+    read:
+      path: /projects
+      method: GET
