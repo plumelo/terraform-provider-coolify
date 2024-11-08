@@ -1,13 +1,13 @@
-.bruno/
 .vscode/
 .env
-examples/playground/
 
 # Testing
+.bruno/
 junit.xml
 coverage.txt
 
 # Terraform
+examples/playground/
 .terraform/
 terraform.tfplan
 *.tfstate
