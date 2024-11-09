@@ -28,6 +28,19 @@ resources:
     delete:
       path: /servers/{uuid}
       method: DELETE
+  project:
+    create:
+      path: /projects
+      method: POST
+    read:
+      path: /projects/{uuid}
+      method: GET
+    update:
+      path: /projects/{uuid}
+      method: PATCH
+    delete:
+      path: /projects/{uuid}
+      method: DELETE
 
 data_sources:
   private_keys:

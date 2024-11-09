@@ -175,6 +175,7 @@ func (p *CoolifyProvider) Resources(ctx context.Context) []func() resource.Resou
 	return []func() resource.Resource{
 		NewPrivateKeyResource,
 		NewServerResource,
+		NewProjectResource,
 	}
 }
 
