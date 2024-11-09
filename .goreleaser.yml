@@ -82,17 +82,17 @@ changelog:
       # Match any commit that contains [SECURITY] (ie renovate bot)
       regexp: "^.*\\[(?i)SECURITY\\]$"
       order: 150
+    - title: 📦 Dependency updates
+      regexp: "^.*(feat|fix)\\(deps\\)*:+.*$"
+      order: 450
     - title: 🐛 Bug fixes
       regexp: "^.*fix[(\\w)]*:+.*$"
       order: 200
-    - title: 📦 Dependency updates
-      regexp: "^.*(feat|fix)\\(deps\\)*:+.*$"
-      order: 300
     - title: 📝 Documentation updates
       regexp: "^.*docs[(\\w)]*:+.*$"
       order: 400
     - title: 🔧 Build process updates
       regexp: "^.*?(build|ci)[(\\w)]*:+.*$"
-      order: 450
+      order: 500
     - title: 📑 Other changes
       order: 9999
