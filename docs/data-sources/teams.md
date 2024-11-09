@@ -13,10 +13,10 @@ Get a list of Coolify teams.
 ## Example Usage
 
 ```terraform
-# Retrieve all private keys
+# Retrieve all teams
 data "coolify_teams" "all" {}
 
-# Retrieve private keys with a specific description and team_id
+# Retrieve teams with specific field values
 data "coolify_teams" "filtered" {
   filter {
     name   = "discord_enabled"

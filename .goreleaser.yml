@@ -71,6 +71,7 @@ changelog:
       - "^chore\\(git\\):" # repo maintenance nobody cares about
       - "^merge"
       - "^Merge"
+      - "\\btypos?\\b" # typos are not interesting
   groups:
     - title: ⚠️ Breaking Changes
       regexp: "^.*\\w[(\\w)]*!:+.*$"

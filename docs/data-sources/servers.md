@@ -16,7 +16,7 @@ Get a list of Coolify servers.
 # Retrieve all servers
 data "coolify_servers" "all" {}
 
-# Retrieve servers with a specific description and team_id
+# Retrieve servers with a specific user and ip address
 data "coolify_servers" "filtered" {
   filter {
     name   = "user"
