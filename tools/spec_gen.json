@@ -312,6 +312,18 @@
 						}
 					},
 					{
+						"name": "delete_unused_networks",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "delete_unused_volumes",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
 						"name": "description",
 						"string": {
 							"computed_optional_required": "computed"
@@ -473,7 +485,7 @@
 									}
 								},
 								{
-									"name": "is_server_api_enabled",
+									"name": "is_sentinel_enabled",
 									"bool": {
 										"computed_optional_required": "computed"
 									}
@@ -539,19 +551,19 @@
 									}
 								},
 								{
-									"name": "metrics_history_days",
+									"name": "sentinel_metrics_history_days",
 									"int64": {
 										"computed_optional_required": "computed"
 									}
 								},
 								{
-									"name": "metrics_refresh_rate_seconds",
+									"name": "sentinel_metrics_refresh_rate_seconds",
 									"int64": {
 										"computed_optional_required": "computed"
 									}
 								},
 								{
-									"name": "metrics_token",
+									"name": "sentinel_token",
 									"string": {
 										"computed_optional_required": "computed"
 									}
@@ -727,6 +739,18 @@
 							"nested_object": {
 								"attributes": [
 									{
+										"name": "delete_unused_networks",
+										"bool": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "delete_unused_volumes",
+										"bool": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
 										"name": "description",
 										"string": {
 											"computed_optional_required": "computed"
@@ -888,7 +912,7 @@
 													}
 												},
 												{
-													"name": "is_server_api_enabled",
+													"name": "is_sentinel_enabled",
 													"bool": {
 														"computed_optional_required": "computed"
 													}
@@ -954,19 +978,19 @@
 													}
 												},
 												{
-													"name": "metrics_history_days",
+													"name": "sentinel_metrics_history_days",
 													"int64": {
 														"computed_optional_required": "computed"
 													}
 												},
 												{
-													"name": "metrics_refresh_rate_seconds",
+													"name": "sentinel_metrics_refresh_rate_seconds",
 													"int64": {
 														"computed_optional_required": "computed"
 													}
 												},
 												{
-													"name": "metrics_token",
+													"name": "sentinel_token",
 													"string": {
 														"computed_optional_required": "computed"
 													}
@@ -2021,7 +2045,7 @@
 					{
 						"name": "ip",
 						"string": {
-							"computed_optional_required": "required",
+							"computed_optional_required": "computed_optional",
 							"description": "The IP of the server."
 						}
 					},
@@ -2049,7 +2073,7 @@
 					{
 						"name": "private_key_uuid",
 						"string": {
-							"computed_optional_required": "required",
+							"computed_optional_required": "computed_optional",
 							"description": "The UUID of the private key."
 						}
 					},
@@ -2065,6 +2089,18 @@
 						"string": {
 							"computed_optional_required": "computed",
 							"description": "The UUID of the server."
+						}
+					},
+					{
+						"name": "delete_unused_networks",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "delete_unused_volumes",
+						"bool": {
+							"computed_optional_required": "computed"
 						}
 					},
 					{
@@ -2205,7 +2241,7 @@
 									}
 								},
 								{
-									"name": "is_server_api_enabled",
+									"name": "is_sentinel_enabled",
 									"bool": {
 										"computed_optional_required": "computed"
 									}
@@ -2271,19 +2307,19 @@
 									}
 								},
 								{
-									"name": "metrics_history_days",
+									"name": "sentinel_metrics_history_days",
 									"int64": {
 										"computed_optional_required": "computed"
 									}
 								},
 								{
-									"name": "metrics_refresh_rate_seconds",
+									"name": "sentinel_metrics_refresh_rate_seconds",
 									"int64": {
 										"computed_optional_required": "computed"
 									}
 								},
 								{
-									"name": "metrics_token",
+									"name": "sentinel_token",
 									"string": {
 										"computed_optional_required": "computed"
 									}

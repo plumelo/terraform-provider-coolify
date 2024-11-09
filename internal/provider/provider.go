@@ -24,7 +24,7 @@ const (
 	ENV_KEY_TOKEN    = "COOLIFY_TOKEN"
 
 	DEFAULT_COOLIFY_ENDPOINT = "https://app.coolify.io/api/v1"
-	MIN_COOLIFY_VERSION      = "4.0.0-beta.360"
+	MIN_COOLIFY_VERSION      = "4.0.0-beta.364"
 )
 
 // Ensure the implementation satisfies the expected interfaces.

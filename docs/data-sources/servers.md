@@ -63,6 +63,8 @@ Required:
 
 Read-Only:
 
+- `delete_unused_networks` (Boolean)
+- `delete_unused_volumes` (Boolean)
 - `description` (String)
 - `high_disk_usage_notification_sent` (Boolean)
 - `id` (Number)
@@ -102,7 +104,7 @@ Read-Only:
 - `is_logdrain_newrelic_enabled` (Boolean)
 - `is_metrics_enabled` (Boolean)
 - `is_reachable` (Boolean)
-- `is_server_api_enabled` (Boolean)
+- `is_sentinel_enabled` (Boolean)
 - `is_swarm_manager` (Boolean)
 - `is_swarm_worker` (Boolean)
 - `is_usable` (Boolean)
@@ -113,9 +115,9 @@ Read-Only:
 - `logdrain_highlight_project_id` (String)
 - `logdrain_newrelic_base_uri` (String)
 - `logdrain_newrelic_license_key` (String)
-- `metrics_history_days` (Number)
-- `metrics_refresh_rate_seconds` (Number)
-- `metrics_token` (String)
+- `sentinel_metrics_history_days` (Number)
+- `sentinel_metrics_refresh_rate_seconds` (Number)
+- `sentinel_token` (String)
 - `server_id` (Number)
 - `updated_at` (String)
 - `wildcard_domain` (String)

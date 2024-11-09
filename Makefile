@@ -6,9 +6,8 @@ endef
 
 default: fmt lint install generate
 
-# @curl -s https://raw.githubusercontent.com/coollabsio/coolify/main/openapi.yaml > tools/openapi.yml
 fetch-schema:
-	@cp ../coolify/openapi.yaml tools/openapi.yml
+	@curl -s https://raw.githubusercontent.com/coollabsio/coolify/main/openapi.yaml > tools/openapi.yml
 
 loadEnv:
 	$(call setup_env)

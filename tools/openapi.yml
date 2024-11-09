@@ -1129,6 +1129,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           description: 'Get application by UUID.'
@@ -1159,6 +1160,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
         -
           name: delete_configurations
           in: query
@@ -1215,14 +1217,6 @@ paths:
       summary: Update
       description: 'Update application by UUID.'
       operationId: update-application-by-uuid
-      parameters:
-        -
-          name: uuid
-          in: path
-          description: 'UUID of the application.'
-          required: true
-          schema:
-            type: string
       requestBody:
         description: 'Application updated.'
         required: true
@@ -1455,6 +1449,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           description: 'All environment variables by application UUID.'
@@ -1487,6 +1482,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       requestBody:
         description: 'Env created.'
         required: true
@@ -1548,6 +1544,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       requestBody:
         description: 'Env updated.'
         required: true
@@ -1613,6 +1610,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       requestBody:
         description: 'Bulk envs updated.'
         required: true
@@ -1659,6 +1657,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
         -
           name: env_uuid
           in: path
@@ -1666,6 +1665,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           description: 'Environment variable deleted.'
@@ -1699,6 +1699,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
         -
           name: force
           in: query
@@ -1747,6 +1748,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           description: 'Stop application.'
@@ -1780,6 +1782,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           description: 'Restart application.'
@@ -1882,6 +1885,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           description: 'Get all databases'
@@ -1913,6 +1917,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
         -
           name: delete_configurations
           in: query
@@ -1977,6 +1982,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       requestBody:
         description: 'Database data'
         required: true
@@ -2838,6 +2844,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           description: 'Start database.'
@@ -2871,6 +2878,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           description: 'Stop database.'
@@ -2904,6 +2912,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           description: 'Restart database.'
@@ -3096,7 +3105,7 @@ paths:
       security:
         -
           bearerAuth: []
-  /healthcheck:
+  /health:
     get:
       summary: Healthcheck
       description: 'Healthcheck endpoint.'
@@ -3215,10 +3224,11 @@ paths:
         -
           name: uuid
           in: path
-          description: 'Project UUID.'
+          description: 'UUID of the application.'
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           description: 'Project deleted.'
@@ -3243,14 +3253,6 @@ paths:
       summary: Update
       description: 'Update Project.'
       operationId: update-project-by-uuid
-      parameters:
-        -
-          name: uuid
-          in: path
-          description: 'UUID of the application.'
-          required: true
-          schema:
-            type: string
       requestBody:
         description: 'Project updated.'
         required: true
@@ -3406,6 +3408,44 @@ paths:
       security:
         -
           bearerAuth: []
+    patch:
+      tags:
+        - 'Private Keys'
+      summary: Update
+      description: 'Update a private key.'
+      operationId: update-private-key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - private_key
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                private_key:
+                  type: string
+              type: object
+              additionalProperties: false
+      responses:
+        '201':
+          description: "The updated private key's UUID."
+          content:
+            application/json:
+              schema:
+                properties:
+                  uuid: { type: string }
+                type: object
+        '401':
+          $ref: '#/components/responses/401'
+        '400':
+          $ref: '#/components/responses/400'
+      security:
+        -
+          bearerAuth: []
   '/security/keys/{uuid}':
     get:
       tags:
@@ -3423,11 +3463,13 @@ paths:
             type: string
       responses:
         '200':
-          description: 'Private key details.'
+          description: 'Get all private keys.'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PrivateKey'
+                type: array
+                items:
+                  $ref: '#/components/schemas/PrivateKey'
         '401':
           $ref: '#/components/responses/401'
         '400':
@@ -3469,52 +3511,6 @@ paths:
       security:
         -
           bearerAuth: []
-    patch:
-      tags:
-        - 'Private Keys'
-      summary: Update
-      description: 'Update a private key.'
-      operationId: update-private-key
-      parameters:
-        -
-          name: uuid
-          in: path
-          description: 'Private Key Uuid'
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              required:
-                - private_key
-              properties:
-                name:
-                  type: string
-                description:
-                  type: string
-                private_key:
-                  type: string
-              type: object
-              additionalProperties: false
-      responses:
-        '201':
-          description: "The updated private key's UUID."
-          content:
-            application/json:
-              schema:
-                properties:
-                  uuid: { type: string }
-                type: object
-        '401':
-          $ref: '#/components/responses/401'
-        '400':
-          $ref: '#/components/responses/400'
-      security:
-        -
-          bearerAuth: []
   /servers:
     get:
       tags:
@@ -3550,9 +3546,6 @@ paths:
         content:
           application/json:
             schema:
-              required:
-                - ip
-                - private_key_uuid
               properties:
                 name:
                   type: string
@@ -3567,8 +3560,8 @@ paths:
                   example: 127.0.0.1
                   description: 'The IP of the server.'
                 port:
-                  type: string
-                  example: '22'
+                  type: integer
+                  example: 22
                   description: 'The port of the server.'
                 user:
                   type: string
@@ -3650,6 +3643,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           description: 'Server deleted.'
@@ -3674,14 +3668,6 @@ paths:
       summary: Update
       description: 'Update Server.'
       operationId: update-server-by-uuid
-      parameters:
-        -
-          name: uuid
-          in: path
-          description: 'UUID of the server.'
-          required: true
-          schema:
-            type: string
       requestBody:
         description: 'Server updated.'
         required: true
@@ -3699,7 +3685,7 @@ paths:
                   type: string
                   description: 'The IP of the server.'
                 port:
-                  type: string
+                  type: integer
                   description: 'The port of the server.'
                 user:
                   type: string
@@ -3720,7 +3706,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Server'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Server'
         '401':
           $ref: '#/components/responses/401'
         '400':
@@ -4273,6 +4261,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           description: 'Start service.'
@@ -4306,6 +4295,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           description: 'Stop service.'
@@ -4339,6 +4329,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           description: 'Restart service.'
@@ -4929,7 +4920,9 @@ components:
         user:
           type: string
         port:
-          type: string
+          type: integer
+        proxy:
+          type: object
         high_disk_usage_notification_sent:
           type: boolean
         unreachable_notification_sent:
@@ -4942,8 +4935,10 @@ components:
           type: boolean
         swarm_cluster:
           type: string
-        settings:
-          $ref: '#/components/schemas/ServerSetting'
+        delete_unused_volumes:
+          type: boolean
+        delete_unused_networks:
+          type: boolean
       type: object
     ServerSetting:
       description: 'Server Settings model'
@@ -4976,7 +4971,7 @@ components:
           type: boolean
         is_reachable:
           type: boolean
-        is_server_api_enabled:
+        is_sentinel_enabled:
           type: boolean
         is_swarm_manager:
           type: boolean
@@ -4998,11 +4993,11 @@ components:
           type: string
         logdrain_newrelic_license_key:
           type: string
-        metrics_history_days:
+        sentinel_metrics_history_days:
           type: integer
-        metrics_refresh_rate_seconds:
+        sentinel_metrics_refresh_rate_seconds:
           type: integer
-        metrics_token:
+        sentinel_token:
           type: string
         docker_cleanup_frequency:
           type: string
@@ -5016,10 +5011,6 @@ components:
           type: string
         updated_at:
           type: string
-        delete_unused_volumes:
-          type: boolean
-        delete_unused_networks:
-          type: boolean
       type: object
     Service:
       description: 'Service model'

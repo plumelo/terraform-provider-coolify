@@ -6,7 +6,7 @@
   <a href="https://GitHub.com/SierraJC/terraform-provider-coolify/releases/" alt="Release">
     <img src="https://img.shields.io/github/v/release/SierraJC/terraform-provider-coolify?include_prereleases" /></a>
   <a href="https://coolify.io/" alt="Coolify">
-    <img src="https://img.shields.io/badge/Coolify-v4.0.0--beta.360-orange" /></a>
+    <img src="https://img.shields.io/badge/Coolify-v4.0.0--beta.364-orange" /></a>
   <br/>
   <a href="https://github.com/SierraJC/terraform-provider-coolify/actions/workflows/test.yml" alt="Tests">
     <img src="https://github.com/SierraJC/terraform-provider-coolify/actions/workflows/test.yml/badge.svg?branch=main" /></a>

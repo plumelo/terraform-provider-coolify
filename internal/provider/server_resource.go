@@ -39,6 +39,11 @@ func (r *serverResource) Schema(ctx context.Context, req resource.SchemaRequest,
 	resp.Schema = resource_server.ServerResourceSchema(ctx)
 	resp.Schema.Description = "Create, read, update, and delete a Coolify server resource." +
 		"\n**NOTE:** This resource is not fully implemented and may not work as expected because the Coolify API is incomplete."
+
+	requiredAttrs := []string{"name", "private_key_uuid", "ip", "instant_validate"}
+	for _, attr := range requiredAttrs {
+		makeResourceAttributeRequired(resp.Schema.Attributes, attr)
+	}
 }
 
 func (r *serverResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
@@ -60,10 +65,10 @@ func (r *serverResource) Create(ctx context.Context, req resource.CreateRequest,
 		Description:     plan.Description.ValueStringPointer(),
 		Name:            plan.Name.ValueStringPointer(),
 		InstantValidate: plan.InstantValidate.ValueBoolPointer(),
-		Ip:              *plan.Ip.ValueStringPointer(),
+		Ip:              plan.Ip.ValueStringPointer(),
 		IsBuildServer:   plan.IsBuildServer.ValueBoolPointer(),
 		Port:            plan.Port.ValueStringPointer(),
-		PrivateKeyUuid:  *plan.PrivateKeyUuid.ValueStringPointer(),
+		PrivateKeyUuid:  plan.PrivateKeyUuid.ValueStringPointer(),
 		User:            plan.User.ValueStringPointer(),
 	})
 
@@ -214,8 +219,8 @@ func (r *serverResource) copyMissingAttributes(
 
 	// Values that are incorrectly mapped in API
 	data.Id = data.Settings.ServerId
-	// data.DeleteUnusedNetworks - not in schema, but is at settings.delete_unused_networks
-	// data.DeleteUnusedVolumes - not in schema, but is at settings.delete_unused_volumes
+	data.DeleteUnusedNetworks = data.Settings.DeleteUnusedNetworks
+	data.DeleteUnusedVolumes = data.Settings.DeleteUnusedVolumes
 }
 
 func (r *serverResource) ReadFromAPI(
@@ -250,42 +255,42 @@ func (r *serverResource) ApiToModel(
 	settings := resource_server.NewSettingsValueMust(
 		resource_server.SettingsValue{}.AttributeTypes(ctx),
 		map[string]attr.Value{
-			"concurrent_builds":             optionalInt64(response.Settings.ConcurrentBuilds),
-			"created_at":                    optionalString(response.Settings.CreatedAt),
-			"delete_unused_networks":        optionalBool(response.Settings.DeleteUnusedNetworks),
-			"delete_unused_volumes":         optionalBool(response.Settings.DeleteUnusedVolumes),
-			"docker_cleanup_frequency":      optionalString(response.Settings.DockerCleanupFrequency),
-			"docker_cleanup_threshold":      optionalInt64(response.Settings.DockerCleanupThreshold),
-			"dynamic_timeout":               optionalInt64(response.Settings.DynamicTimeout),
-			"force_disabled":                optionalBool(response.Settings.ForceDisabled),
-			"force_server_cleanup":          optionalBool(response.Settings.ForceServerCleanup),
-			"id":                            optionalInt64(response.Settings.Id),
-			"is_build_server":               optionalBool(response.Settings.IsBuildServer),
-			"is_cloudflare_tunnel":          optionalBool(response.Settings.IsCloudflareTunnel),
-			"is_jump_server":                optionalBool(response.Settings.IsJumpServer),
-			"is_logdrain_axiom_enabled":     optionalBool(response.Settings.IsLogdrainAxiomEnabled),
-			"is_logdrain_custom_enabled":    optionalBool(response.Settings.IsLogdrainCustomEnabled),
-			"is_logdrain_highlight_enabled": optionalBool(response.Settings.IsLogdrainHighlightEnabled),
-			"is_logdrain_newrelic_enabled":  optionalBool(response.Settings.IsLogdrainNewrelicEnabled),
-			"is_metrics_enabled":            optionalBool(response.Settings.IsMetricsEnabled),
-			"is_reachable":                  optionalBool(response.Settings.IsReachable),
-			"is_server_api_enabled":         optionalBool(response.Settings.IsServerApiEnabled),
-			"is_swarm_manager":              optionalBool(response.Settings.IsSwarmManager),
-			"is_swarm_worker":               optionalBool(response.Settings.IsSwarmWorker),
-			"is_usable":                     optionalBool(response.Settings.IsUsable),
-			"logdrain_axiom_api_key":        optionalString(response.Settings.LogdrainAxiomApiKey),
-			"logdrain_axiom_dataset_name":   optionalString(response.Settings.LogdrainAxiomDatasetName),
-			"logdrain_custom_config":        optionalString(response.Settings.LogdrainCustomConfig),
-			"logdrain_custom_config_parser": optionalString(response.Settings.LogdrainCustomConfigParser),
-			"logdrain_highlight_project_id": optionalString(response.Settings.LogdrainHighlightProjectId),
-			"logdrain_newrelic_base_uri":    optionalString(response.Settings.LogdrainNewrelicBaseUri),
-			"logdrain_newrelic_license_key": optionalString(response.Settings.LogdrainNewrelicLicenseKey),
-			"metrics_history_days":          optionalInt64(response.Settings.MetricsHistoryDays),
-			"metrics_refresh_rate_seconds":  optionalInt64(response.Settings.MetricsRefreshRateSeconds),
-			"metrics_token":                 optionalString(response.Settings.MetricsToken),
-			"server_id":                     optionalInt64(response.Settings.ServerId),
-			"updated_at":                    optionalString(response.Settings.UpdatedAt),
-			"wildcard_domain":               optionalString(response.Settings.WildcardDomain),
+			"concurrent_builds":                     optionalInt64(response.Settings.ConcurrentBuilds),
+			"created_at":                            optionalString(response.Settings.CreatedAt),
+			"delete_unused_networks":                optionalBool(response.Settings.DeleteUnusedNetworks),
+			"delete_unused_volumes":                 optionalBool(response.Settings.DeleteUnusedVolumes),
+			"docker_cleanup_frequency":              optionalString(response.Settings.DockerCleanupFrequency),
+			"docker_cleanup_threshold":              optionalInt64(response.Settings.DockerCleanupThreshold),
+			"dynamic_timeout":                       optionalInt64(response.Settings.DynamicTimeout),
+			"force_disabled":                        optionalBool(response.Settings.ForceDisabled),
+			"force_server_cleanup":                  optionalBool(response.Settings.ForceServerCleanup),
+			"id":                                    optionalInt64(response.Settings.Id),
+			"is_build_server":                       optionalBool(response.Settings.IsBuildServer),
+			"is_cloudflare_tunnel":                  optionalBool(response.Settings.IsCloudflareTunnel),
+			"is_jump_server":                        optionalBool(response.Settings.IsJumpServer),
+			"is_logdrain_axiom_enabled":             optionalBool(response.Settings.IsLogdrainAxiomEnabled),
+			"is_logdrain_custom_enabled":            optionalBool(response.Settings.IsLogdrainCustomEnabled),
+			"is_logdrain_highlight_enabled":         optionalBool(response.Settings.IsLogdrainHighlightEnabled),
+			"is_logdrain_newrelic_enabled":          optionalBool(response.Settings.IsLogdrainNewrelicEnabled),
+			"is_metrics_enabled":                    optionalBool(response.Settings.IsMetricsEnabled),
+			"is_reachable":                          optionalBool(response.Settings.IsReachable),
+			"is_sentinel_enabled":                   optionalBool(response.Settings.IsSentinelEnabled),
+			"is_swarm_manager":                      optionalBool(response.Settings.IsSwarmManager),
+			"is_swarm_worker":                       optionalBool(response.Settings.IsSwarmWorker),
+			"is_usable":                             optionalBool(response.Settings.IsUsable),
+			"logdrain_axiom_api_key":                optionalString(response.Settings.LogdrainAxiomApiKey),
+			"logdrain_axiom_dataset_name":           optionalString(response.Settings.LogdrainAxiomDatasetName),
+			"logdrain_custom_config":                optionalString(response.Settings.LogdrainCustomConfig),
+			"logdrain_custom_config_parser":         optionalString(response.Settings.LogdrainCustomConfigParser),
+			"logdrain_highlight_project_id":         optionalString(response.Settings.LogdrainHighlightProjectId),
+			"logdrain_newrelic_base_uri":            optionalString(response.Settings.LogdrainNewrelicBaseUri),
+			"logdrain_newrelic_license_key":         optionalString(response.Settings.LogdrainNewrelicLicenseKey),
+			"sentinel_metrics_history_days":         optionalInt64(response.Settings.SentinelMetricsHistoryDays),
+			"sentinel_metrics_refresh_rate_seconds": optionalInt64(response.Settings.SentinelMetricsRefreshRateSeconds),
+			"sentinel_token":                        optionalString(response.Settings.SentinelToken),
+			"server_id":                             optionalInt64(response.Settings.ServerId),
+			"updated_at":                            optionalString(response.Settings.UpdatedAt),
+			"wildcard_domain":                       optionalString(response.Settings.WildcardDomain),
 		},
 	)
 
