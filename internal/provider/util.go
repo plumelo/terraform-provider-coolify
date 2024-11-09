@@ -1,7 +1,10 @@
 package provider
 
 import (
+	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-framework/attr"
+	resource_schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 )
@@ -39,4 +42,36 @@ func optionalStringListValue(values *[]string) basetypes.ListValue {
 	}
 
 	return types.ListValueMust(types.StringType, elems)
+}
+
+func makeResourceAttributeRequired(
+	attributes map[string]resource_schema.Attribute,
+	attrName string,
+) error {
+	attr, ok := attributes[attrName]
+	if !ok {
+		return fmt.Errorf("attribute %s not found", attrName)
+	}
+
+	switch typedAttr := attr.(type) {
+	case resource_schema.StringAttribute:
+		typedAttr.Required = true
+		typedAttr.Optional = false
+		typedAttr.Computed = false
+		attributes[attrName] = typedAttr
+	case resource_schema.BoolAttribute:
+		typedAttr.Required = true
+		typedAttr.Optional = false
+		typedAttr.Computed = false
+		attributes[attrName] = typedAttr
+	case resource_schema.Int64Attribute:
+		typedAttr.Required = true
+		typedAttr.Optional = false
+		typedAttr.Computed = false
+		attributes[attrName] = typedAttr
+	default:
+		return fmt.Errorf("unsupported attribute type for %s", attrName)
+	}
+
+	return nil
 }
