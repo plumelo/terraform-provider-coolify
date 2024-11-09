@@ -1,0 +1,105 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/OAI/Overlay-Specification/refs/heads/main/schemas/v1.0/schema.yaml
+
+overlay: 1.0.0
+info:
+  title: Fix upstream API issues
+actions:
+  - target: $.paths.*['post','get','put','patch','delete'].parameters[?(@.in=='path' && @.name=='uuid')]
+    description: Replace "uuid" formats with "string". Coolify UUIDs are NOT correct UUID format.
+    update:
+      schema:
+        type: string
+        format:
+
+  - target: "$.paths['/security/keys/{uuid}'].get.responses.200.content.application/json.schema"
+    description: Fix array response, should be singular object
+    update:
+      $ref: "#/components/schemas/PrivateKey"
+  - target: "$.paths['/servers/{uuid}'].patch.responses.201.content.application/json.schema"
+    description: Fix array response, should be singular object
+    update:
+      $ref: "#/components/schemas/Server"
+
+  - target: "$.paths['/security/keys'].patch"
+    description: Remove invalid patch operation - should be PATCH /security/keys/{uuid}
+    remove: true
+  - target: "$.paths['/security/keys/{uuid}']"
+    description: Add a patch operation to update a private key
+    update:
+      patch:
+        tags:
+          - "Private Keys"
+        summary: Update
+        description: "Update a private key."
+        operationId: update-private-key
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                required:
+                  - private_key
+                properties:
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  private_key:
+                    type: string
+                type: object
+                additionalProperties: false
+        responses:
+          "201":
+            description: "The updated private key's UUID."
+            content:
+              application/json:
+                schema:
+                  properties:
+                    uuid: { type: string }
+                  type: object
+          "401":
+            $ref: "#/components/responses/401"
+          "400":
+            $ref: "#/components/responses/400"
+        security:
+          - bearerAuth: []
+
+  - target: $.paths['/servers/{uuid}', '/projects/{uuid}', '/applications/{uuid}', '/security/keys/{uuid}'].patch
+    description: add missing `uuid` parameters to patch operations
+    update:
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+
+  - target: "$.components.schemas.Server.properties.proxy"
+    description: Remove `proxy` property, it's not being returned reliably
+    remove: true
+
+  - target: "$.components.schemas.Server"
+    description: Add `settings` ref on Server properties schema, fix port type
+    update:
+      properties:
+        port:
+          type: string
+        settings:
+          $ref: "#/components/schemas/ServerSetting"
+  - target: "$.paths['/servers'].post.requestBody.content.application/json.schema.properties.port"
+    description: Change port type from int to string
+    update:
+      type: string
+  - target: "$.paths['/servers/{uuid}'].patch.requestBody.content.application/json.schema.properties.port"
+    description: Change port type from int to string
+    update:
+      type: string
+
+  - target: "$.components.schemas.ServerSetting"
+    description: Add 'delete_unused_volumes', 'delete_unused_networks to Server settings schema (incorrectly listed on Server schema)
+    update:
+      properties:
+        delete_unused_volumes:
+          type: boolean
+        delete_unused_networks:
+          type: boolean

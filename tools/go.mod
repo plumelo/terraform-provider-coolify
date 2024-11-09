@@ -7,7 +7,11 @@ require (
 	github.com/hashicorp/terraform-plugin-codegen-openapi v0.3.0
 	github.com/hashicorp/terraform-plugin-docs v0.20.0
 	github.com/oapi-codegen/oapi-codegen/v2 v2.4.1
+	github.com/speakeasy-api/openapi-overlay v0.9.0
 )
+
+// todo: Remove replacement when PR is merged: https://github.com/speakeasy-api/openapi-overlay/pull/11
+replace github.com/speakeasy-api/openapi-overlay => github.com/clambin/openapi-overlay v0.0.0-20241101171957-e99fefb40976
 
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
@@ -43,6 +47,7 @@ require (
 	github.com/hashicorp/terraform-plugin-codegen-spec v0.2.0 // indirect
 	github.com/huandu/xstrings v1.4.0 // indirect
 	github.com/imdario/mergo v0.3.16 // indirect
+	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/invopop/yaml v0.3.1 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
@@ -56,8 +61,9 @@ require (
 	github.com/perimeterx/marshmallow v1.1.5 // indirect
 	github.com/posener/complete v1.2.3 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
-	github.com/speakeasy-api/openapi-overlay v0.9.0 // indirect
 	github.com/spf13/cast v1.5.1 // indirect
+	github.com/spf13/cobra v1.7.0 // indirect
+	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/vmware-labs/yaml-jsonpath v0.3.2 // indirect
 	github.com/wk8/go-ordered-map/v2 v2.1.8 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
