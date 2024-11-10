@@ -8,7 +8,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 
 	"terraform-provider-coolify/internal/api"
@@ -38,10 +37,10 @@ func (r *privateKeyResource) Schema(ctx context.Context, req resource.SchemaRequ
 	resp.Schema = resource_private_key.PrivateKeyResourceSchema(ctx)
 	resp.Schema.Description = "Create, read, update, and delete a Coolify private key resource."
 
-	// Override the private_key.private_key attribute to make it sensitive
-	if privateKeyAttr, ok := resp.Schema.Attributes["private_key"].(schema.StringAttribute); ok {
-		privateKeyAttr.Sensitive = true
-		resp.Schema.Attributes["private_key"] = privateKeyAttr
+	// Mark sensitive attributes
+	sensitiveAttrs := []string{"private_key"}
+	for _, attr := range sensitiveAttrs {
+		makeResourceAttributeSensitive(resp.Schema.Attributes, attr)
 	}
 }
 

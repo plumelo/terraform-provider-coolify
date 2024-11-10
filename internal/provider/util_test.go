@@ -136,3 +136,104 @@ func TestMakeResourceAttributeRequired(t *testing.T) {
 		})
 	}
 }
+
+func TestMakeResourceAttributeSensitive(t *testing.T) {
+	tests := []struct {
+		name        string
+		attributes  map[string]resource_schema.Attribute
+		attrName    string
+		expectedErr string
+	}{
+		{
+			name: "attribute not found",
+			attributes: map[string]resource_schema.Attribute{
+				"existing_attr": resource_schema.StringAttribute{},
+			},
+			attrName:    "missing_attr",
+			expectedErr: "attribute missing_attr not found",
+		},
+		{
+			name: "unsupported attribute type",
+			attributes: map[string]resource_schema.Attribute{
+				"unsupported_attr": resource_schema.DynamicAttribute{},
+			},
+			attrName:    "unsupported_attr",
+			expectedErr: "unsupported attribute type for unsupported_attr",
+		},
+		{
+			name: "string attribute",
+			attributes: map[string]resource_schema.Attribute{
+				"string_attr": resource_schema.StringAttribute{},
+			},
+			attrName:    "string_attr",
+			expectedErr: "",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := makeResourceAttributeSensitive(tt.attributes, tt.attrName)
+			if tt.expectedErr != "" {
+				assert.EqualError(t, err, tt.expectedErr)
+			} else {
+				assert.NoError(t, err)
+				attr := tt.attributes[tt.attrName]
+				switch typedAttr := attr.(type) {
+				case datasource_schema.StringAttribute:
+					assert.True(t, typedAttr.Sensitive)
+				}
+			}
+		})
+	}
+}
+
+func TestMakeDataSourceAttributeSensitive(t *testing.T) {
+	tests := []struct {
+		name        string
+		attributes  map[string]datasource_schema.Attribute
+		attrName    string
+		expectedErr string
+	}{
+		{
+			name: "attribute not found",
+			attributes: map[string]datasource_schema.Attribute{
+				"existing_attr": datasource_schema.StringAttribute{},
+			},
+			attrName:    "missing_attr",
+			expectedErr: "attribute missing_attr not found",
+		},
+		{
+			name: "unsupported attribute type",
+			attributes: map[string]datasource_schema.Attribute{
+				"unsupported_attr": datasource_schema.DynamicAttribute{},
+			},
+			attrName:    "unsupported_attr",
+			expectedErr: "unsupported attribute type for unsupported_attr",
+		},
+		{
+			name: "string attribute",
+			attributes: map[string]datasource_schema.Attribute{
+				"string_attr": datasource_schema.StringAttribute{},
+			},
+			attrName:    "string_attr",
+			expectedErr: "",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := makeDataSourceAttributeSensitive(tt.attributes, tt.attrName)
+			if tt.expectedErr != "" {
+				assert.EqualError(t, err, tt.expectedErr)
+			} else {
+				assert.NoError(t, err)
+				attr := tt.attributes[tt.attrName]
+				switch typedAttr := attr.(type) {
+				case datasource_schema.StringAttribute:
+					assert.True(t, typedAttr.Sensitive)
+				}
+			}
+		})
+	}
+}
+

@@ -46,15 +46,15 @@ func (d *privateKeysDataSource) Schema(ctx context.Context, req datasource.Schem
 		"filter": createDatasourceFilter(privateKeysFilterNames),
 	}
 
-	// Make private_keys.*.private_key attribute sensitive
+	// Mark sensitive attributes
 	if privateKeysSet, ok := resp.Schema.Attributes["private_keys"].(schema.SetNestedAttribute); ok {
-		if privateKeyAttr, ok := privateKeysSet.NestedObject.Attributes["private_key"].(schema.StringAttribute); ok {
-			privateKeyAttr.Sensitive = true
-			privateKeysSet.NestedObject.Attributes["private_key"] = privateKeyAttr
-			resp.Schema.Attributes["private_keys"] = privateKeysSet
+		sensitiveAttrs := []string{"private_key"}
+		for _, attr := range sensitiveAttrs {
+			makeDataSourceAttributeSensitive(privateKeysSet.NestedObject.Attributes, attr)
 		}
 	}
 }
+
 func (d *privateKeysDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	util.ProviderDataFromDataSourceConfigureRequest(req, &d.providerData, resp)
 }

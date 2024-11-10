@@ -43,24 +43,9 @@ func (d *teamDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 	}
 
 	// Mark sensitive attributes
-	if discordWebhookUrl, ok := resp.Schema.Attributes["discord_webhook_url"].(schema.StringAttribute); ok {
-		discordWebhookUrl.Sensitive = true
-		resp.Schema.Attributes["discord_webhook_url"] = discordWebhookUrl
-	}
-
-	if smtpPassword, ok := resp.Schema.Attributes["smtp_password"].(schema.StringAttribute); ok {
-		smtpPassword.Sensitive = true
-		resp.Schema.Attributes["smtp_password"] = smtpPassword
-	}
-
-	if telegramToken, ok := resp.Schema.Attributes["telegram_token"].(schema.StringAttribute); ok {
-		telegramToken.Sensitive = true
-		resp.Schema.Attributes["telegram_token"] = telegramToken
-	}
-
-	if resendApiKey, ok := resp.Schema.Attributes["resend_api_key"].(schema.StringAttribute); ok {
-		resendApiKey.Sensitive = true
-		resp.Schema.Attributes["resend_api_key"] = resendApiKey
+	sensitiveAttrs := []string{"discord_webhook_url", "smtp_password", "telegram_token", "resend_api_key"}
+	for _, attr := range sensitiveAttrs {
+		makeDataSourceAttributeSensitive(resp.Schema.Attributes, attr)
 	}
 }
 

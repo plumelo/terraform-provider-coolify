@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
+	datasource_schema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resource_schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
@@ -68,6 +69,46 @@ func makeResourceAttributeRequired(
 		typedAttr.Required = true
 		typedAttr.Optional = false
 		typedAttr.Computed = false
+		attributes[attrName] = typedAttr
+	default:
+		return fmt.Errorf("unsupported attribute type for %s", attrName)
+	}
+
+	return nil
+}
+
+func makeResourceAttributeSensitive(
+	attributes map[string]resource_schema.Attribute,
+	attrName string,
+) error {
+	attr, ok := attributes[attrName]
+	if !ok {
+		return fmt.Errorf("attribute %s not found", attrName)
+	}
+
+	switch typedAttr := attr.(type) {
+	case resource_schema.StringAttribute:
+		typedAttr.Sensitive = true
+		attributes[attrName] = typedAttr
+	default:
+		return fmt.Errorf("unsupported attribute type for %s", attrName)
+	}
+
+	return nil
+}
+
+func makeDataSourceAttributeSensitive(
+	attributes map[string]datasource_schema.Attribute,
+	attrName string,
+) error {
+	attr, ok := attributes[attrName]
+	if !ok {
+		return fmt.Errorf("attribute %s not found", attrName)
+	}
+
+	switch typedAttr := attr.(type) {
+	case datasource_schema.StringAttribute:
+		typedAttr.Sensitive = true
 		attributes[attrName] = typedAttr
 	default:
 		return fmt.Errorf("unsupported attribute type for %s", attrName)

@@ -55,14 +55,10 @@ func (d *teamsDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 
 	// Make sensitive fields sensitive
 	if teamsSet, ok := resp.Schema.Attributes["teams"].(schema.SetNestedAttribute); ok {
-		sensitiveFields := []string{"discord_webhook_url", "smtp_password", "telegram_token", "resend_api_key"}
-		for _, field := range sensitiveFields {
-			if attr, ok := teamsSet.NestedObject.Attributes[field].(schema.StringAttribute); ok {
-				attr.Sensitive = true
-				teamsSet.NestedObject.Attributes[field] = attr
-			}
+		sensitiveAttrs := []string{"discord_webhook_url", "smtp_password", "telegram_token", "resend_api_key"}
+		for _, attr := range sensitiveAttrs {
+			makeDataSourceAttributeSensitive(teamsSet.NestedObject.Attributes, attr)
 		}
-		resp.Schema.Attributes["teams"] = teamsSet
 	}
 }
 

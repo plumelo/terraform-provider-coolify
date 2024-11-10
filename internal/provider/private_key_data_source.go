@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
-	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 
 	"terraform-provider-coolify/internal/api"
@@ -33,10 +32,10 @@ func (d *privateKeyDataSource) Schema(ctx context.Context, req datasource.Schema
 	resp.Schema = datasource_private_key.PrivateKeyDataSourceSchema(ctx)
 	resp.Schema.Description = "Get a single Coolify private key by UUID."
 
-	// Override the private_key.private_key attribute to make it sensitive
-	if privateKeyAttr, ok := resp.Schema.Attributes["private_key"].(schema.StringAttribute); ok {
-		privateKeyAttr.Sensitive = true
-		resp.Schema.Attributes["private_key"] = privateKeyAttr
+	// Mark sensitive attributes
+	sensitiveAttrs := []string{"private_key"}
+	for _, attr := range sensitiveAttrs {
+		makeDataSourceAttributeSensitive(resp.Schema.Attributes, attr)
 	}
 }
 
