@@ -14,7 +14,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/oapi-codegen/nullable"
 	"github.com/oapi-codegen/runtime"
 	openapi_types "github.com/oapi-codegen/runtime/types"
 )
@@ -246,19 +245,19 @@ type Application struct {
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 
 	// CustomDockerRunOptions Custom docker run options.
-	CustomDockerRunOptions nullable.Nullable[string] `json:"custom_docker_run_options,omitempty"`
+	CustomDockerRunOptions *string `json:"custom_docker_run_options"`
 
 	// CustomHealthcheckFound Custom healthcheck found.
 	CustomHealthcheckFound *bool `json:"custom_healthcheck_found,omitempty"`
 
 	// CustomLabels Custom labels.
-	CustomLabels nullable.Nullable[string] `json:"custom_labels,omitempty"`
+	CustomLabels *string `json:"custom_labels"`
 
 	// DeletedAt The date and time when the application was deleted.
-	DeletedAt nullable.Nullable[time.Time] `json:"deleted_at,omitempty"`
+	DeletedAt *time.Time `json:"deleted_at"`
 
 	// Description The application description.
-	Description nullable.Nullable[string] `json:"description,omitempty"`
+	Description *string `json:"description"`
 
 	// DestinationId Destination identifier.
 	DestinationId *int `json:"destination_id,omitempty"`
@@ -267,43 +266,43 @@ type Application struct {
 	DestinationType *string `json:"destination_type,omitempty"`
 
 	// DockerCompose Docker compose content. Used for docker compose build pack.
-	DockerCompose nullable.Nullable[string] `json:"docker_compose,omitempty"`
+	DockerCompose *string `json:"docker_compose"`
 
 	// DockerComposeCustomBuildCommand Docker compose custom build command.
-	DockerComposeCustomBuildCommand nullable.Nullable[string] `json:"docker_compose_custom_build_command,omitempty"`
+	DockerComposeCustomBuildCommand *string `json:"docker_compose_custom_build_command"`
 
 	// DockerComposeCustomStartCommand Docker compose custom start command.
-	DockerComposeCustomStartCommand nullable.Nullable[string] `json:"docker_compose_custom_start_command,omitempty"`
+	DockerComposeCustomStartCommand *string `json:"docker_compose_custom_start_command"`
 
 	// DockerComposeDomains Docker compose domains.
-	DockerComposeDomains nullable.Nullable[string] `json:"docker_compose_domains,omitempty"`
+	DockerComposeDomains *string `json:"docker_compose_domains"`
 
 	// DockerComposeLocation Docker compose location.
 	DockerComposeLocation *string `json:"docker_compose_location,omitempty"`
 
 	// DockerComposeRaw Docker compose raw content.
-	DockerComposeRaw nullable.Nullable[string] `json:"docker_compose_raw,omitempty"`
+	DockerComposeRaw *string `json:"docker_compose_raw"`
 
 	// DockerRegistryImageName Docker registry image name.
-	DockerRegistryImageName nullable.Nullable[string] `json:"docker_registry_image_name,omitempty"`
+	DockerRegistryImageName *string `json:"docker_registry_image_name"`
 
 	// DockerRegistryImageTag Docker registry image tag.
-	DockerRegistryImageTag nullable.Nullable[string] `json:"docker_registry_image_tag,omitempty"`
+	DockerRegistryImageTag *string `json:"docker_registry_image_tag"`
 
 	// Dockerfile Dockerfile content. Used for dockerfile build pack.
-	Dockerfile nullable.Nullable[string] `json:"dockerfile,omitempty"`
+	Dockerfile *string `json:"dockerfile"`
 
 	// DockerfileLocation Dockerfile location.
 	DockerfileLocation *string `json:"dockerfile_location,omitempty"`
 
 	// DockerfileTargetBuild Dockerfile target build.
-	DockerfileTargetBuild nullable.Nullable[string] `json:"dockerfile_target_build,omitempty"`
+	DockerfileTargetBuild *string `json:"dockerfile_target_build"`
 
 	// EnvironmentId Environment identifier.
 	EnvironmentId *int `json:"environment_id,omitempty"`
 
 	// Fqdn The application domains.
-	Fqdn nullable.Nullable[string] `json:"fqdn,omitempty"`
+	Fqdn *string `json:"fqdn"`
 
 	// GitBranch Git branch.
 	GitBranch *string `json:"git_branch,omitempty"`
@@ -312,7 +311,7 @@ type Application struct {
 	GitCommitSha *string `json:"git_commit_sha,omitempty"`
 
 	// GitFullUrl Git full URL.
-	GitFullUrl nullable.Nullable[string] `json:"git_full_url,omitempty"`
+	GitFullUrl *string `json:"git_full_url"`
 
 	// GitRepository Git repository URL.
 	GitRepository *string `json:"git_repository,omitempty"`
@@ -321,7 +320,7 @@ type Application struct {
 	HealthCheckEnabled *bool `json:"health_check_enabled,omitempty"`
 
 	// HealthCheckHost Health check host.
-	HealthCheckHost nullable.Nullable[string] `json:"health_check_host,omitempty"`
+	HealthCheckHost *string `json:"health_check_host"`
 
 	// HealthCheckInterval Health check interval in seconds.
 	HealthCheckInterval *int `json:"health_check_interval,omitempty"`
@@ -333,10 +332,10 @@ type Application struct {
 	HealthCheckPath *string `json:"health_check_path,omitempty"`
 
 	// HealthCheckPort Health check port.
-	HealthCheckPort nullable.Nullable[string] `json:"health_check_port,omitempty"`
+	HealthCheckPort *string `json:"health_check_port"`
 
 	// HealthCheckResponseText Health check response text.
-	HealthCheckResponseText nullable.Nullable[string] `json:"health_check_response_text,omitempty"`
+	HealthCheckResponseText *string `json:"health_check_response_text"`
 
 	// HealthCheckRetries Health check retries count.
 	HealthCheckRetries *int `json:"health_check_retries,omitempty"`
@@ -366,7 +365,7 @@ type Application struct {
 	LimitsCpus *string `json:"limits_cpus,omitempty"`
 
 	// LimitsCpuset CPU set.
-	LimitsCpuset nullable.Nullable[string] `json:"limits_cpuset,omitempty"`
+	LimitsCpuset *string `json:"limits_cpuset"`
 
 	// LimitsMemory Memory limit.
 	LimitsMemory *string `json:"limits_memory,omitempty"`
@@ -381,16 +380,16 @@ type Application struct {
 	LimitsMemorySwappiness *int `json:"limits_memory_swappiness,omitempty"`
 
 	// ManualWebhookSecretBitbucket Manual webhook secret for Bitbucket.
-	ManualWebhookSecretBitbucket nullable.Nullable[string] `json:"manual_webhook_secret_bitbucket,omitempty"`
+	ManualWebhookSecretBitbucket *string `json:"manual_webhook_secret_bitbucket"`
 
 	// ManualWebhookSecretGitea Manual webhook secret for Gitea.
-	ManualWebhookSecretGitea nullable.Nullable[string] `json:"manual_webhook_secret_gitea,omitempty"`
+	ManualWebhookSecretGitea *string `json:"manual_webhook_secret_gitea"`
 
 	// ManualWebhookSecretGithub Manual webhook secret for GitHub.
-	ManualWebhookSecretGithub nullable.Nullable[string] `json:"manual_webhook_secret_github,omitempty"`
+	ManualWebhookSecretGithub *string `json:"manual_webhook_secret_github"`
 
 	// ManualWebhookSecretGitlab Manual webhook secret for GitLab.
-	ManualWebhookSecretGitlab nullable.Nullable[string] `json:"manual_webhook_secret_gitlab,omitempty"`
+	ManualWebhookSecretGitlab *string `json:"manual_webhook_secret_gitlab"`
 
 	// Name The application name.
 	Name *string `json:"name,omitempty"`
@@ -399,37 +398,37 @@ type Application struct {
 	PortsExposes *string `json:"ports_exposes,omitempty"`
 
 	// PortsMappings Ports mappings.
-	PortsMappings nullable.Nullable[string] `json:"ports_mappings,omitempty"`
+	PortsMappings *string `json:"ports_mappings"`
 
 	// PostDeploymentCommand Post deployment command.
-	PostDeploymentCommand nullable.Nullable[string] `json:"post_deployment_command,omitempty"`
+	PostDeploymentCommand *string `json:"post_deployment_command"`
 
 	// PostDeploymentCommandContainer Post deployment command container.
-	PostDeploymentCommandContainer nullable.Nullable[string] `json:"post_deployment_command_container,omitempty"`
+	PostDeploymentCommandContainer *string `json:"post_deployment_command_container"`
 
 	// PreDeploymentCommand Pre deployment command.
-	PreDeploymentCommand nullable.Nullable[string] `json:"pre_deployment_command,omitempty"`
+	PreDeploymentCommand *string `json:"pre_deployment_command"`
 
 	// PreDeploymentCommandContainer Pre deployment command container.
-	PreDeploymentCommandContainer nullable.Nullable[string] `json:"pre_deployment_command_container,omitempty"`
+	PreDeploymentCommandContainer *string `json:"pre_deployment_command_container"`
 
 	// PreviewUrlTemplate Preview URL template.
 	PreviewUrlTemplate *string `json:"preview_url_template,omitempty"`
 
 	// PrivateKeyId Private key identifier.
-	PrivateKeyId nullable.Nullable[int] `json:"private_key_id,omitempty"`
+	PrivateKeyId *int `json:"private_key_id"`
 
 	// PublishDirectory Publish directory.
 	PublishDirectory *string `json:"publish_directory,omitempty"`
 
 	// Redirect How to set redirect with Traefik / Caddy. www<->non-www.
-	Redirect nullable.Nullable[ApplicationRedirect] `json:"redirect,omitempty"`
+	Redirect *ApplicationRedirect `json:"redirect"`
 
 	// RepositoryProjectId The repository project identifier.
-	RepositoryProjectId nullable.Nullable[int] `json:"repository_project_id,omitempty"`
+	RepositoryProjectId *int `json:"repository_project_id"`
 
 	// SourceId Source identifier.
-	SourceId nullable.Nullable[int] `json:"source_id,omitempty"`
+	SourceId *int `json:"source_id"`
 
 	// StartCommand Start command.
 	StartCommand *string `json:"start_command,omitempty"`
@@ -441,10 +440,10 @@ type Application struct {
 	Status *string `json:"status,omitempty"`
 
 	// SwarmPlacementConstraints Swarm placement constraints. Only used for swarm deployments.
-	SwarmPlacementConstraints nullable.Nullable[string] `json:"swarm_placement_constraints,omitempty"`
+	SwarmPlacementConstraints *string `json:"swarm_placement_constraints"`
 
 	// SwarmReplicas Swarm replicas. Only used for swarm deployments.
-	SwarmReplicas nullable.Nullable[int] `json:"swarm_replicas,omitempty"`
+	SwarmReplicas *int `json:"swarm_replicas"`
 
 	// UpdatedAt The date and time when the application was last updated.
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
@@ -453,7 +452,7 @@ type Application struct {
 	Uuid *string `json:"uuid,omitempty"`
 
 	// WatchPaths Watch paths.
-	WatchPaths nullable.Nullable[string] `json:"watch_paths,omitempty"`
+	WatchPaths *string `json:"watch_paths"`
 }
 
 // ApplicationBuildPack Build pack.
@@ -879,7 +878,7 @@ type CreateDockercomposeApplicationJSONBody struct {
 	ServerUuid string `json:"server_uuid"`
 
 	// UseBuildServer Use build server.
-	UseBuildServer nullable.Nullable[bool] `json:"use_build_server,omitempty"`
+	UseBuildServer *bool `json:"use_build_server"`
 }
 
 // CreateDockerfileApplicationJSONBody defines parameters for CreateDockerfileApplication.
@@ -921,7 +920,7 @@ type CreateDockerfileApplicationJSONBody struct {
 	HealthCheckEnabled *bool `json:"health_check_enabled,omitempty"`
 
 	// HealthCheckHost Health check host.
-	HealthCheckHost nullable.Nullable[string] `json:"health_check_host,omitempty"`
+	HealthCheckHost *string `json:"health_check_host"`
 
 	// HealthCheckInterval Health check interval in seconds.
 	HealthCheckInterval *int `json:"health_check_interval,omitempty"`
@@ -933,10 +932,10 @@ type CreateDockerfileApplicationJSONBody struct {
 	HealthCheckPath *string `json:"health_check_path,omitempty"`
 
 	// HealthCheckPort Health check port.
-	HealthCheckPort nullable.Nullable[string] `json:"health_check_port,omitempty"`
+	HealthCheckPort *string `json:"health_check_port"`
 
 	// HealthCheckResponseText Health check response text.
-	HealthCheckResponseText nullable.Nullable[string] `json:"health_check_response_text,omitempty"`
+	HealthCheckResponseText *string `json:"health_check_response_text"`
 
 	// HealthCheckRetries Health check retries count.
 	HealthCheckRetries *int `json:"health_check_retries,omitempty"`
@@ -963,7 +962,7 @@ type CreateDockerfileApplicationJSONBody struct {
 	LimitsCpus *string `json:"limits_cpus,omitempty"`
 
 	// LimitsCpuset CPU set.
-	LimitsCpuset nullable.Nullable[string] `json:"limits_cpuset,omitempty"`
+	LimitsCpuset *string `json:"limits_cpuset"`
 
 	// LimitsMemory Memory limit.
 	LimitsMemory *string `json:"limits_memory,omitempty"`
@@ -1014,13 +1013,13 @@ type CreateDockerfileApplicationJSONBody struct {
 	ProjectUuid string `json:"project_uuid"`
 
 	// Redirect How to set redirect with Traefik / Caddy. www<->non-www.
-	Redirect nullable.Nullable[CreateDockerfileApplicationJSONBodyRedirect] `json:"redirect,omitempty"`
+	Redirect *CreateDockerfileApplicationJSONBodyRedirect `json:"redirect"`
 
 	// ServerUuid The server UUID.
 	ServerUuid string `json:"server_uuid"`
 
 	// UseBuildServer Use build server.
-	UseBuildServer nullable.Nullable[bool] `json:"use_build_server,omitempty"`
+	UseBuildServer *bool `json:"use_build_server"`
 }
 
 // CreateDockerfileApplicationJSONBodyBuildPack defines parameters for CreateDockerfileApplication.
@@ -1059,7 +1058,7 @@ type CreateDockerimageApplicationJSONBody struct {
 	HealthCheckEnabled *bool `json:"health_check_enabled,omitempty"`
 
 	// HealthCheckHost Health check host.
-	HealthCheckHost nullable.Nullable[string] `json:"health_check_host,omitempty"`
+	HealthCheckHost *string `json:"health_check_host"`
 
 	// HealthCheckInterval Health check interval in seconds.
 	HealthCheckInterval *int `json:"health_check_interval,omitempty"`
@@ -1071,10 +1070,10 @@ type CreateDockerimageApplicationJSONBody struct {
 	HealthCheckPath *string `json:"health_check_path,omitempty"`
 
 	// HealthCheckPort Health check port.
-	HealthCheckPort nullable.Nullable[string] `json:"health_check_port,omitempty"`
+	HealthCheckPort *string `json:"health_check_port"`
 
 	// HealthCheckResponseText Health check response text.
-	HealthCheckResponseText nullable.Nullable[string] `json:"health_check_response_text,omitempty"`
+	HealthCheckResponseText *string `json:"health_check_response_text"`
 
 	// HealthCheckRetries Health check retries count.
 	HealthCheckRetries *int `json:"health_check_retries,omitempty"`
@@ -1101,7 +1100,7 @@ type CreateDockerimageApplicationJSONBody struct {
 	LimitsCpus *string `json:"limits_cpus,omitempty"`
 
 	// LimitsCpuset CPU set.
-	LimitsCpuset nullable.Nullable[string] `json:"limits_cpuset,omitempty"`
+	LimitsCpuset *string `json:"limits_cpuset"`
 
 	// LimitsMemory Memory limit.
 	LimitsMemory *string `json:"limits_memory,omitempty"`
@@ -1152,13 +1151,13 @@ type CreateDockerimageApplicationJSONBody struct {
 	ProjectUuid string `json:"project_uuid"`
 
 	// Redirect How to set redirect with Traefik / Caddy. www<->non-www.
-	Redirect nullable.Nullable[CreateDockerimageApplicationJSONBodyRedirect] `json:"redirect,omitempty"`
+	Redirect *CreateDockerimageApplicationJSONBodyRedirect `json:"redirect"`
 
 	// ServerUuid The server UUID.
 	ServerUuid string `json:"server_uuid"`
 
 	// UseBuildServer Use build server.
-	UseBuildServer nullable.Nullable[bool] `json:"use_build_server,omitempty"`
+	UseBuildServer *bool `json:"use_build_server"`
 }
 
 // CreateDockerimageApplicationJSONBodyRedirect defines parameters for CreateDockerimageApplication.
@@ -1230,7 +1229,7 @@ type CreatePrivateDeployKeyApplicationJSONBody struct {
 	HealthCheckEnabled *bool `json:"health_check_enabled,omitempty"`
 
 	// HealthCheckHost Health check host.
-	HealthCheckHost nullable.Nullable[string] `json:"health_check_host,omitempty"`
+	HealthCheckHost *string `json:"health_check_host"`
 
 	// HealthCheckInterval Health check interval in seconds.
 	HealthCheckInterval *int `json:"health_check_interval,omitempty"`
@@ -1242,10 +1241,10 @@ type CreatePrivateDeployKeyApplicationJSONBody struct {
 	HealthCheckPath *string `json:"health_check_path,omitempty"`
 
 	// HealthCheckPort Health check port.
-	HealthCheckPort nullable.Nullable[string] `json:"health_check_port,omitempty"`
+	HealthCheckPort *string `json:"health_check_port"`
 
 	// HealthCheckResponseText Health check response text.
-	HealthCheckResponseText nullable.Nullable[string] `json:"health_check_response_text,omitempty"`
+	HealthCheckResponseText *string `json:"health_check_response_text"`
 
 	// HealthCheckRetries Health check retries count.
 	HealthCheckRetries *int `json:"health_check_retries,omitempty"`
@@ -1278,7 +1277,7 @@ type CreatePrivateDeployKeyApplicationJSONBody struct {
 	LimitsCpus *string `json:"limits_cpus,omitempty"`
 
 	// LimitsCpuset CPU set.
-	LimitsCpuset nullable.Nullable[string] `json:"limits_cpuset,omitempty"`
+	LimitsCpuset *string `json:"limits_cpuset"`
 
 	// LimitsMemory Memory limit.
 	LimitsMemory *string `json:"limits_memory,omitempty"`
@@ -1335,7 +1334,7 @@ type CreatePrivateDeployKeyApplicationJSONBody struct {
 	PublishDirectory *string `json:"publish_directory,omitempty"`
 
 	// Redirect How to set redirect with Traefik / Caddy. www<->non-www.
-	Redirect nullable.Nullable[CreatePrivateDeployKeyApplicationJSONBodyRedirect] `json:"redirect,omitempty"`
+	Redirect *CreatePrivateDeployKeyApplicationJSONBodyRedirect `json:"redirect"`
 
 	// ServerUuid The server UUID.
 	ServerUuid string `json:"server_uuid"`
@@ -1347,7 +1346,7 @@ type CreatePrivateDeployKeyApplicationJSONBody struct {
 	StaticImage *CreatePrivateDeployKeyApplicationJSONBodyStaticImage `json:"static_image,omitempty"`
 
 	// UseBuildServer Use build server.
-	UseBuildServer nullable.Nullable[bool] `json:"use_build_server,omitempty"`
+	UseBuildServer *bool `json:"use_build_server"`
 
 	// WatchPaths The watch paths.
 	WatchPaths *string `json:"watch_paths,omitempty"`
@@ -1431,7 +1430,7 @@ type CreatePrivateGithubAppApplicationJSONBody struct {
 	HealthCheckEnabled *bool `json:"health_check_enabled,omitempty"`
 
 	// HealthCheckHost Health check host.
-	HealthCheckHost nullable.Nullable[string] `json:"health_check_host,omitempty"`
+	HealthCheckHost *string `json:"health_check_host"`
 
 	// HealthCheckInterval Health check interval in seconds.
 	HealthCheckInterval *int `json:"health_check_interval,omitempty"`
@@ -1443,10 +1442,10 @@ type CreatePrivateGithubAppApplicationJSONBody struct {
 	HealthCheckPath *string `json:"health_check_path,omitempty"`
 
 	// HealthCheckPort Health check port.
-	HealthCheckPort nullable.Nullable[string] `json:"health_check_port,omitempty"`
+	HealthCheckPort *string `json:"health_check_port"`
 
 	// HealthCheckResponseText Health check response text.
-	HealthCheckResponseText nullable.Nullable[string] `json:"health_check_response_text,omitempty"`
+	HealthCheckResponseText *string `json:"health_check_response_text"`
 
 	// HealthCheckRetries Health check retries count.
 	HealthCheckRetries *int `json:"health_check_retries,omitempty"`
@@ -1479,7 +1478,7 @@ type CreatePrivateGithubAppApplicationJSONBody struct {
 	LimitsCpus *string `json:"limits_cpus,omitempty"`
 
 	// LimitsCpuset CPU set.
-	LimitsCpuset nullable.Nullable[string] `json:"limits_cpuset,omitempty"`
+	LimitsCpuset *string `json:"limits_cpuset"`
 
 	// LimitsMemory Memory limit.
 	LimitsMemory *string `json:"limits_memory,omitempty"`
@@ -1533,7 +1532,7 @@ type CreatePrivateGithubAppApplicationJSONBody struct {
 	PublishDirectory *string `json:"publish_directory,omitempty"`
 
 	// Redirect How to set redirect with Traefik / Caddy. www<->non-www.
-	Redirect nullable.Nullable[CreatePrivateGithubAppApplicationJSONBodyRedirect] `json:"redirect,omitempty"`
+	Redirect *CreatePrivateGithubAppApplicationJSONBodyRedirect `json:"redirect"`
 
 	// ServerUuid The server UUID.
 	ServerUuid string `json:"server_uuid"`
@@ -1545,7 +1544,7 @@ type CreatePrivateGithubAppApplicationJSONBody struct {
 	StaticImage *CreatePrivateGithubAppApplicationJSONBodyStaticImage `json:"static_image,omitempty"`
 
 	// UseBuildServer Use build server.
-	UseBuildServer nullable.Nullable[bool] `json:"use_build_server,omitempty"`
+	UseBuildServer *bool `json:"use_build_server"`
 
 	// WatchPaths The watch paths.
 	WatchPaths *string `json:"watch_paths,omitempty"`
@@ -1626,7 +1625,7 @@ type CreatePublicApplicationJSONBody struct {
 	HealthCheckEnabled *bool `json:"health_check_enabled,omitempty"`
 
 	// HealthCheckHost Health check host.
-	HealthCheckHost nullable.Nullable[string] `json:"health_check_host,omitempty"`
+	HealthCheckHost *string `json:"health_check_host"`
 
 	// HealthCheckInterval Health check interval in seconds.
 	HealthCheckInterval *int `json:"health_check_interval,omitempty"`
@@ -1638,10 +1637,10 @@ type CreatePublicApplicationJSONBody struct {
 	HealthCheckPath *string `json:"health_check_path,omitempty"`
 
 	// HealthCheckPort Health check port.
-	HealthCheckPort nullable.Nullable[string] `json:"health_check_port,omitempty"`
+	HealthCheckPort *string `json:"health_check_port"`
 
 	// HealthCheckResponseText Health check response text.
-	HealthCheckResponseText nullable.Nullable[string] `json:"health_check_response_text,omitempty"`
+	HealthCheckResponseText *string `json:"health_check_response_text"`
 
 	// HealthCheckRetries Health check retries count.
 	HealthCheckRetries *int `json:"health_check_retries,omitempty"`
@@ -1674,7 +1673,7 @@ type CreatePublicApplicationJSONBody struct {
 	LimitsCpus *string `json:"limits_cpus,omitempty"`
 
 	// LimitsCpuset CPU set.
-	LimitsCpuset nullable.Nullable[string] `json:"limits_cpuset,omitempty"`
+	LimitsCpuset *string `json:"limits_cpuset"`
 
 	// LimitsMemory Memory limit.
 	LimitsMemory *string `json:"limits_memory,omitempty"`
@@ -1728,7 +1727,7 @@ type CreatePublicApplicationJSONBody struct {
 	PublishDirectory *string `json:"publish_directory,omitempty"`
 
 	// Redirect How to set redirect with Traefik / Caddy. www<->non-www.
-	Redirect nullable.Nullable[CreatePublicApplicationJSONBodyRedirect] `json:"redirect,omitempty"`
+	Redirect *CreatePublicApplicationJSONBodyRedirect `json:"redirect"`
 
 	// ServerUuid The server UUID.
 	ServerUuid string `json:"server_uuid"`
@@ -1740,7 +1739,7 @@ type CreatePublicApplicationJSONBody struct {
 	StaticImage *CreatePublicApplicationJSONBodyStaticImage `json:"static_image,omitempty"`
 
 	// UseBuildServer Use build server.
-	UseBuildServer nullable.Nullable[bool] `json:"use_build_server,omitempty"`
+	UseBuildServer *bool `json:"use_build_server"`
 
 	// WatchPaths The watch paths.
 	WatchPaths *string `json:"watch_paths,omitempty"`
@@ -1839,7 +1838,7 @@ type UpdateApplicationByUuidJSONBody struct {
 	HealthCheckEnabled *bool `json:"health_check_enabled,omitempty"`
 
 	// HealthCheckHost Health check host.
-	HealthCheckHost nullable.Nullable[string] `json:"health_check_host,omitempty"`
+	HealthCheckHost *string `json:"health_check_host"`
 
 	// HealthCheckInterval Health check interval in seconds.
 	HealthCheckInterval *int `json:"health_check_interval,omitempty"`
@@ -1851,10 +1850,10 @@ type UpdateApplicationByUuidJSONBody struct {
 	HealthCheckPath *string `json:"health_check_path,omitempty"`
 
 	// HealthCheckPort Health check port.
-	HealthCheckPort nullable.Nullable[string] `json:"health_check_port,omitempty"`
+	HealthCheckPort *string `json:"health_check_port"`
 
 	// HealthCheckResponseText Health check response text.
-	HealthCheckResponseText nullable.Nullable[string] `json:"health_check_response_text,omitempty"`
+	HealthCheckResponseText *string `json:"health_check_response_text"`
 
 	// HealthCheckRetries Health check retries count.
 	HealthCheckRetries *int `json:"health_check_retries,omitempty"`
@@ -1887,7 +1886,7 @@ type UpdateApplicationByUuidJSONBody struct {
 	LimitsCpus *string `json:"limits_cpus,omitempty"`
 
 	// LimitsCpuset CPU set.
-	LimitsCpuset nullable.Nullable[string] `json:"limits_cpuset,omitempty"`
+	LimitsCpuset *string `json:"limits_cpuset"`
 
 	// LimitsMemory Memory limit.
 	LimitsMemory *string `json:"limits_memory,omitempty"`
@@ -1941,7 +1940,7 @@ type UpdateApplicationByUuidJSONBody struct {
 	PublishDirectory *string `json:"publish_directory,omitempty"`
 
 	// Redirect How to set redirect with Traefik / Caddy. www<->non-www.
-	Redirect nullable.Nullable[UpdateApplicationByUuidJSONBodyRedirect] `json:"redirect,omitempty"`
+	Redirect *UpdateApplicationByUuidJSONBodyRedirect `json:"redirect"`
 
 	// ServerUuid The server UUID.
 	ServerUuid *string `json:"server_uuid,omitempty"`
@@ -1950,7 +1949,7 @@ type UpdateApplicationByUuidJSONBody struct {
 	StartCommand *string `json:"start_command,omitempty"`
 
 	// UseBuildServer Use build server.
-	UseBuildServer nullable.Nullable[bool] `json:"use_build_server,omitempty"`
+	UseBuildServer *bool `json:"use_build_server"`
 
 	// WatchPaths The watch paths.
 	WatchPaths *string `json:"watch_paths,omitempty"`
@@ -2788,7 +2787,7 @@ type UpdateServerByUuidJSONBody struct {
 // CreateServiceJSONBody defines parameters for CreateService.
 type CreateServiceJSONBody struct {
 	// Description Description of the service.
-	Description nullable.Nullable[string] `json:"description,omitempty"`
+	Description *string `json:"description"`
 
 	// DestinationUuid Destination UUID. Required if server has multiple destinations.
 	DestinationUuid *string `json:"destination_uuid,omitempty"`
