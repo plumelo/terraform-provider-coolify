@@ -2,8 +2,10 @@ package provider
 
 import (
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
+	datasource_schema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resource_schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/stretchr/testify/assert"
@@ -237,3 +239,22 @@ func TestMakeDataSourceAttributeSensitive(t *testing.T) {
 	}
 }
 
+func TestOptionalTime(t *testing.T) {
+	now := time.Now()
+	formattedTime := now.Format(time.RFC3339Nano)
+
+	tests := []struct {
+		name     string
+		input    *time.Time
+		expected types.String
+	}{
+		{"nil input", nil, types.StringNull()},
+		{"valid time input", &now, types.StringValue(formattedTime)},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.expected, optionalTime(tt.input))
+		})
+	}
+}

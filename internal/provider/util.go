@@ -2,6 +2,7 @@ package provider
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	datasource_schema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
@@ -9,6 +10,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 )
+
+func optionalTime(value *time.Time) types.String {
+	if value == nil {
+		return types.StringNull()
+	}
+	return types.StringValue(value.Format(time.RFC3339Nano))
+}
 
 func optionalString(value *string) types.String {
 	if value == nil {
