@@ -49,7 +49,7 @@ Before you begin using the Coolify Terraform Provider, ensure you have completed
 | Databases                  | ❌       | ❌          |
 | Services                   | ❌       | ❌          |
 | - Service Environments     | ❌       | ❌          |
-| Applications               | ❌       | ❌          |
+| Applications               | ❌       | ⚒️          |
 | - Application Environments | ❌       | ❌          |
 
 The provider is currently limited by the [Coolify API](https://github.com/coollabsio/coolify/blob/main/openapi.yaml), which is still in development. As the API matures, more resources will be added to the provider.

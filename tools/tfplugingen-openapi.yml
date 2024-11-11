@@ -83,3 +83,7 @@ data_sources:
     read:
       path: /projects
       method: GET
+  application:
+    read:
+      path: /applications/{uuid}
+      method: GET

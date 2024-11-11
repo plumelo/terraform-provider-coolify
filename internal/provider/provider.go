@@ -191,6 +191,7 @@ func (p *CoolifyProvider) DataSources(ctx context.Context) []func() datasource.D
 		NewServerDomainsDataSource,
 		NewProjectDataSource,
 		NewProjectsDataSource,
+		NewApplicationDataSource,
 	}
 }
 
