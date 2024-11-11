@@ -1,13 +1,13 @@
 <p align="center">
   <a href="https://github.com/SierraJC/terraform-provider-coolify/blob/main/LICENSE" alt="License">
     <img src="https://img.shields.io/github/license/SierraJC/terraform-provider-coolify" /></a>
-  <a href="http://golang.org" alt="Made With Go">
-    <img src="https://img.shields.io/github/go-mod/go-version/SierraJC/terraform-provider-coolify" /></a>
   <a href="https://GitHub.com/SierraJC/terraform-provider-coolify/releases/" alt="Release">
     <img src="https://img.shields.io/github/v/release/SierraJC/terraform-provider-coolify?include_prereleases" /></a>
-  <a href="https://coolify.io/" alt="Coolify">
+  <a href="https://github.com/coollabsio/coolify" alt="Coolify">
     <img src="https://img.shields.io/badge/Coolify-v4.0.0--beta.364-orange" /></a>
   <br/>
+  <a href="http://golang.org" alt="Made With Go">
+    <img src="https://img.shields.io/github/go-mod/go-version/SierraJC/terraform-provider-coolify" /></a>
   <a href="https://github.com/SierraJC/terraform-provider-coolify/actions/workflows/test.yml" alt="Tests">
     <img src="https://github.com/SierraJC/terraform-provider-coolify/actions/workflows/test.yml/badge.svg?branch=main" /></a>
   <a href="https://codecov.io/gh/SierraJC/terraform-provider-coolify" alt="Coverage">
@@ -45,12 +45,14 @@ Before you begin using the Coolify Terraform Provider, ensure you have completed
 | - Server Domains           |          | ️✔️         |
 | Projects                   | ✔️       | ✔️          |
 | - Project Environments     | ⛔       | ⛔          |
-| Resources                  | ⛔       | ❌          |
-| Databases                  | ❌       | ❌          |
-| Services                   | ❌       | ❌          |
-| - Service Environments     | ❌       | ❌          |
-| Applications               | ❌       | ⚒️          |
-| - Application Environments | ❌       | ❌          |
+| Resources                  | ⛔       | ➖          |
+| Databases                  | ➖       | ➖          |
+| Services                   | ➖       | ➖          |
+| - Service Environments     | ➖       | ➖          |
+| Applications               | ➖       | ⚒️          |
+| - Application Environments | ➖       | ➖          |
+
+✔️ Supported ⚒️ Partial Support ➖ Planned ⛔ Blocked by Coolify API
 
 The provider is currently limited by the [Coolify API](https://github.com/coollabsio/coolify/blob/main/openapi.yaml), which is still in development. As the API matures, more resources will be added to the provider.
 

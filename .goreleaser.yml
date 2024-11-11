@@ -68,7 +68,7 @@ changelog:
       - "^build:"
       - "^build\\("
       - "^chore\\(deps\\):" # dev tools only
-      - "^chore\\(git\\):" # repo maintenance nobody cares about
+      - "^(docs|chore)\\(git\\):" # repo maintenance nobody cares about
       - "^merge"
       - "^Merge"
       - "\\btypos?\\b" # typos are not interesting
