@@ -132,7 +132,7 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 		return
 	}
 
-	// GET /version
+	if os.Getenv("TF_ACC") == "" { // Version check during tests blows through API rate limit
 	versionResp, err := client.VersionWithResponse(ctx)
 	if err != nil {
 		resp.Diagnostics.AddError(
@@ -161,6 +161,7 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 	}
 
 	tflog.Info(ctx, "Successfully connected to Coolify API", map[string]interface{}{"version": currentVersion})
+	}
 
 	providerData := &CoolifyProviderData{
 		endpoint: apiEndpoint,
