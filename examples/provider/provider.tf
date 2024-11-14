@@ -2,7 +2,7 @@ terraform {
   required_providers {
     coolify = {
       source  = "sierrajc/coolify"
-      version = "~> 0.0.1"
+      version = "~> 0"
     }
   }
 }
