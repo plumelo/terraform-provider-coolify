@@ -1644,7 +1644,7 @@ paths:
                   required: true
                   schema:
                     type: string
-                    format: uuid
+                    format: ""
             responses:
                 '200':
                     description: 'Environment variable deleted.'
@@ -4140,7 +4140,7 @@ paths:
                   required: true
                   schema:
                     type: string
-                    format: uuid
+                    format: ""
             responses:
                 '200':
                     description: 'Environment variable deleted.'

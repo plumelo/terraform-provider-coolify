@@ -15,7 +15,6 @@ import (
 	"time"
 
 	"github.com/oapi-codegen/runtime"
-	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
 const (
@@ -3129,7 +3128,7 @@ type ClientInterface interface {
 	UpdateEnvsByApplicationUuid(ctx context.Context, uuid string, body UpdateEnvsByApplicationUuidJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteEnvByApplicationUuid request
-	DeleteEnvByApplicationUuid(ctx context.Context, uuid string, envUuid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	DeleteEnvByApplicationUuid(ctx context.Context, uuid string, envUuid string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ExecuteCommandApplicationWithBody request with any body
 	ExecuteCommandApplicationWithBody(ctx context.Context, uuid string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -3331,7 +3330,7 @@ type ClientInterface interface {
 	UpdateEnvsByServiceUuid(ctx context.Context, uuid string, body UpdateEnvsByServiceUuidJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteEnvByServiceUuid request
-	DeleteEnvByServiceUuid(ctx context.Context, uuid string, envUuid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	DeleteEnvByServiceUuid(ctx context.Context, uuid string, envUuid string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// RestartServiceByUuid request
 	RestartServiceByUuid(ctx context.Context, uuid string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -3649,7 +3648,7 @@ func (c *Client) UpdateEnvsByApplicationUuid(ctx context.Context, uuid string, b
 	return c.Client.Do(req)
 }
 
-func (c *Client) DeleteEnvByApplicationUuid(ctx context.Context, uuid string, envUuid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) DeleteEnvByApplicationUuid(ctx context.Context, uuid string, envUuid string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDeleteEnvByApplicationUuidRequest(c.Server, uuid, envUuid)
 	if err != nil {
 		return nil, err
@@ -4537,7 +4536,7 @@ func (c *Client) UpdateEnvsByServiceUuid(ctx context.Context, uuid string, body 
 	return c.Client.Do(req)
 }
 
-func (c *Client) DeleteEnvByServiceUuid(ctx context.Context, uuid string, envUuid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) DeleteEnvByServiceUuid(ctx context.Context, uuid string, envUuid string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDeleteEnvByServiceUuidRequest(c.Server, uuid, envUuid)
 	if err != nil {
 		return nil, err
@@ -5285,7 +5284,7 @@ func NewUpdateEnvsByApplicationUuidRequestWithBody(server string, uuid string, c
 }
 
 // NewDeleteEnvByApplicationUuidRequest generates requests for DeleteEnvByApplicationUuid
-func NewDeleteEnvByApplicationUuidRequest(server string, uuid string, envUuid openapi_types.UUID) (*http.Request, error) {
+func NewDeleteEnvByApplicationUuidRequest(server string, uuid string, envUuid string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -7466,7 +7465,7 @@ func NewUpdateEnvsByServiceUuidRequestWithBody(server string, uuid string, conte
 }
 
 // NewDeleteEnvByServiceUuidRequest generates requests for DeleteEnvByServiceUuid
-func NewDeleteEnvByServiceUuidRequest(server string, uuid string, envUuid openapi_types.UUID) (*http.Request, error) {
+func NewDeleteEnvByServiceUuidRequest(server string, uuid string, envUuid string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -7890,7 +7889,7 @@ type ClientWithResponsesInterface interface {
 	UpdateEnvsByApplicationUuidWithResponse(ctx context.Context, uuid string, body UpdateEnvsByApplicationUuidJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateEnvsByApplicationUuidResponse, error)
 
 	// DeleteEnvByApplicationUuidWithResponse request
-	DeleteEnvByApplicationUuidWithResponse(ctx context.Context, uuid string, envUuid openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteEnvByApplicationUuidResponse, error)
+	DeleteEnvByApplicationUuidWithResponse(ctx context.Context, uuid string, envUuid string, reqEditors ...RequestEditorFn) (*DeleteEnvByApplicationUuidResponse, error)
 
 	// ExecuteCommandApplicationWithBodyWithResponse request with any body
 	ExecuteCommandApplicationWithBodyWithResponse(ctx context.Context, uuid string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ExecuteCommandApplicationResponse, error)
@@ -8092,7 +8091,7 @@ type ClientWithResponsesInterface interface {
 	UpdateEnvsByServiceUuidWithResponse(ctx context.Context, uuid string, body UpdateEnvsByServiceUuidJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateEnvsByServiceUuidResponse, error)
 
 	// DeleteEnvByServiceUuidWithResponse request
-	DeleteEnvByServiceUuidWithResponse(ctx context.Context, uuid string, envUuid openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteEnvByServiceUuidResponse, error)
+	DeleteEnvByServiceUuidWithResponse(ctx context.Context, uuid string, envUuid string, reqEditors ...RequestEditorFn) (*DeleteEnvByServiceUuidResponse, error)
 
 	// RestartServiceByUuidWithResponse request
 	RestartServiceByUuidWithResponse(ctx context.Context, uuid string, reqEditors ...RequestEditorFn) (*RestartServiceByUuidResponse, error)
@@ -10332,7 +10331,7 @@ func (c *ClientWithResponses) UpdateEnvsByApplicationUuidWithResponse(ctx contex
 }
 
 // DeleteEnvByApplicationUuidWithResponse request returning *DeleteEnvByApplicationUuidResponse
-func (c *ClientWithResponses) DeleteEnvByApplicationUuidWithResponse(ctx context.Context, uuid string, envUuid openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteEnvByApplicationUuidResponse, error) {
+func (c *ClientWithResponses) DeleteEnvByApplicationUuidWithResponse(ctx context.Context, uuid string, envUuid string, reqEditors ...RequestEditorFn) (*DeleteEnvByApplicationUuidResponse, error) {
 	rsp, err := c.DeleteEnvByApplicationUuid(ctx, uuid, envUuid, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -10978,7 +10977,7 @@ func (c *ClientWithResponses) UpdateEnvsByServiceUuidWithResponse(ctx context.Co
 }
 
 // DeleteEnvByServiceUuidWithResponse request returning *DeleteEnvByServiceUuidResponse
-func (c *ClientWithResponses) DeleteEnvByServiceUuidWithResponse(ctx context.Context, uuid string, envUuid openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteEnvByServiceUuidResponse, error) {
+func (c *ClientWithResponses) DeleteEnvByServiceUuidWithResponse(ctx context.Context, uuid string, envUuid string, reqEditors ...RequestEditorFn) (*DeleteEnvByServiceUuidResponse, error) {
 	rsp, err := c.DeleteEnvByServiceUuid(ctx, uuid, envUuid, reqEditors...)
 	if err != nil {
 		return nil, err
