@@ -2,12 +2,18 @@ package api
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"regexp"
 )
 
 const UserAgentPrefix = "terraform-provider-coolify"
+
+var (
+	TokenRegex      = regexp.MustCompile(`^\d+\|\w+$`)
+	ErrInvalidToken = errors.New("invalid token format")
+)
 
 func NewAPIClient(version, server, apiToken string) (*ClientWithResponses, error) {
 	if err := ValidateTokenFormat(apiToken); err != nil {
@@ -27,9 +33,8 @@ func NewAPIClient(version, server, apiToken string) (*ClientWithResponses, error
 }
 
 func ValidateTokenFormat(token string) error {
-	matched, _ := regexp.MatchString(`^\d+\|\w+$`, token)
-	if !matched {
-		return fmt.Errorf("invalid token format")
+	if !TokenRegex.MatchString(token) {
+		return ErrInvalidToken
 	}
 	return nil
 }

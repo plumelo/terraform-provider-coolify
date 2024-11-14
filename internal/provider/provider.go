@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/ephemeral"
 	"github.com/hashicorp/terraform-plugin-framework/function"
@@ -13,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 
@@ -72,19 +74,21 @@ func (p *CoolifyProvider) Schema(ctx context.Context, req provider.SchemaRequest
 			"For instructions on obtaining an API token, refer to Coolify's [API documentation](https://coolify.io/docs/api-reference/authorization#generate).",
 		Attributes: map[string]schema.Attribute{
 			"endpoint": schema.StringAttribute{
-				Optional:            true,
-				MarkdownDescription: "Coolify endpoint. If not set, checks env for `" + ENV_KEY_ENDPOINT + "`. Default: `" + DEFAULT_COOLIFY_ENDPOINT + "`.",
+				Optional:    true,
+				Description: "Coolify endpoint. If not set, checks env for `" + ENV_KEY_ENDPOINT + "`. Default: `" + DEFAULT_COOLIFY_ENDPOINT + "`.",
 			},
 			"token": schema.StringAttribute{
-				Required:            !hasEnvToken,
-				Optional:            hasEnvToken,
-				Sensitive:           true,
-				MarkdownDescription: "Coolify token. If not set, checks env for `" + ENV_KEY_TOKEN + "`.",
+				Required:  !hasEnvToken,
+				Optional:  hasEnvToken,
+				Sensitive: true,
+				Validators: []validator.String{
+					stringvalidator.RegexMatches(api.TokenRegex, api.ErrInvalidToken.Error()),
+				},
+				Description: "Coolify token. If not set, checks env for `" + ENV_KEY_TOKEN + "`.",
 			},
 		},
 	}
 }
-
 func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
 	var data CoolifyProviderModel
 
@@ -133,34 +137,34 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 	}
 
 	if os.Getenv("TF_ACC") == "" { // Version check during tests blows through API rate limit
-	versionResp, err := client.VersionWithResponse(ctx)
-	if err != nil {
-		resp.Diagnostics.AddError(
-			"Failed to connect to Coolify API",
-			err.Error(),
-		)
-		return
-	}
+		versionResp, err := client.VersionWithResponse(ctx)
+		if err != nil {
+			resp.Diagnostics.AddError(
+				"Failed to connect to Coolify API",
+				err.Error(),
+			)
+			return
+		}
 
-	if versionResp.StatusCode() != http.StatusOK {
-		resp.Diagnostics.AddError(
-			"Unexpected HTTP status code API client",
-			fmt.Sprintf("Received %s creating API client. Details: %s", versionResp.Status(), versionResp.Body),
-		)
-		return
-	}
+		if versionResp.StatusCode() != http.StatusOK {
+			resp.Diagnostics.AddError(
+				"Unexpected HTTP status code API client",
+				fmt.Sprintf("Received %s creating API client. Details: %s", versionResp.Status(), versionResp.Body),
+			)
+			return
+		}
 
-	currentVersion := string(versionResp.Body)
+		currentVersion := string(versionResp.Body)
 
-	if !isVersionCompatible(currentVersion, MIN_COOLIFY_VERSION) {
-		resp.Diagnostics.AddError(
-			"Unsupported API version",
-			fmt.Sprintf("The Coolify API version %s is not supported. The minimum supported version is %s", currentVersion, MIN_COOLIFY_VERSION),
-		)
-		return
-	}
+		if !isVersionCompatible(currentVersion, MIN_COOLIFY_VERSION) {
+			resp.Diagnostics.AddError(
+				"Unsupported API version",
+				fmt.Sprintf("The Coolify API version %s is not supported. The minimum supported version is %s", currentVersion, MIN_COOLIFY_VERSION),
+			)
+			return
+		}
 
-	tflog.Info(ctx, "Successfully connected to Coolify API", map[string]interface{}{"version": currentVersion})
+		tflog.Info(ctx, "Successfully connected to Coolify API", map[string]interface{}{"version": currentVersion})
 	}
 
 	providerData := &CoolifyProviderData{
