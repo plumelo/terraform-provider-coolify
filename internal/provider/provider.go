@@ -136,36 +136,34 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 		return
 	}
 
-	if os.Getenv("TF_ACC") == "" { // Version check during tests blows through API rate limit
-		versionResp, err := client.VersionWithResponse(ctx)
-		if err != nil {
-			resp.Diagnostics.AddError(
-				"Failed to connect to Coolify API",
-				err.Error(),
-			)
-			return
-		}
-
-		if versionResp.StatusCode() != http.StatusOK {
-			resp.Diagnostics.AddError(
-				"Unexpected HTTP status code API client",
-				fmt.Sprintf("Received %s creating API client. Details: %s", versionResp.Status(), versionResp.Body),
-			)
-			return
-		}
-
-		currentVersion := string(versionResp.Body)
-
-		if !isVersionCompatible(currentVersion, MIN_COOLIFY_VERSION) {
-			resp.Diagnostics.AddError(
-				"Unsupported API version",
-				fmt.Sprintf("The Coolify API version %s is not supported. The minimum supported version is %s", currentVersion, MIN_COOLIFY_VERSION),
-			)
-			return
-		}
-
-		tflog.Info(ctx, "Successfully connected to Coolify API", map[string]interface{}{"version": currentVersion})
+	versionResp, err := client.VersionWithResponse(ctx)
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Failed to connect to Coolify API",
+			err.Error(),
+		)
+		return
 	}
+
+	if versionResp.StatusCode() != http.StatusOK {
+		resp.Diagnostics.AddError(
+			"Unexpected HTTP status code API client",
+			fmt.Sprintf("Received %s creating API client. Details: %s", versionResp.Status(), versionResp.Body),
+		)
+		return
+	}
+
+	currentVersion := string(versionResp.Body)
+
+	if !isVersionCompatible(currentVersion, MIN_COOLIFY_VERSION) {
+		resp.Diagnostics.AddError(
+			"Unsupported API version",
+			fmt.Sprintf("The Coolify API version %s is not supported. The minimum supported version is %s", currentVersion, MIN_COOLIFY_VERSION),
+		)
+		return
+	}
+
+	tflog.Info(ctx, "Successfully connected to Coolify API", map[string]interface{}{"version": currentVersion})
 
 	providerData := &CoolifyProviderData{
 		endpoint: apiEndpoint,
