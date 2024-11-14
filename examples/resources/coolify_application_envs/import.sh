@@ -1,0 +1,1 @@
+terraform import coolify_application_envs.example <application_uuid>

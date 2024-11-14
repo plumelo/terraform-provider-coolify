@@ -181,6 +181,7 @@ func (p *CoolifyProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewPrivateKeyResource,
 		NewServerResource,
 		NewProjectResource,
+		NewApplicationEnvsResource,
 	}
 }
 
