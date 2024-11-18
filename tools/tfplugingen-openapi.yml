@@ -54,6 +54,19 @@ resources:
     delete:
       path: /applications/{uuid}/envs/{env_uuid}
       method: DELETE
+  service_envs:
+    create:
+      path: /services/{uuid}/envs
+      method: POST
+    read:
+      path: /services/{uuid}/envs
+      method: GET
+    update:
+      path: /services/{uuid}/envs/bulk
+      method: PATCH
+    delete:
+      path: /services/{uuid}/envs/{env_uuid}
+      method: DELETE
 
 data_sources:
   private_keys:
