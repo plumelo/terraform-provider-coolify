@@ -113,3 +113,7 @@ data_sources:
     read:
       path: /applications/{uuid}
       method: GET
+  service:
+    read:
+      path: /services/{uuid}
+      method: GET
