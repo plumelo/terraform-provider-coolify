@@ -70,7 +70,7 @@ func (r *applicationEnvsResource) Schema(ctx context.Context, req resource.Schem
 		},
 		Blocks: map[string]schema.Block{
 			"env": schema.ListNestedBlock{
-				MarkdownDescription: "Filter results by values",
+				MarkdownDescription: "Environment variable to set.",
 				NestedObject: schema.NestedBlockObject{
 					Attributes: codegenSchema.Attributes,
 				},
@@ -78,6 +78,8 @@ func (r *applicationEnvsResource) Schema(ctx context.Context, req resource.Schem
 		},
 	}
 
+	makeResourceAttributeRequired(codegenSchema.Attributes, "key")
+	makeResourceAttributeRequired(codegenSchema.Attributes, "value")
 }
 
 func (r *applicationEnvsResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {

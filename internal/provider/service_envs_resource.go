@@ -80,7 +80,7 @@ func (r *serviceEnvsResource) Schema(ctx context.Context, req resource.SchemaReq
 		},
 		Blocks: map[string]schema.Block{
 			"env": schema.ListNestedBlock{
-				MarkdownDescription: "Filter results by values",
+				MarkdownDescription: "Environment variable to set.",
 				NestedObject: schema.NestedBlockObject{
 					Attributes: codegenSchema.Attributes,
 				},
@@ -88,6 +88,8 @@ func (r *serviceEnvsResource) Schema(ctx context.Context, req resource.SchemaReq
 		},
 	}
 
+	makeResourceAttributeRequired(codegenSchema.Attributes, "key")
+	makeResourceAttributeRequired(codegenSchema.Attributes, "value")
 }
 
 func (r *serviceEnvsResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {

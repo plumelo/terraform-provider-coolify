@@ -45,10 +45,15 @@ resource "coolify_application_envs" "example" {
 
 ### Optional
 
-- `env` (Block List) Filter results by values (see [below for nested schema](#nestedblock--env))
+- `env` (Block List) Environment variable to set. (see [below for nested schema](#nestedblock--env))
 
 <a id="nestedblock--env"></a>
 ### Nested Schema for `env`
+
+Required:
+
+- `key` (String) The key of the environment variable.
+- `value` (String) The value of the environment variable.
 
 Optional:
 
@@ -57,8 +62,6 @@ Optional:
 - `is_multiline` (Boolean) The flag to indicate if the environment variable is multiline.
 - `is_preview` (Boolean) The flag to indicate if the environment variable is used in preview deployments.
 - `is_shown_once` (Boolean) The flag to indicate if the environment variable's value is shown on the UI.
-- `key` (String) The key of the environment variable.
-- `value` (String) The value of the environment variable.
 
 Read-Only:
 
