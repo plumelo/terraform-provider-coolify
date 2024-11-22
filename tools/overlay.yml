@@ -110,3 +110,106 @@ actions:
       type: array
       items:
         $ref: "#/components/schemas/EnvironmentVariable"
+
+  - target: $.components.schemas
+    description: Add a new schema for a PostgresqlDatabase
+    update:
+      PostgresqlDatabase:
+        type: object
+        required:
+          - database_type
+        properties:
+          # Common properties
+          database_type:
+            type: string
+          name:
+            type: string
+          uuid:
+            type: string
+          description:
+            type: string
+          deleted_at:
+            type: string
+            format: date-time
+          created_at:
+            type: string
+            format: date-time
+          updated_at:
+            type: string
+            format: date-time
+          internal_db_url:
+            type: string
+          image:
+            type: string
+          is_public:
+            type: boolean
+            default: false
+          public_port:
+            type: integer
+            nullable: true
+          # Resource limits
+          limits_cpu_shares:
+            type: integer
+          limits_cpus:
+            type: string
+          limits_cpuset:
+            type: string
+            nullable: true
+          limits_memory:
+            type: string
+          limits_memory_reservation:
+            type: string
+          limits_memory_swap:
+            type: string
+          limits_memory_swappiness:
+            type: integer
+          # PostgreSQL specific properties
+          postgres_conf:
+            type: string
+            nullable: true
+          postgres_db:
+            type: string
+          postgres_user:
+            type: string
+          postgres_password:
+            type: string
+          postgres_host_auth_method:
+            type: string
+          postgres_initdb_args:
+            type: string
+
+  - target: $.components.schemas
+    description: Add a new schema for a Database
+    update:
+      Database:
+        discriminator:
+          propertyName: database_type
+          mapping:
+            standalone-postgresql: "#/components/schemas/PostgresqlDatabase"
+        oneOf:
+          - $ref: "#/components/schemas/PostgresqlDatabase"
+
+  - target: $.paths['/databases/{uuid}'].get.responses.200.content.application/json.schema
+    description: Set response schema to new Database schema
+    update:
+      $ref: "#/components/schemas/Database"
+  - target: $.paths['/databases'].get.responses.200.content.application/json.schema
+    description: Set response schema to new Database schema
+    update:
+      type: array
+      items:
+        $ref: "#/components/schemas/Database"
+
+  - target: $.paths['/databases/postgresql'].post.responses
+    description: Add missing properties to response
+    update:
+      "201":
+        content:
+          application/json:
+            schema:
+              properties:
+                uuid:
+                  type: string
+                internal_db_url:
+                  type: string
+              type: object

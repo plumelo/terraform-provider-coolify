@@ -1,0 +1,1 @@
+terraform import coolify_postgresql_database.example <server_uuid>/<project_uuid>/<environment_name>/<database_uuid>

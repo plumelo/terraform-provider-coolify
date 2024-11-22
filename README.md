@@ -46,7 +46,7 @@ Before you begin using the Coolify Terraform Provider, ensure you have completed
 | Projects                   | ✔️       | ✔️          |
 | - Project Environments     | ⛔       | ⛔          |
 | Resources                  | ⛔       | ➖          |
-| Databases                  | ➖       | ➖          |
+| Databases                  | ⚒️       | ➖          |
 | Services                   | ➖       | ⚒️          |
 | - Service Environments     | ✔️       | ➖          |
 | Applications               | ➖       | ⚒️          |

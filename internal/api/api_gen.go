@@ -7,6 +7,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -487,6 +488,11 @@ type ApplicationDeploymentQueue struct {
 	UpdatedAt        *string `json:"updated_at,omitempty"`
 }
 
+// Database defines model for Database.
+type Database struct {
+	union json.RawMessage
+}
+
 // Environment Environment model
 type Environment struct {
 	CreatedAt   *string `json:"created_at,omitempty"`
@@ -516,6 +522,34 @@ type EnvironmentVariable struct {
 	Uuid          *string `json:"uuid,omitempty"`
 	Value         *string `json:"value,omitempty"`
 	Version       *string `json:"version,omitempty"`
+}
+
+// PostgresqlDatabase defines model for PostgresqlDatabase.
+type PostgresqlDatabase struct {
+	CreatedAt               *time.Time `json:"created_at,omitempty"`
+	DatabaseType            string     `json:"database_type"`
+	DeletedAt               *time.Time `json:"deleted_at,omitempty"`
+	Description             *string    `json:"description,omitempty"`
+	Image                   *string    `json:"image,omitempty"`
+	InternalDbUrl           *string    `json:"internal_db_url,omitempty"`
+	IsPublic                *bool      `json:"is_public,omitempty"`
+	LimitsCpuShares         *int       `json:"limits_cpu_shares,omitempty"`
+	LimitsCpus              *string    `json:"limits_cpus,omitempty"`
+	LimitsCpuset            *string    `json:"limits_cpuset"`
+	LimitsMemory            *string    `json:"limits_memory,omitempty"`
+	LimitsMemoryReservation *string    `json:"limits_memory_reservation,omitempty"`
+	LimitsMemorySwap        *string    `json:"limits_memory_swap,omitempty"`
+	LimitsMemorySwappiness  *int       `json:"limits_memory_swappiness,omitempty"`
+	Name                    *string    `json:"name,omitempty"`
+	PostgresConf            *string    `json:"postgres_conf"`
+	PostgresDb              *string    `json:"postgres_db,omitempty"`
+	PostgresHostAuthMethod  *string    `json:"postgres_host_auth_method,omitempty"`
+	PostgresInitdbArgs      *string    `json:"postgres_initdb_args,omitempty"`
+	PostgresPassword        *string    `json:"postgres_password,omitempty"`
+	PostgresUser            *string    `json:"postgres_user,omitempty"`
+	PublicPort              *int       `json:"public_port"`
+	UpdatedAt               *time.Time `json:"updated_at,omitempty"`
+	Uuid                    *string    `json:"uuid,omitempty"`
 }
 
 // PrivateKey Private Key model
@@ -2991,6 +3025,65 @@ type CreateEnvByServiceUuidJSONRequestBody CreateEnvByServiceUuidJSONBody
 
 // UpdateEnvsByServiceUuidJSONRequestBody defines body for UpdateEnvsByServiceUuid for application/json ContentType.
 type UpdateEnvsByServiceUuidJSONRequestBody UpdateEnvsByServiceUuidJSONBody
+
+// AsPostgresqlDatabase returns the union data inside the Database as a PostgresqlDatabase
+func (t Database) AsPostgresqlDatabase() (PostgresqlDatabase, error) {
+	var body PostgresqlDatabase
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromPostgresqlDatabase overwrites any union data inside the Database as the provided PostgresqlDatabase
+func (t *Database) FromPostgresqlDatabase(v PostgresqlDatabase) error {
+	v.DatabaseType = "standalone-postgresql"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergePostgresqlDatabase performs a merge with any union data inside the Database, using the provided PostgresqlDatabase
+func (t *Database) MergePostgresqlDatabase(v PostgresqlDatabase) error {
+	v.DatabaseType = "standalone-postgresql"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t Database) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"database_type"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t Database) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "standalone-postgresql":
+		return t.AsPostgresqlDatabase()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t Database) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *Database) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
@@ -8613,7 +8706,7 @@ func (r StopApplicationByUuidResponse) StatusCode() int {
 type ListDatabasesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *string
+	JSON200      *[]Database
 	JSON400      *N400
 	JSON401      *N401
 }
@@ -8775,8 +8868,12 @@ func (r CreateDatabaseMysqlResponse) StatusCode() int {
 type CreateDatabasePostgresqlResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON400      *N400
-	JSON401      *N401
+	JSON201      *struct {
+		InternalDbUrl *string `json:"internal_db_url,omitempty"`
+		Uuid          *string `json:"uuid,omitempty"`
+	}
+	JSON400 *N400
+	JSON401 *N401
 }
 
 // Status returns HTTPResponse.Status
@@ -8848,7 +8945,7 @@ func (r DeleteDatabaseByUuidResponse) StatusCode() int {
 type GetDatabaseByUuidResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *string
+	JSON200      *Database
 	JSON400      *N400
 	JSON401      *N401
 	JSON404      *N404
@@ -11908,7 +12005,7 @@ func ParseListDatabasesResponse(rsp *http.Response) (*ListDatabasesResponse, err
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest string
+		var dest []Database
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -12145,6 +12242,16 @@ func ParseCreateDatabasePostgresqlResponse(rsp *http.Response) (*CreateDatabaseP
 	}
 
 	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest struct {
+			InternalDbUrl *string `json:"internal_db_url,omitempty"`
+			Uuid          *string `json:"uuid,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest N400
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -12261,7 +12368,7 @@ func ParseGetDatabaseByUuidResponse(rsp *http.Response) (*GetDatabaseByUuidRespo
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest string
+		var dest Database
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

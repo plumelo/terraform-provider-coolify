@@ -1829,7 +1829,9 @@ paths:
                     content:
                         application/json:
                             schema:
-                                type: string
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Database"
                             example: 'Content is very complex. Will be implemented later.'
                 '401':
                     $ref: '#/components/responses/401'
@@ -1859,6 +1861,7 @@ paths:
                         application/json:
                             schema:
                                 type: string
+                                $ref: "#/components/schemas/Database"
                             example: 'Content is very complex. Will be implemented later.'
                 '401':
                     $ref: '#/components/responses/401'
@@ -2169,6 +2172,16 @@ paths:
                     $ref: '#/components/responses/401'
                 '400':
                     $ref: '#/components/responses/400'
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    uuid:
+                                        type: string
+                                    internal_db_url:
+                                        type: string
+                                type: object
             security:
                 - bearerAuth: []
     /databases/clickhouse:
@@ -5153,6 +5166,76 @@ components:
                     type: boolean
                     description: 'The flag to receive marketing emails.'
             type: object
+        PostgresqlDatabase:
+            type: object
+            required:
+                - database_type
+            properties:
+                # Common properties
+                database_type:
+                    type: string
+                name:
+                    type: string
+                uuid:
+                    type: string
+                description:
+                    type: string
+                deleted_at:
+                    type: string
+                    format: date-time
+                created_at:
+                    type: string
+                    format: date-time
+                updated_at:
+                    type: string
+                    format: date-time
+                internal_db_url:
+                    type: string
+                image:
+                    type: string
+                is_public:
+                    type: boolean
+                    default: false
+                public_port:
+                    type: integer
+                    nullable: true
+                # Resource limits
+                limits_cpu_shares:
+                    type: integer
+                limits_cpus:
+                    type: string
+                limits_cpuset:
+                    type: string
+                    nullable: true
+                limits_memory:
+                    type: string
+                limits_memory_reservation:
+                    type: string
+                limits_memory_swap:
+                    type: string
+                limits_memory_swappiness:
+                    type: integer
+                # PostgreSQL specific properties
+                postgres_conf:
+                    type: string
+                    nullable: true
+                postgres_db:
+                    type: string
+                postgres_user:
+                    type: string
+                postgres_password:
+                    type: string
+                postgres_host_auth_method:
+                    type: string
+                postgres_initdb_args:
+                    type: string
+        Database:
+            discriminator:
+                propertyName: database_type
+                mapping:
+                    standalone-postgresql: "#/components/schemas/PostgresqlDatabase"
+            oneOf:
+                - $ref: "#/components/schemas/PostgresqlDatabase"
     responses:
         '400':
             description: 'Invalid token.'
