@@ -80,3 +80,57 @@ func TestOptionalTime(t *testing.T) {
 		})
 	}
 }
+func TestBase64EncodeAttr(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    types.String
+		expected *string
+	}{
+		{"null value", types.StringNull(), nil},
+		{"unknown value", types.StringUnknown(), nil},
+		{"empty string", types.StringValue(""), &[]string{""}[0]},
+		{"simple string", types.StringValue("hello"), &[]string{"aGVsbG8="}[0]},
+		{"string with special characters", types.StringValue("hello@world!123"), &[]string{"aGVsbG9Ad29ybGQhMTIz"}[0]},
+		{"unicode string", types.StringValue("こんにちは"), &[]string{"44GT44KT44Gr44Gh44Gv"}[0]},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := base64EncodeAttr(tt.input)
+			if tt.expected == nil {
+				assert.Nil(t, result)
+			} else {
+				assert.NotNil(t, result)
+				assert.Equal(t, *tt.expected, *result)
+			}
+		})
+	}
+}
+
+func TestBase64DecodeAttr(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    types.String
+		expected *string
+	}{
+		{"null value", types.StringNull(), nil},
+		{"unknown value", types.StringUnknown(), nil},
+		{"invalid base64", types.StringValue("!@#$"), nil},
+		{"simple string", types.StringValue("YWJj"), &[]string{"abc"}[0]},
+		{"empty string", types.StringValue(""), &[]string{""}[0]},
+		{"string with special characters", types.StringValue("IUAjJCVeJiooKV8r"), &[]string{"!@#$%^&*()_+"}[0]},
+		{"unicode string", types.StringValue("5pel5pys6Kqe"), &[]string{"日本語"}[0]},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := base64DecodeAttr(tt.input)
+			if tt.expected == nil {
+				assert.Nil(t, result)
+			} else {
+				assert.NotNil(t, result)
+				assert.Equal(t, *tt.expected, *result)
+			}
+		})
+	}
+}

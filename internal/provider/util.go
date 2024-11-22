@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"encoding/base64"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -47,4 +48,38 @@ func optionalStringListValue(values *[]string) types.List {
 	}
 
 	return types.ListValueMust(types.StringType, elems)
+}
+
+func base64Encode(value *string) *string {
+	if value == nil {
+		return nil
+	}
+	encoded := base64.StdEncoding.EncodeToString([]byte(*value))
+	return &encoded
+}
+
+func base64EncodeAttr(value types.String) *string {
+	if value.IsUnknown() {
+		return nil
+	}
+	return base64Encode(value.ValueStringPointer())
+}
+
+func base64Decode(value *string) *string {
+	if value == nil {
+		return nil
+	}
+	decoded, err := base64.StdEncoding.DecodeString(*value)
+	if err != nil {
+		return nil
+	}
+	decodedStr := string(decoded)
+	return &decodedStr
+}
+
+func base64DecodeAttr(value types.String) *string {
+	if value.IsUnknown() {
+		return nil
+	}
+	return base64Decode(value.ValueStringPointer())
 }
