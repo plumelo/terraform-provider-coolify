@@ -5,6 +5,9 @@ import (
 
 	datasource_schema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resource_schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -178,6 +181,132 @@ func TestMakeDataSourceAttributeSensitive(t *testing.T) {
 				switch typedAttr := attr.(type) {
 				case datasource_schema.StringAttribute:
 					assert.True(t, typedAttr.Sensitive)
+				}
+			}
+		})
+	}
+}
+
+func TestSetResourceDefaultValue(t *testing.T) {
+	tests := []struct {
+		name         string
+		attributes   map[string]resource_schema.Attribute
+		attrName     string
+		defaultValue interface{}
+		expectedErr  string
+	}{
+		{
+			name: "attribute not found",
+			attributes: map[string]resource_schema.Attribute{
+				"existing_attr": resource_schema.StringAttribute{},
+			},
+			attrName:     "missing_attr",
+			defaultValue: "default",
+			expectedErr:  "attribute missing_attr not found",
+		},
+		{
+			name: "unsupported attribute type",
+			attributes: map[string]resource_schema.Attribute{
+				"unsupported_attr": resource_schema.DynamicAttribute{},
+			},
+			attrName:     "unsupported_attr",
+			defaultValue: nil,
+			expectedErr:  "unsupported attribute type for unsupported_attr",
+		},
+		{
+			name: "string attribute with default",
+			attributes: map[string]resource_schema.Attribute{
+				"string_attr": resource_schema.StringAttribute{},
+			},
+			attrName:     "string_attr",
+			defaultValue: "default",
+			expectedErr:  "",
+		},
+		{
+			name: "bool attribute with default",
+			attributes: map[string]resource_schema.Attribute{
+				"bool_attr": resource_schema.BoolAttribute{},
+			},
+			attrName:     "bool_attr",
+			defaultValue: true,
+			expectedErr:  "",
+		},
+		{
+			name: "int64 attribute with default",
+			attributes: map[string]resource_schema.Attribute{
+				"int64_attr": resource_schema.Int64Attribute{},
+			},
+			attrName:     "int64_attr",
+			defaultValue: int64(42),
+			expectedErr:  "",
+		},
+		{
+			name: "string attribute with wrong default type",
+			attributes: map[string]resource_schema.Attribute{
+				"string_attr": resource_schema.StringAttribute{},
+			},
+			attrName:     "string_attr",
+			defaultValue: 123, // wrong type
+			expectedErr:  "",
+		},
+		{
+			name: "string attribute with nil default",
+			attributes: map[string]resource_schema.Attribute{
+				"string_attr": resource_schema.StringAttribute{},
+			},
+			attrName:     "string_attr",
+			defaultValue: nil,
+			expectedErr:  "",
+		},
+		{
+			name: "bool attribute with nil default",
+			attributes: map[string]resource_schema.Attribute{
+				"bool_attr": resource_schema.BoolAttribute{},
+			},
+			attrName:     "bool_attr",
+			defaultValue: nil,
+			expectedErr:  "",
+		},
+		{
+			name: "int64 attribute with nil default",
+			attributes: map[string]resource_schema.Attribute{
+				"int64_attr": resource_schema.Int64Attribute{},
+			},
+			attrName:     "int64_attr",
+			defaultValue: nil,
+			expectedErr:  "",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := setResourceDefaultValue(tt.attributes, tt.attrName, tt.defaultValue)
+			if tt.expectedErr != "" {
+				assert.EqualError(t, err, tt.expectedErr)
+			} else {
+				assert.NoError(t, err)
+				attr := tt.attributes[tt.attrName]
+				switch typedAttr := attr.(type) {
+				case resource_schema.StringAttribute:
+					if strVal, ok := tt.defaultValue.(string); ok {
+						assert.Equal(t, stringdefault.StaticString(strVal), typedAttr.Default)
+					} else {
+						assert.Nil(t, typedAttr.Default)
+					}
+				case resource_schema.BoolAttribute:
+					if boolVal, ok := tt.defaultValue.(bool); ok {
+						assert.Equal(t, booldefault.StaticBool(boolVal), typedAttr.Default)
+					} else {
+						assert.Nil(t, typedAttr.Default)
+					}
+				case resource_schema.Int64Attribute:
+					if intVal, ok := tt.defaultValue.(int64); ok {
+						assert.Equal(t, int64default.StaticInt64(intVal), typedAttr.Default)
+					} else {
+						assert.Nil(t, typedAttr.Default)
+					}
+				default:
+					t.Errorf("Unexpected attribute type")
 				}
 			}
 		})
