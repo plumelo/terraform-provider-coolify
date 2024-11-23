@@ -14,7 +14,7 @@ Create, read, update, and delete a Coolify database (PostgreSQL) resource.
 
 ```terraform
 resource "coolify_postgresql_database" "example" {
-  name        = "Example Terraformed Database 3"
+  name        = "Example Terraformed Database"
   description = "Managed by Terraform"
 
   server_uuid      = "rg8ks8c"
@@ -64,7 +64,7 @@ resource "coolify_postgresql_database" "example" {
 
 ### Read-Only
 
-- `internal_db_url` (String) Internal URL of the database.
+- `internal_db_url` (String, Sensitive) Internal URL of the database.
 - `uuid` (String) UUID of the database.
 
 ## Import

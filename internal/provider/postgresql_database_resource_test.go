@@ -87,10 +87,6 @@ func TestAccPostgresqlDatabaseResource(t *testing.T) {
 					// public_port = 1024 
 					instant_deploy = false
 
-					postgres_initdb_args = "()"
-					postgres_host_auth_method = "()"
-					postgres_conf	= " "
-
 					limits_memory = "0"
 					limits_memory_swap = "0"
 					limits_memory_swappiness = "60"

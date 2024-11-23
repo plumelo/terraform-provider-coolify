@@ -1,5 +1,5 @@
 resource "coolify_postgresql_database" "example" {
-  name        = "Example Terraformed Database 3"
+  name        = "Example Terraformed Database"
   description = "Managed by Terraform"
 
   server_uuid      = "rg8ks8c"

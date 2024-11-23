@@ -54,6 +54,7 @@ func (r *postgresqlDatabaseResource) Schema(ctx context.Context, req resource.Sc
 
 	resp.Schema.Attributes["internal_db_url"] = schema.StringAttribute{
 		Computed:            true,
+		Sensitive:           true,
 		Description:         "Internal URL of the database.",
 		MarkdownDescription: "Internal URL of the database.",
 	}
@@ -82,9 +83,9 @@ func (r *postgresqlDatabaseResource) Schema(ctx context.Context, req resource.Sc
 		"instant_deploy":   false,
 		"public_port":      nil,
 
-		"postgres_initdb_args":      "()", // todo: should be nullable - api bug
-		"postgres_host_auth_method": "()", // todo: should be nullable - api bug
-		"postgres_conf":             " ",  // todo: should be nullable - api bug
+		"postgres_initdb_args":      nil,
+		"postgres_host_auth_method": nil,
+		"postgres_conf":             nil,
 
 		"limits_cpu_shares":         int64(1024),
 		"limits_cpus":               "0",
