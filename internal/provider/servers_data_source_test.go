@@ -34,13 +34,13 @@ func TestAccServersDataSource(t *testing.T) {
 				data "coolify_servers" "test" {
 					filter {
 						name = "uuid"
-						values = ["rg8ks8c"]
+						values = ["` + testAccServerUUID + `"]
 					}
 				}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resName, "servers.#", "1"),
 					resource.TestCheckResourceAttr(resName, "servers.0.id", "0"),
-					resource.TestCheckResourceAttr(resName, "servers.0.uuid", "rg8ks8c"),
+					resource.TestCheckResourceAttr(resName, "servers.0.uuid", testAccServerUUID),
 					resource.TestCheckResourceAttr(resName, "servers.0.ip", "host.docker.internal"),
 				),
 			},

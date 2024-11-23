@@ -18,13 +18,13 @@ func TestAccApplicationDataSource(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: `data "coolify_application" "test" {
-					uuid = "i8wcgsk"
+					uuid = "` + testAccApplicationUUID + `"
 				}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr(resName, "uuid", "i8wcgsk"),
-					resource.TestCheckResourceAttr(resName, "build_pack", "dockerimage"),
-					resource.TestCheckResourceAttr(resName, "created_at", "2024-04-30T09:49:56Z"),
-					resource.TestCheckResourceAttr(resName, "name", "api"),
+					resource.TestCheckResourceAttr(resName, "uuid", testAccApplicationUUID),
+					resource.TestCheckResourceAttr(resName, "build_pack", "dockerfile"),
+					resource.TestCheckResourceAttr(resName, "created_at", "2024-11-10T08:59:09Z"),
+					resource.TestCheckResourceAttr(resName, "name", "dockerfile-"+testAccApplicationUUID),
 					resource.TestCheckNoResourceAttr(resName, "description"),
 				),
 			},

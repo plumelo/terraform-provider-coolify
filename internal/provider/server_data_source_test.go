@@ -15,11 +15,11 @@ func TestAccServerDataSource(t *testing.T) {
 			// With ID
 			{
 				Config: `data "coolify_server" "test" {
-					uuid = "rg8ks8c"
+					uuid  = "` + testAccServerUUID + `"
 				}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resName, "id", "0"),
-					resource.TestCheckResourceAttr(resName, "uuid", "rg8ks8c"),
+					resource.TestCheckResourceAttr(resName, "uuid", testAccServerUUID),
 					resource.TestCheckResourceAttr(resName, "ip", "host.docker.internal"),
 					resource.TestCheckResourceAttr(resName, "port", "22"),
 					resource.TestCheckResourceAttr(resName, "user", "root"),

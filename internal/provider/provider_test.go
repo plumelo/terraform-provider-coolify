@@ -22,6 +22,15 @@ var (
 	}
 )
 
+const (
+	testAccPrivateKeyUUID  = "ys4g88w"
+	testAccServerUUID      = "rg8ks8c"
+	testAccProjectUUID     = "uoswco88w8swo40k48o8kcwk"
+	testAccEnvironmentName = "production"
+	testAccApplicationUUID = "mc8gw00wscww4gskgk0gwgw0"
+	testAccServiceUUID     = "i0800ok00gcww840kk8sok0s"
+)
+
 func testAccPreCheck(t *testing.T) {
 	if os.Getenv("TF_ACC") != "1" {
 		t.Skip("Acceptance tests skipped unless env 'TF_ACC' set")

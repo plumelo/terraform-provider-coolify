@@ -22,7 +22,7 @@ func TestAccApplicationEnvsResource(t *testing.T) {
 			{ // Create and Read testing
 				Config: `
 					resource "coolify_application_envs" "test" {
-						uuid = "mc8gw00wscww4gskgk0gwgw0"
+						uuid = "` + testAccApplicationUUID + `"
 						env {
 							key        = "key1"
 							value      = "value1"
@@ -58,8 +58,8 @@ func TestAccApplicationEnvsResource(t *testing.T) {
 					if is[0].Attributes["env.#"] != "4" {
 						return fmt.Errorf("expected 4 envs, got %s", is[0].Attributes["env.#"])
 					}
-					if is[0].Attributes["uuid"] != "mc8gw00wscww4gskgk0gwgw0" {
-						return fmt.Errorf("expected uuid to be mc8gw00wscww4gskgk0gwgw0, got %s", is[0].Attributes["uuid"])
+					if is[0].Attributes["uuid"] != testAccApplicationUUID {
+						return fmt.Errorf("expected uuid to be %s, got %s", testAccApplicationUUID, is[0].Attributes["uuid"])
 					}
 					return nil
 				},
@@ -67,7 +67,7 @@ func TestAccApplicationEnvsResource(t *testing.T) {
 			{ // Update and Read testing
 				Config: `
 					resource "coolify_application_envs" "test" {
-						uuid = "mc8gw00wscww4gskgk0gwgw0"
+						uuid = "` + testAccApplicationUUID + `"
 						env {
 							key        = "key1-1"
 							value      = "value1-1"

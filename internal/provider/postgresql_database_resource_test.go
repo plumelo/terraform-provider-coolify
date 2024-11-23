@@ -28,9 +28,9 @@ func TestAccPostgresqlDatabaseResource(t *testing.T) {
 					name        = "TerraformAccTest"
 					description = "Terraform acceptance testing"
 
-					server_uuid = "rg8ks8c"
-					project_uuid = "uoswco88w8swo40k48o8kcwk"
-					environment_name = "production"
+					server_uuid = "` + testAccServerUUID + `"
+					project_uuid = "` + testAccProjectUUID + `"
+					environment_name = "` + testAccEnvironmentName + `"
 
 					image = "postgres:16-alpine"
 					postgres_db = "postgres"
@@ -41,9 +41,9 @@ func TestAccPostgresqlDatabaseResource(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resName, "name", "TerraformAccTest"),
 					resource.TestCheckResourceAttr(resName, "description", "Terraform acceptance testing"),
-					resource.TestCheckResourceAttr(resName, "server_uuid", "rg8ks8c"),
-					resource.TestCheckResourceAttr(resName, "project_uuid", "uoswco88w8swo40k48o8kcwk"),
-					resource.TestCheckResourceAttr(resName, "environment_name", "production"),
+					resource.TestCheckResourceAttr(resName, "server_uuid", testAccServerUUID),
+					resource.TestCheckResourceAttr(resName, "project_uuid", testAccProjectUUID),
+					resource.TestCheckResourceAttr(resName, "environment_name", testAccEnvironmentName),
 					resource.TestCheckResourceAttr(resName, "instant_deploy", "false"),
 
 					resource.TestCheckResourceAttrSet(resName, "uuid"),
@@ -74,9 +74,9 @@ func TestAccPostgresqlDatabaseResource(t *testing.T) {
 					name        = "TerraformAccTestUpdated"
 					description = "Terraform acceptance testing"
 
-					server_uuid = "rg8ks8c"
-					project_uuid = "uoswco88w8swo40k48o8kcwk"
-					environment_name = "production"
+					server_uuid = "` + testAccServerUUID + `"
+					project_uuid = "` + testAccProjectUUID + `"
+					environment_name = "` + testAccEnvironmentName + `"
 
 					image = "postgres:16-alpine"
 					postgres_db = "postgres"
@@ -115,7 +115,7 @@ func TestAccPostgresqlDatabaseResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resName, "internal_db_url"),
 					resource.TestCheckResourceAttr(resName, "name", "TerraformAccTestUpdated"),
 					resource.TestCheckResourceAttr(resName, "description", "Terraform acceptance testing"),
-					resource.TestCheckResourceAttr(resName, "server_uuid", "rg8ks8c"),
+					resource.TestCheckResourceAttr(resName, "server_uuid", testAccServerUUID),
 				),
 			},
 		},

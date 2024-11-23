@@ -14,11 +14,11 @@ func TestAccProjectDataSource(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: `data "coolify_project" "test" {
-					uuid = "cogc0wo"
+					uuid = "` + testAccProjectUUID + `"
 				}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr(resName, "id", "2"),
-					resource.TestCheckResourceAttr(resName, "uuid", "cogc0wo"),
+					resource.TestCheckResourceAttr(resName, "id", "38"),
+					resource.TestCheckResourceAttr(resName, "uuid", testAccProjectUUID),
 					resource.TestCheckResourceAttrSet(resName, "name"),
 					resource.TestCheckResourceAttrSet(resName, "environments.#"),
 				),

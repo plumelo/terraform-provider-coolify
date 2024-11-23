@@ -14,10 +14,10 @@ func TestAccServerDomainsDataSource(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: `data "coolify_server_domains" "test" {
-					uuid = "rg8ks8c"
+					uuid  = "` + testAccServerUUID + `"
 				}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr(resName, "uuid", "rg8ks8c"),
+					resource.TestCheckResourceAttr(resName, "uuid", testAccServerUUID),
 					resource.TestCheckResourceAttrSet(resName, "server_domains.#"),
 					resource.TestCheckResourceAttrSet(resName, "server_domains.0.ip"),
 					resource.TestCheckResourceAttrSet(resName, "server_domains.0.domains.#"),

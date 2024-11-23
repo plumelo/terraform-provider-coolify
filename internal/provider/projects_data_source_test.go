@@ -35,14 +35,14 @@ func TestAccProjectsDataSource(t *testing.T) {
 				data "coolify_projects" "test" {
 					filter {
 						name = "name"
-						values = ["Infrastructure"]
+						values = ["AccTestProj"]
 					}
 				}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resName, "projects.#", "1"),
-					resource.TestCheckResourceAttr(resName, "projects.0.id", "2"),
-					resource.TestCheckResourceAttr(resName, "projects.0.uuid", "cogc0wo"),
-					resource.TestCheckResourceAttr(resName, "projects.0.name", "Infrastructure"),
+					resource.TestCheckResourceAttr(resName, "projects.0.id", "38"),
+					resource.TestCheckResourceAttr(resName, "projects.0.uuid", testAccProjectUUID),
+					resource.TestCheckResourceAttr(resName, "projects.0.name", "AccTestProj"),
 					resource.TestCheckNoResourceAttr(resName, "projects.0.environments"),
 				),
 			},

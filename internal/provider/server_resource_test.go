@@ -28,14 +28,14 @@ func TestAccServerResource(t *testing.T) {
 					description = "Terraform acceptance testing"
 					ip = "localhost"
 					port = 22
-					private_key_uuid = "ys4g88w"
+					private_key_uuid = "` + testAccPrivateKeyUUID + `"
 					instant_validate = false
 				}
 				`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resName, "name", "TerraformAccTest"),
 					resource.TestCheckResourceAttr(resName, "description", "Terraform acceptance testing"),
-					resource.TestCheckResourceAttr(resName, "private_key_uuid", "ys4g88w"),
+					resource.TestCheckResourceAttr(resName, "private_key_uuid", testAccPrivateKeyUUID),
 					// Verify dynamic values
 					resource.TestCheckResourceAttrSet(resName, "uuid"),
 					resource.TestCheckResourceAttrSet(resName, "id"),
@@ -59,7 +59,7 @@ func TestAccServerResource(t *testing.T) {
 					description = "Terraform acceptance testing"
 					ip = "localhost"
 					port = 22
-					private_key_uuid = "ys4g88w"
+					private_key_uuid = "` + testAccPrivateKeyUUID + `"
 					instant_validate = false
 				}
 				`,
@@ -77,7 +77,7 @@ func TestAccServerResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resName, "uuid"),
 					resource.TestCheckResourceAttr(resName, "name", "TerraformAccTestUpdated"),
 					resource.TestCheckResourceAttr(resName, "description", "Terraform acceptance testing"),
-					resource.TestCheckResourceAttr(resName, "private_key_uuid", "ys4g88w"),
+					resource.TestCheckResourceAttr(resName, "private_key_uuid", testAccPrivateKeyUUID),
 				),
 			},
 		},

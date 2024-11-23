@@ -20,13 +20,13 @@ func TestAccPrivatekeyDataSource(t *testing.T) {
 			// Without filters
 			{
 				Config: `data "coolify_private_key" "test" {
-					uuid = "ys4g88w"
+					uuid = "` + testAccPrivateKeyUUID + `"
 				}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resName, "id", "0"),
 					resource.TestCheckResourceAttr(resName, "name", "localhost's key"),
 					resource.TestCheckResourceAttrSet(resName, "private_key"),
-					resource.TestCheckResourceAttr(resName, "uuid", "ys4g88w"),
+					resource.TestCheckResourceAttr(resName, "uuid", testAccPrivateKeyUUID),
 				),
 			},
 		},
