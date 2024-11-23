@@ -42,8 +42,14 @@ func TestAPIClient(t *testing.T) {
 	mockServer := httptest.NewServer(http.HandlerFunc(MockHandler))
 	defer mockServer.Close()
 
+	retryConfig := api.RetryConfig{
+		MaxAttempts: 1,
+		MinWait:     1,
+		MaxWait:     1,
+	}
+
 	// Test with valid token
-	client, err := api.NewAPIClient("test", mockServer.URL, MOCK_TOKEN)
+	client, err := api.NewAPIClient("test", mockServer.URL, MOCK_TOKEN, retryConfig)
 	if err != nil {
 		t.Fatalf("Failed to create API client: %v", err)
 	}
@@ -59,7 +65,7 @@ func TestAPIClient(t *testing.T) {
 
 	// Test with invalid token
 	invalidToken := "invalid_token"
-	_, err = api.NewAPIClient("test", mockServer.URL, invalidToken)
+	_, err = api.NewAPIClient("test", mockServer.URL, invalidToken, retryConfig)
 	if err == nil {
 		t.Fatalf("Expected error when creating API client with invalid token, got none")
 	}

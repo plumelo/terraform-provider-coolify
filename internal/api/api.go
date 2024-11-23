@@ -6,6 +6,9 @@ import (
 	"fmt"
 	"net/http"
 	"regexp"
+	"time"
+
+	"github.com/hashicorp/go-retryablehttp"
 )
 
 const UserAgentPrefix = "terraform-provider-coolify"
@@ -15,14 +18,27 @@ var (
 	ErrInvalidToken = errors.New("invalid token format")
 )
 
-func NewAPIClient(version, server, apiToken string) (*ClientWithResponses, error) {
+type RetryConfig struct {
+	MaxAttempts int64
+	MinWait     int64
+	MaxWait     int64
+}
+
+func NewAPIClient(version, server, apiToken string, retry RetryConfig) (*ClientWithResponses, error) {
 	if err := ValidateTokenFormat(apiToken); err != nil {
 		return nil, err
 	}
 
-	httpClient := http.Client{}
+	retryClient := retryablehttp.NewClient()
+	retryClient.RetryMax = int(retry.MaxAttempts)
+	retryClient.RetryWaitMin = time.Duration(retry.MinWait) * time.Second
+	retryClient.RetryWaitMax = time.Duration(retry.MaxWait) * time.Second
+	retryClient.Backoff = retryablehttp.DefaultBackoff
+
+	httpClient := retryClient.StandardClient()
+
 	return NewClientWithResponses(server,
-		WithHTTPClient(&httpClient),
+		WithHTTPClient(httpClient),
 		WithRequestEditorFn(func(ctx context.Context, req *http.Request) error {
 			req.Header.Set("Authorization", "Bearer "+apiToken)
 			req.Header.Set("User-Agent", fmt.Sprintf("%s/%s", UserAgentPrefix, version))

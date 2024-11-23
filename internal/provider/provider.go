@@ -27,6 +27,10 @@ const (
 
 	DEFAULT_COOLIFY_ENDPOINT = "https://app.coolify.io/api/v1"
 	MIN_COOLIFY_VERSION      = "4.0.0-beta.364"
+
+	DEFAULT_RETRY_ATTEMPTS = 4
+	DEFAULT_RETRY_MIN_WAIT = 1
+	DEFAULT_RETRY_MAX_WAIT = 30
 )
 
 // Ensure the implementation satisfies the expected interfaces.
@@ -48,8 +52,15 @@ type CoolifyProviderData struct {
 }
 
 type CoolifyProviderModel struct {
-	Endpoint types.String `tfsdk:"endpoint"`
-	Token    types.String `tfsdk:"token"`
+	Endpoint types.String      `tfsdk:"endpoint"`
+	Token    types.String      `tfsdk:"token"`
+	Retry    *RetryConfigModel `tfsdk:"retry"`
+}
+
+type RetryConfigModel struct {
+	Attempts types.Int64 `tfsdk:"attempts"`
+	MinWait  types.Int64 `tfsdk:"min_wait"`
+	MaxWait  types.Int64 `tfsdk:"max_wait"`
 }
 
 func New(version string) func() provider.Provider {
@@ -86,9 +97,50 @@ func (p *CoolifyProvider) Schema(ctx context.Context, req provider.SchemaRequest
 				},
 				Description: "Coolify token. If not set, checks env for `" + ENV_KEY_TOKEN + "`.",
 			},
+			"retry": schema.SingleNestedAttribute{
+				Optional:    true,
+				Description: "Configuration for the HTTP retry behavior",
+				Attributes: map[string]schema.Attribute{
+					"attempts": schema.Int64Attribute{
+						Optional:    true,
+						Description: fmt.Sprintf("Maximum number of retries for HTTP requests. Default: %d", DEFAULT_RETRY_ATTEMPTS),
+					},
+					"min_wait": schema.Int64Attribute{
+						Optional:    true,
+						Description: fmt.Sprintf("Minimum time to wait between retries in seconds. Default: %d", DEFAULT_RETRY_MIN_WAIT),
+					},
+					"max_wait": schema.Int64Attribute{
+						Optional:    true,
+						Description: fmt.Sprintf("Maximum time to wait between retries in seconds. Default: %d", DEFAULT_RETRY_MAX_WAIT),
+					},
+				},
+			},
 		},
 	}
 }
+
+func GetRetryConfig(config *RetryConfigModel) api.RetryConfig {
+	retryConfig := api.RetryConfig{
+		MaxAttempts: DEFAULT_RETRY_ATTEMPTS,
+		MinWait:     DEFAULT_RETRY_MIN_WAIT,
+		MaxWait:     DEFAULT_RETRY_MAX_WAIT,
+	}
+
+	if config != nil {
+		if !config.Attempts.IsNull() {
+			retryConfig.MaxAttempts = config.Attempts.ValueInt64()
+		}
+		if !config.MinWait.IsNull() {
+			retryConfig.MinWait = config.MinWait.ValueInt64()
+		}
+		if !config.MaxWait.IsNull() {
+			retryConfig.MaxWait = config.MaxWait.ValueInt64()
+		}
+	}
+
+	return retryConfig
+}
+
 func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
 	var data CoolifyProviderModel
 
@@ -127,7 +179,7 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 		return
 	}
 
-	client, err := api.NewAPIClient(p.version, apiEndpoint, apiToken)
+	client, err := api.NewAPIClient(p.version, apiEndpoint, apiToken, GetRetryConfig(data.Retry))
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Failed to create API client",

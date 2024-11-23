@@ -8,11 +8,13 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"terraform-provider-coolify/internal/api"
 	"terraform-provider-coolify/internal/provider"
 )
 
@@ -53,12 +55,14 @@ func providerConfigDynamicValue(config map[string]interface{}) (tfprotov6.Dynami
 	providerConfigTypes := map[string]tftypes.Type{
 		"endpoint": tftypes.String,
 		"token":    tftypes.String,
+		"retry":    tftypes.Object{},
 	}
 	providerConfigObjectType := tftypes.Object{AttributeTypes: providerConfigTypes}
 
 	providerConfigObjectValue := tftypes.NewValue(providerConfigObjectType, map[string]tftypes.Value{
 		"endpoint": tftypes.NewValue(tftypes.String, config["endpoint"]),
 		"token":    tftypes.NewValue(tftypes.String, config["token"]),
+		"retry":    tftypes.NewValue(tftypes.Object{}, nil),
 	})
 
 	value, err := tfprotov6.NewDynamicValue(providerConfigObjectType, providerConfigObjectValue)
@@ -194,4 +198,57 @@ func GetRandomResourceName(resType string) string {
 		b[i] = letters[rand.Intn(len(letters))]
 	}
 	return fmt.Sprintf("%s-%s-%s", TestAccNamePrefix, resType, string(b))
+}
+
+func TestGetRetryConfig(t *testing.T) {
+	testCases := map[string]struct {
+		input    *provider.RetryConfigModel
+		expected api.RetryConfig
+	}{
+		"nil config": {
+			input: nil,
+			expected: api.RetryConfig{
+				MaxAttempts: provider.DEFAULT_RETRY_ATTEMPTS,
+				MinWait:     provider.DEFAULT_RETRY_MIN_WAIT,
+				MaxWait:     provider.DEFAULT_RETRY_MAX_WAIT,
+			},
+		},
+		"empty config": {
+			input: &provider.RetryConfigModel{},
+			expected: api.RetryConfig{
+				MaxAttempts: provider.DEFAULT_RETRY_ATTEMPTS,
+				MinWait:     provider.DEFAULT_RETRY_MIN_WAIT,
+				MaxWait:     provider.DEFAULT_RETRY_MAX_WAIT,
+			},
+		},
+		"partial config": {
+			input: &provider.RetryConfigModel{
+				Attempts: types.Int64Value(5),
+			},
+			expected: api.RetryConfig{
+				MaxAttempts: 5,
+				MinWait:     provider.DEFAULT_RETRY_MIN_WAIT,
+				MaxWait:     provider.DEFAULT_RETRY_MAX_WAIT,
+			},
+		},
+		"full config": {
+			input: &provider.RetryConfigModel{
+				Attempts: types.Int64Value(6),
+				MinWait:  types.Int64Value(2),
+				MaxWait:  types.Int64Value(20),
+			},
+			expected: api.RetryConfig{
+				MaxAttempts: 6,
+				MinWait:     2,
+				MaxWait:     20,
+			},
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			result := provider.GetRetryConfig(tc.input)
+			assert.Equal(t, tc.expected, result)
+		})
+	}
 }

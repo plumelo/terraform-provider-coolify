@@ -69,3 +69,13 @@ resource "coolify_server" "example" {
 ### Optional
 
 - `endpoint` (String) Coolify endpoint. If not set, checks env for `COOLIFY_ENDPOINT`. Default: `https://app.coolify.io/api/v1`.
+- `retry` (Attributes) Configuration for the HTTP retry behavior (see [below for nested schema](#nestedatt--retry))
+
+<a id="nestedatt--retry"></a>
+### Nested Schema for `retry`
+
+Optional:
+
+- `attempts` (Number) Maximum number of retries for HTTP requests. Default: 4
+- `max_wait` (Number) Maximum time to wait between retries in seconds. Default: 30
+- `min_wait` (Number) Minimum time to wait between retries in seconds. Default: 1
