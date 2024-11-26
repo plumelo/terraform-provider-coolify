@@ -49,10 +49,7 @@ func filterOnAttributes(attributes map[string]attr.Value, filters []filterBlockM
 
 	for _, filter := range filters {
 		if attr, ok := attributes[filter.Name.ValueString()]; ok {
-			attrValueString, err := attributeValueToString(attr)
-			if err != nil {
-				return false
-			}
+			attrValueString := attributeValueToString(attr)
 
 			filterValues := []string{}
 			filter.Values.ElementsAs(context.Background(), &filterValues, false)
@@ -68,21 +65,28 @@ func filterOnAttributes(attributes map[string]attr.Value, filters []filterBlockM
 }
 
 // attributeValueToString converts any supported attribute value to its string representation.
-func attributeValueToString(value attr.Value) (string, error) {
+func attributeValueToString(value attr.Value) string {
 	switch v := value.(type) {
 	case types.String:
-		return v.ValueString(), nil
+		return v.ValueString()
 	case types.Bool:
-		return fmt.Sprintf("%t", v.ValueBool()), nil
+		return fmt.Sprintf("%t", v.ValueBool())
 	case types.Int64:
-		return fmt.Sprintf("%d", v.ValueInt64()), nil
+		return fmt.Sprintf("%d", v.ValueInt64())
 	case types.Int32:
-		return fmt.Sprintf("%d", v.ValueInt32()), nil
+		return fmt.Sprintf("%d", v.ValueInt32())
 	case types.Float64:
-		return fmt.Sprintf("%f", v.ValueFloat64()), nil
+		return fmt.Sprintf("%f", v.ValueFloat64())
 	case types.Float32:
-		return fmt.Sprintf("%f", v.ValueFloat32()), nil
-	default:
-		return "", fmt.Errorf("unsupported attribute type: %T", value)
+		return fmt.Sprintf("%f", v.ValueFloat32())
+	case types.Number:
+		return fmt.Sprintf("%f", v.ValueBigFloat())
+	case types.Dynamic:
+		if underlyingValue := v.UnderlyingValue(); underlyingValue != nil {
+			return attributeValueToString(underlyingValue)
 	}
+	}
+
+	// Fall back to Terraform's string representation
+	return value.String()
 }

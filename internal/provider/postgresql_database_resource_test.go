@@ -118,7 +118,7 @@ func TestAccPostgresqlDatabaseResource(t *testing.T) {
 	})
 }
 
-func TestDatabaseResourceSchema(t *testing.T) {
+func TestPostgresqlDatabaseResourceSchema(t *testing.T) {
 	ctx := context.Background()
 	rs := provider.NewPostgresqlDatabaseResource()
 	resp := &tfresource.SchemaResponse{}

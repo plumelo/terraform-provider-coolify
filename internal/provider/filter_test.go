@@ -1,7 +1,7 @@
 package provider
 
 import (
-	"fmt"
+	"math/big"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -14,25 +14,21 @@ func TestAttributeValueToString(t *testing.T) {
 		name     string
 		input    attr.Value
 		expected string
-		err      error
 	}{
-		{"StringValue", types.StringValue("test"), "test", nil},
-		{"BoolValue", types.BoolValue(true), "true", nil},
-		{"Int64Value", types.Int64Value(42), "42", nil},
-		{"Int32Value", types.Int32Value(32), "32", nil},
-		{"Float64Value", types.Float64Value(3.14), "3.140000", nil},
-		{"Float32Value", types.Float32Value(1.23), "1.230000", nil},
-		{"UnsupportedType", types.List{}, "", fmt.Errorf("unsupported attribute type: %T", types.List{})},
+		{"StringValue", types.StringValue("test"), "test"},
+		{"BoolValue", types.BoolValue(true), "true"},
+		{"Int64Value", types.Int64Value(42), "42"},
+		{"Int32Value", types.Int32Value(32), "32"},
+		{"Float64Value", types.Float64Value(3.14), "3.140000"},
+		{"Float32Value", types.Float32Value(1.23), "1.230000"},
+		{"NumberValue", types.NumberValue(big.NewFloat(1.23)), "1.230000"},
+		{"DynamicValue-String", types.DynamicValue(types.StringValue("test")), "test"},
+		{"DynamicValue-Int64", types.DynamicValue(types.Int64Value(42)), "42"},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result, err := attributeValueToString(tt.input)
-			if tt.err != nil {
-				assert.EqualError(t, err, tt.err.Error())
-				return
-			}
-			assert.NoError(t, err)
+			result := attributeValueToString(tt.input)
 			assert.Equal(t, tt.expected, result)
 		})
 	}

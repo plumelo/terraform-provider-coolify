@@ -34,9 +34,11 @@ const (
 )
 
 // Ensure the implementation satisfies the expected interfaces.
-var _ provider.Provider = &CoolifyProvider{}
-var _ provider.ProviderWithFunctions = &CoolifyProvider{}
-var _ provider.ProviderWithEphemeralResources = &CoolifyProvider{}
+var (
+	_ provider.Provider                       = &CoolifyProvider{}
+	_ provider.ProviderWithFunctions          = &CoolifyProvider{}
+	_ provider.ProviderWithEphemeralResources = &CoolifyProvider{}
+)
 
 // CoolifyProvider defines the provider implementation.
 type CoolifyProvider struct {
@@ -47,8 +49,7 @@ type CoolifyProvider struct {
 }
 
 type CoolifyProviderData struct {
-	endpoint string
-	client   *api.ClientWithResponses
+	client *api.ClientWithResponses
 }
 
 type CoolifyProviderModel struct {
@@ -218,8 +219,7 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 	tflog.Info(ctx, "Successfully connected to Coolify API", map[string]interface{}{"version": currentVersion})
 
 	providerData := &CoolifyProviderData{
-		endpoint: apiEndpoint,
-		client:   client,
+		client: client,
 	}
 
 	resp.ResourceData = providerData
