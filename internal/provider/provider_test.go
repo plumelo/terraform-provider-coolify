@@ -3,7 +3,6 @@ package provider_test
 import (
 	"context"
 	"fmt"
-	"math/rand"
 	"os"
 	"testing"
 
@@ -11,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
+	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -192,12 +192,8 @@ func TestProtocol6ProviderServerConfigure(t *testing.T) {
 const TestAccNamePrefix = "tf-acc"
 
 func GetRandomResourceName(resType string) string {
-	var letters = []rune("abcdefghijklmnopqrstuvwxyz")
-	b := make([]rune, 8)
-	for i := range b {
-		b[i] = letters[rand.Intn(len(letters))]
-	}
-	return fmt.Sprintf("%s-%s-%s", TestAccNamePrefix, resType, string(b))
+	generatedIdentifier := acctest.RandStringFromCharSet(10, acctest.CharSetAlpha)
+	return fmt.Sprintf("%s-%s-%s", TestAccNamePrefix, resType, generatedIdentifier)
 }
 
 func TestGetRetryConfig(t *testing.T) {
