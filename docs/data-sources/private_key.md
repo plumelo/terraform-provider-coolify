@@ -44,6 +44,7 @@ output "private_key_value" {
 
 - `created_at` (String)
 - `description` (String)
+- `fingerprint` (String)
 - `id` (Number) The ID of this resource.
 - `is_git_related` (Boolean)
 - `name` (String)

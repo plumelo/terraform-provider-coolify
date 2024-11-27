@@ -213,3 +213,10 @@ actions:
                 internal_db_url:
                   type: string
               type: object
+
+  # add fingerprint to private key schema
+  - target: $.components.schemas.PrivateKey.properties
+    description: Add fingerprint to PrivateKey schema
+    update:
+      fingerprint:
+        type: string

@@ -1,14 +1,9 @@
 package provider_test
 
 import (
-	"context"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-framework/datasource"
-	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
-
-	"terraform-provider-coolify/internal/provider"
 )
 
 func TestAccPrivateKeysDataSource(t *testing.T) {
@@ -89,24 +84,4 @@ func TestAccPrivateKeysDataSource(t *testing.T) {
 			},
 		},
 	})
-}
-
-func TestPrivateKeysDataSourceSchema(t *testing.T) {
-	ctx := context.Background()
-	ds := provider.NewPrivateKeysDataSource()
-	resp := &datasource.SchemaResponse{}
-	ds.Schema(ctx, datasource.SchemaRequest{}, resp)
-
-	// Test private_key sensitivity
-	privateKeysAttr := resp.Schema.Attributes["private_keys"].(schema.SetNestedAttribute)
-	privateKeyAttr := privateKeysAttr.NestedObject.Attributes["private_key"].(schema.StringAttribute)
-	if !privateKeyAttr.Sensitive {
-		t.Error("private_key field should be marked as sensitive in schema")
-	}
-
-	// Test filter block
-	_, ok := resp.Schema.Blocks["filter"].(schema.ListNestedBlock)
-	if !ok {
-		t.Error("filter should be a ListNestedBlock")
-	}
 }

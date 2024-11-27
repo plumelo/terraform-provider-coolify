@@ -563,6 +563,12 @@
 						}
 					},
 					{
+						"name": "fingerprint",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
 						"name": "id",
 						"int64": {
 							"computed_optional_required": "computed"
@@ -619,6 +625,12 @@
 									},
 									{
 										"name": "description",
+										"string": {
+											"computed_optional_required": "computed"
+										}
+									},
+									{
+										"name": "fingerprint",
 										"string": {
 											"computed_optional_required": "computed"
 										}
@@ -2822,6 +2834,12 @@
 					},
 					{
 						"name": "created_at",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "fingerprint",
 						"string": {
 							"computed_optional_required": "computed"
 						}

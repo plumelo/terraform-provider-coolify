@@ -51,7 +51,7 @@ output "filtered" {
 
 ### Read-Only
 
-- `private_keys` (Attributes Set) (see [below for nested schema](#nestedatt--private_keys))
+- `private_keys` (Attributes Set) List of private keys (see [below for nested schema](#nestedatt--private_keys))
 
 <a id="nestedblock--filter"></a>
 ### Nested Schema for `filter`
@@ -69,10 +69,11 @@ Read-Only:
 
 - `created_at` (String)
 - `description` (String)
+- `fingerprint` (String)
 - `id` (Number)
 - `is_git_related` (Boolean)
 - `name` (String)
 - `private_key` (String, Sensitive)
 - `team_id` (Number)
 - `updated_at` (String)
-- `uuid` (String)
+- `uuid` (String) Private Key UUID

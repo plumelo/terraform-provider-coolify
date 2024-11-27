@@ -187,15 +187,6 @@ func TestProtocol6ProviderServerConfigure(t *testing.T) {
 	}
 }
 
-// ---------------------
-
-const TestAccNamePrefix = "tf-acc"
-
-func GetRandomResourceName(resType string) string {
-	generatedIdentifier := acctest.RandStringFromCharSet(10, acctest.CharSetAlpha)
-	return fmt.Sprintf("%s-%s-%s", TestAccNamePrefix, resType, generatedIdentifier)
-}
-
 func TestGetRetryConfig(t *testing.T) {
 	testCases := map[string]struct {
 		input    *provider.RetryConfigModel
@@ -247,4 +238,13 @@ func TestGetRetryConfig(t *testing.T) {
 			assert.Equal(t, tc.expected, result)
 		})
 	}
+}
+
+// MARK: Helper functions
+
+const TestAccNamePrefix = "tf-acc"
+
+func getRandomResourceName(resType string) string {
+	generatedIdentifier := acctest.RandStringFromCharSet(10, acctest.CharSetAlpha)
+	return fmt.Sprintf("%s-%s-%s", TestAccNamePrefix, resType, generatedIdentifier)
 }

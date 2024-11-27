@@ -84,9 +84,42 @@ func attributeValueToString(value attr.Value) string {
 	case types.Dynamic:
 		if underlyingValue := v.UnderlyingValue(); underlyingValue != nil {
 			return attributeValueToString(underlyingValue)
-	}
+		}
 	}
 
 	// Fall back to Terraform's string representation
 	return value.String()
+}
+
+type structWithAttributeMap interface {
+	Attributes() map[string]attr.Value
+}
+
+func filterOnStruct(
+	ctx context.Context,
+	item structWithAttributeMap,
+	filters []filterBlockModel,
+) bool {
+	if len(filters) == 0 {
+		return true
+	}
+
+	attributes := item.Attributes()
+
+	for _, filter := range filters {
+		filterName := filter.Name.ValueString()
+		filterValues := []string{}
+		filter.Values.ElementsAs(ctx, &filterValues, false)
+
+		attrValue, ok := attributes[filterName]
+		if !ok {
+			return false
+		}
+
+		attrValueString := attributeValueToString(attrValue)
+		if !slices.Contains(filterValues, attrValueString) {
+			return false
+		}
+	}
+	return true
 }

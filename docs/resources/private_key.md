@@ -44,11 +44,12 @@ output "public_key" {
 ### Read-Only
 
 - `created_at` (String)
+- `fingerprint` (String)
 - `id` (Number) The ID of this resource.
 - `is_git_related` (Boolean)
 - `team_id` (Number)
 - `updated_at` (String)
-- `uuid` (String) Private Key UUID
+- `uuid` (String)
 
 ## Import
 

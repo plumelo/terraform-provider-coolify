@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"context"
 	"math/big"
 	"testing"
 
@@ -175,6 +176,163 @@ func TestFilterOnAttributes(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result := filterOnAttributes(tt.attributes, tt.filters)
+			assert.Equal(t, tt.expected, result)
+		})
+	}
+}
+
+type mockStruct struct {
+	attributes map[string]attr.Value
+}
+
+func (m mockStruct) Attributes() map[string]attr.Value {
+	return m.attributes
+}
+
+func TestFilterOnStruct(t *testing.T) {
+	tests := []struct {
+		name     string
+		item     structWithAttributeMap
+		filters  []filterBlockModel
+		expected bool
+	}{
+		{
+			name: "NoFilters",
+			item: mockStruct{
+				attributes: map[string]attr.Value{
+					"field1": types.StringValue("value1"),
+				},
+			},
+			filters:  []filterBlockModel{},
+			expected: true,
+		},
+		{
+			name: "MatchingFilter",
+			item: mockStruct{
+				attributes: map[string]attr.Value{
+					"field1": types.StringValue("value1"),
+				},
+			},
+			filters: []filterBlockModel{
+				{
+					Name:   types.StringValue("field1"),
+					Values: types.ListValueMust(types.StringType, []attr.Value{types.StringValue("value1")}),
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "NonMatchingFilter",
+			item: mockStruct{
+				attributes: map[string]attr.Value{
+					"field1": types.StringValue("value1"),
+				},
+			},
+			filters: []filterBlockModel{
+				{
+					Name:   types.StringValue("field1"),
+					Values: types.ListValueMust(types.StringType, []attr.Value{types.StringValue("value2")}),
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "MissingAttribute",
+			item: mockStruct{
+				attributes: map[string]attr.Value{
+					"field1": types.StringValue("value1"),
+				},
+			},
+			filters: []filterBlockModel{
+				{
+					Name:   types.StringValue("field2"),
+					Values: types.ListValueMust(types.StringType, []attr.Value{types.StringValue("value1")}),
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "MultipleFilters",
+			item: mockStruct{
+				attributes: map[string]attr.Value{
+					"field1": types.StringValue("value1"),
+					"field2": types.StringValue("value2"),
+				},
+			},
+			filters: []filterBlockModel{
+				{
+					Name:   types.StringValue("field1"),
+					Values: types.ListValueMust(types.StringType, []attr.Value{types.StringValue("value1")}),
+				},
+				{
+					Name:   types.StringValue("field2"),
+					Values: types.ListValueMust(types.StringType, []attr.Value{types.StringValue("value2")}),
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "MultipleFiltersNonMatching",
+			item: mockStruct{
+				attributes: map[string]attr.Value{
+					"field1": types.StringValue("value1"),
+					"field2": types.StringValue("value2"),
+				},
+			},
+			filters: []filterBlockModel{
+				{
+					Name:   types.StringValue("field1"),
+					Values: types.ListValueMust(types.StringType, []attr.Value{types.StringValue("value1")}),
+				},
+				{
+					Name:   types.StringValue("field2"),
+					Values: types.ListValueMust(types.StringType, []attr.Value{types.StringValue("value3")}),
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "MultipleValuesInFilter_OR_Logic",
+			item: mockStruct{
+				attributes: map[string]attr.Value{
+					"field1": types.StringValue("value1"),
+				},
+			},
+			filters: []filterBlockModel{
+				{
+					Name: types.StringValue("field1"),
+					Values: types.ListValueMust(types.StringType, []attr.Value{
+						types.StringValue("value2"),
+						types.StringValue("value1"),
+						types.StringValue("value3"),
+					}),
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "MultipleValuesInFilter_NoMatch",
+			item: mockStruct{
+				attributes: map[string]attr.Value{
+					"field1": types.StringValue("value1"),
+				},
+			},
+			filters: []filterBlockModel{
+				{
+					Name: types.StringValue("field1"),
+					Values: types.ListValueMust(types.StringType, []attr.Value{
+						types.StringValue("value2"),
+						types.StringValue("value3"),
+					}),
+				},
+			},
+			expected: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := filterOnStruct(context.Background(), tt.item, tt.filters)
 			assert.Equal(t, tt.expected, result)
 		})
 	}

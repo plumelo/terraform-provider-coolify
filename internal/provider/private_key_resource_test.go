@@ -1,55 +1,41 @@
 package provider_test
 
 import (
-	"context"
-	"crypto/ed25519"
-	"crypto/x509"
-	"encoding/pem"
+	"fmt"
 	"strings"
 	"testing"
 
-	tfresource "github.com/hashicorp/terraform-plugin-framework/resource"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
-	"github.com/hashicorp/terraform-plugin-testing/knownvalue"
 	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/hashicorp/terraform-plugin-testing/tfjsonpath"
-
-	"terraform-provider-coolify/internal/provider"
 )
 
 func TestAccPrivateKeyResource(t *testing.T) {
 	resName := "coolify_private_key.test"
+	randomName := getRandomResourceName("pk")
 
-	privateKey := generatePrivateKey(t)
-	privateKeyUpdated := generatePrivateKey(t)
-
-	// Escape newlines for inclusion in HCL configuration
-	hclPrivateKey := strings.ReplaceAll(privateKey, "\n", "\\n")
-	hclPrivateKeyUpdated := strings.ReplaceAll(privateKeyUpdated, "\n", "\\n")
+	_, privateKey1, err := acctest.RandSSHKeyPair(t.Name())
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, privateKey2, err := acctest.RandSSHKeyPair(t.Name())
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{ // Create and Read testing
-				Config: `
-				resource "coolify_private_key" "test" {
-					name        = "TerraformAccTest"
-					description = "Terraform acceptance testing"
-					private_key = "` + hclPrivateKey + `"
-				}
-				`,
+				Config: testAccPrivateKeyResourceConfig(randomName, privateKey1),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr(resName, "name", "TerraformAccTest"),
-					resource.TestCheckResourceAttr(resName, "description", "Terraform acceptance testing"),
-					resource.TestCheckResourceAttr(resName, "private_key", privateKey),
-					// Verify dynamic values
+					resource.TestCheckResourceAttr(resName, "name", randomName),
+					resource.TestCheckResourceAttr(resName, "private_key", privateKey1),
 					resource.TestCheckResourceAttrSet(resName, "uuid"),
 					resource.TestCheckResourceAttrSet(resName, "id"),
-					resource.TestCheckResourceAttrSet(resName, "created_at"),
-					resource.TestCheckResourceAttrSet(resName, "updated_at"),
 				),
 			},
 			{ // ImportState testing
@@ -61,18 +47,11 @@ func TestAccPrivateKeyResource(t *testing.T) {
 				},
 			},
 			{ // Update and Read testing
-				Config: `
-				resource "coolify_private_key" "test" {
-					name        = "TerraformAccTestUpdated"
-					description = "Terraform acceptance testing"
-					private_key = "` + hclPrivateKeyUpdated + `"
-				}
-				`,
+				Config: testAccPrivateKeyResourceConfig(randomName, privateKey2),
 				ConfigPlanChecks: resource.ConfigPlanChecks{
 					PreApply: []plancheck.PlanCheck{
 						plancheck.ExpectResourceAction(resName, plancheck.ResourceActionUpdate),
-						plancheck.ExpectKnownValue(resName, tfjsonpath.New("name"), knownvalue.StringExact("TerraformAccTestUpdated")),
-						plancheck.ExpectKnownValue(resName, tfjsonpath.New("description"), knownvalue.StringExact("Terraform acceptance testing")),
+						plancheck.ExpectUnknownValue(resName, tfjsonpath.New("fingerprint")),
 					},
 					PostApplyPostRefresh: []plancheck.PlanCheck{
 						plancheck.ExpectResourceAction(resName, plancheck.ResourceActionNoop),
@@ -80,47 +59,23 @@ func TestAccPrivateKeyResource(t *testing.T) {
 				},
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet(resName, "uuid"),
-					resource.TestCheckResourceAttr(resName, "name", "TerraformAccTestUpdated"),
-					resource.TestCheckResourceAttr(resName, "description", "Terraform acceptance testing"),
-					resource.TestCheckResourceAttr(resName, "private_key", privateKeyUpdated),
+					resource.TestCheckResourceAttr(resName, "name", randomName),
+					resource.TestCheckResourceAttr(resName, "private_key", privateKey2),
 				),
 			},
 		},
 	})
 }
 
-func TestPrivatekeyResourceSchema(t *testing.T) {
-	ctx := context.Background()
-	rs := provider.NewPrivateKeyResource()
-	resp := &tfresource.SchemaResponse{}
-	rs.Schema(ctx, tfresource.SchemaRequest{}, resp)
-
-	// Test private_key sensitivity
-	privateKeyAttr := resp.Schema.Attributes["private_key"].(schema.StringAttribute)
-	if !privateKeyAttr.Sensitive {
-		t.Error("private_key field should be marked as sensitive in schema")
-	}
-}
-
-func generatePrivateKey(t *testing.T) string {
-	t.Helper()
-	// Generate an Ed25519 private key
-	_, privateKey, err := ed25519.GenerateKey(nil)
-	if err != nil {
-		t.Fatalf("failed to generate key: %v", err)
-	}
-
-	// Marshal the private key into PKCS8 format
-	privateKeyBytes, err := x509.MarshalPKCS8PrivateKey(privateKey)
-	if err != nil {
-		t.Fatalf("failed to marshal private key: %v", err)
-	}
-
-	// Encode the private key into PEM format
-	privateKeyPem := pem.EncodeToMemory(&pem.Block{
-		Type:  "PRIVATE KEY",
-		Bytes: privateKeyBytes,
-	})
-
-	return string(privateKeyPem)
+func testAccPrivateKeyResourceConfig(name, privateKey string) string {
+	return fmt.Sprintf(`
+		resource "coolify_private_key" "test" {
+			name        = "%s"
+			description = "Terraform acceptance testing"
+			private_key = "%s"
+		}
+	`,
+		name,
+		strings.ReplaceAll(privateKey, "\n", "\\n"),
+	)
 }

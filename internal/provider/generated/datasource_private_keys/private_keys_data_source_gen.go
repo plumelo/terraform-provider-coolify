@@ -27,6 +27,9 @@ func PrivateKeysDataSourceSchema(ctx context.Context) schema.Schema {
 						"description": schema.StringAttribute{
 							Computed: true,
 						},
+						"fingerprint": schema.StringAttribute{
+							Computed: true,
+						},
 						"id": schema.Int64Attribute{
 							Computed: true,
 						},
@@ -124,6 +127,24 @@ func (t PrivateKeysType) ValueFromObject(ctx context.Context, in basetypes.Objec
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`description expected to be basetypes.StringValue, was: %T`, descriptionAttribute))
+	}
+
+	fingerprintAttribute, ok := attributes["fingerprint"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`fingerprint is missing from object`)
+
+		return nil, diags
+	}
+
+	fingerprintVal, ok := fingerprintAttribute.(basetypes.StringValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`fingerprint expected to be basetypes.StringValue, was: %T`, fingerprintAttribute))
 	}
 
 	idAttribute, ok := attributes["id"]
@@ -259,6 +280,7 @@ func (t PrivateKeysType) ValueFromObject(ctx context.Context, in basetypes.Objec
 	return PrivateKeysValue{
 		CreatedAt:    createdAtVal,
 		Description:  descriptionVal,
+		Fingerprint:  fingerprintVal,
 		Id:           idVal,
 		IsGitRelated: isGitRelatedVal,
 		Name:         nameVal,
@@ -369,6 +391,24 @@ func NewPrivateKeysValue(attributeTypes map[string]attr.Type, attributes map[str
 			fmt.Sprintf(`description expected to be basetypes.StringValue, was: %T`, descriptionAttribute))
 	}
 
+	fingerprintAttribute, ok := attributes["fingerprint"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`fingerprint is missing from object`)
+
+		return NewPrivateKeysValueUnknown(), diags
+	}
+
+	fingerprintVal, ok := fingerprintAttribute.(basetypes.StringValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`fingerprint expected to be basetypes.StringValue, was: %T`, fingerprintAttribute))
+	}
+
 	idAttribute, ok := attributes["id"]
 
 	if !ok {
@@ -502,6 +542,7 @@ func NewPrivateKeysValue(attributeTypes map[string]attr.Type, attributes map[str
 	return PrivateKeysValue{
 		CreatedAt:    createdAtVal,
 		Description:  descriptionVal,
+		Fingerprint:  fingerprintVal,
 		Id:           idVal,
 		IsGitRelated: isGitRelatedVal,
 		Name:         nameVal,
@@ -583,6 +624,7 @@ var _ basetypes.ObjectValuable = PrivateKeysValue{}
 type PrivateKeysValue struct {
 	CreatedAt    basetypes.StringValue `tfsdk:"created_at"`
 	Description  basetypes.StringValue `tfsdk:"description"`
+	Fingerprint  basetypes.StringValue `tfsdk:"fingerprint"`
 	Id           basetypes.Int64Value  `tfsdk:"id"`
 	IsGitRelated basetypes.BoolValue   `tfsdk:"is_git_related"`
 	Name         basetypes.StringValue `tfsdk:"name"`
@@ -594,13 +636,14 @@ type PrivateKeysValue struct {
 }
 
 func (v PrivateKeysValue) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
-	attrTypes := make(map[string]tftypes.Type, 9)
+	attrTypes := make(map[string]tftypes.Type, 10)
 
 	var val tftypes.Value
 	var err error
 
 	attrTypes["created_at"] = basetypes.StringType{}.TerraformType(ctx)
 	attrTypes["description"] = basetypes.StringType{}.TerraformType(ctx)
+	attrTypes["fingerprint"] = basetypes.StringType{}.TerraformType(ctx)
 	attrTypes["id"] = basetypes.Int64Type{}.TerraformType(ctx)
 	attrTypes["is_git_related"] = basetypes.BoolType{}.TerraformType(ctx)
 	attrTypes["name"] = basetypes.StringType{}.TerraformType(ctx)
@@ -613,7 +656,7 @@ func (v PrivateKeysValue) ToTerraformValue(ctx context.Context) (tftypes.Value, 
 
 	switch v.state {
 	case attr.ValueStateKnown:
-		vals := make(map[string]tftypes.Value, 9)
+		vals := make(map[string]tftypes.Value, 10)
 
 		val, err = v.CreatedAt.ToTerraformValue(ctx)
 
@@ -630,6 +673,14 @@ func (v PrivateKeysValue) ToTerraformValue(ctx context.Context) (tftypes.Value, 
 		}
 
 		vals["description"] = val
+
+		val, err = v.Fingerprint.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["fingerprint"] = val
 
 		val, err = v.Id.ToTerraformValue(ctx)
 
@@ -719,6 +770,7 @@ func (v PrivateKeysValue) ToObjectValue(ctx context.Context) (basetypes.ObjectVa
 	attributeTypes := map[string]attr.Type{
 		"created_at":     basetypes.StringType{},
 		"description":    basetypes.StringType{},
+		"fingerprint":    basetypes.StringType{},
 		"id":             basetypes.Int64Type{},
 		"is_git_related": basetypes.BoolType{},
 		"name":           basetypes.StringType{},
@@ -741,6 +793,7 @@ func (v PrivateKeysValue) ToObjectValue(ctx context.Context) (basetypes.ObjectVa
 		map[string]attr.Value{
 			"created_at":     v.CreatedAt,
 			"description":    v.Description,
+			"fingerprint":    v.Fingerprint,
 			"id":             v.Id,
 			"is_git_related": v.IsGitRelated,
 			"name":           v.Name,
@@ -773,6 +826,10 @@ func (v PrivateKeysValue) Equal(o attr.Value) bool {
 	}
 
 	if !v.Description.Equal(other.Description) {
+		return false
+	}
+
+	if !v.Fingerprint.Equal(other.Fingerprint) {
 		return false
 	}
 
@@ -819,6 +876,7 @@ func (v PrivateKeysValue) AttributeTypes(ctx context.Context) map[string]attr.Ty
 	return map[string]attr.Type{
 		"created_at":     basetypes.StringType{},
 		"description":    basetypes.StringType{},
+		"fingerprint":    basetypes.StringType{},
 		"id":             basetypes.Int64Type{},
 		"is_git_related": basetypes.BoolType{},
 		"name":           basetypes.StringType{},

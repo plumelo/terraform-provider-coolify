@@ -19,6 +19,9 @@ func PrivateKeyResourceSchema(ctx context.Context) schema.Schema {
 				Optional: true,
 				Computed: true,
 			},
+			"fingerprint": schema.StringAttribute{
+				Computed: true,
+			},
 			"id": schema.Int64Attribute{
 				Computed: true,
 			},
@@ -50,6 +53,7 @@ func PrivateKeyResourceSchema(ctx context.Context) schema.Schema {
 type PrivateKeyModel struct {
 	CreatedAt    types.String `tfsdk:"created_at"`
 	Description  types.String `tfsdk:"description"`
+	Fingerprint  types.String `tfsdk:"fingerprint"`
 	Id           types.Int64  `tfsdk:"id"`
 	IsGitRelated types.Bool   `tfsdk:"is_git_related"`
 	Name         types.String `tfsdk:"name"`

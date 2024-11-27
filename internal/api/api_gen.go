@@ -556,6 +556,7 @@ type PostgresqlDatabase struct {
 type PrivateKey struct {
 	CreatedAt    *string `json:"created_at,omitempty"`
 	Description  *string `json:"description,omitempty"`
+	Fingerprint  *string `json:"fingerprint,omitempty"`
 	Id           *int    `json:"id,omitempty"`
 	IsGitRelated *bool   `json:"is_git_related,omitempty"`
 	Name         *string `json:"name,omitempty"`

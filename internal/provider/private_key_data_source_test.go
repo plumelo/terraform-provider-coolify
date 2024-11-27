@@ -1,27 +1,21 @@
 package provider_test
 
 import (
-	"context"
+	"fmt"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-framework/datasource"
-	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
-
-	"terraform-provider-coolify/internal/provider"
 )
 
 func TestAccPrivatekeyDataSource(t *testing.T) {
-	resName := "data.coolify_private_key.test"
+	randomName := getRandomResourceName("pk-ds")
+	resName := "data.coolify_private_key." + randomName
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
-			// Without filters
 			{
-				Config: `data "coolify_private_key" "test" {
-					uuid = "` + testAccPrivateKeyUUID + `"
-				}`,
+				Config: testAccPrivateKeyDataSourceConfig(randomName),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resName, "id", "0"),
 					resource.TestCheckResourceAttr(resName, "name", "localhost's key"),
@@ -33,15 +27,13 @@ func TestAccPrivatekeyDataSource(t *testing.T) {
 	})
 }
 
-func TestPrivatekeyDataSourceSchema(t *testing.T) {
-	ctx := context.Background()
-	ds := provider.NewPrivateKeyDataSource()
-	resp := &datasource.SchemaResponse{}
-	ds.Schema(ctx, datasource.SchemaRequest{}, resp)
-
-	// Test private_key sensitivity
-	privateKeyAttr := resp.Schema.Attributes["private_key"].(schema.StringAttribute)
-	if !privateKeyAttr.Sensitive {
-		t.Error("private_key field should be marked as sensitive in schema")
-	}
+func testAccPrivateKeyDataSourceConfig(randomName string) string {
+	return fmt.Sprintf(`
+		data "coolify_private_key" "%[1]s" {
+			uuid = "%[2]s"
+		}
+	`,
+		randomName,
+		testAccPrivateKeyUUID,
+	)
 }

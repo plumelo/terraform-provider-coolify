@@ -5,14 +5,12 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"terraform-provider-coolify/internal/api"
-	"terraform-provider-coolify/internal/provider/generated/datasource_private_keys"
 	"terraform-provider-coolify/internal/provider/util"
 )
 
@@ -27,11 +25,6 @@ type privateKeysDataSource struct {
 	providerData CoolifyProviderData
 }
 
-type privateKeysDataSourceWithFilterModel struct {
-	datasource_private_keys.PrivateKeysModel
-	Filter []filterBlockModel `tfsdk:"filter"`
-}
-
 var privateKeysFilterNames = []string{"name", "description", "team_id", "is_git_related"}
 
 func (d *privateKeysDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -39,19 +32,38 @@ func (d *privateKeysDataSource) Metadata(ctx context.Context, req datasource.Met
 }
 
 func (d *privateKeysDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
-	resp.Schema = datasource_private_keys.PrivateKeysDataSourceSchema(ctx)
-	resp.Schema.Description = "Get a list of Coolify private keys."
 
-	resp.Schema.Blocks = map[string]schema.Block{
-		"filter": createDatasourceFilter(privateKeysFilterNames),
+	ds := NewPrivateKeyDataSource()
+	dsResp := datasource.SchemaResponse{}
+
+	ds.Schema(ctx, datasource.SchemaRequest{}, &dsResp)
+
+	if attr, ok := dsResp.Schema.Attributes["uuid"].(schema.StringAttribute); ok {
+		attr.Required = false
+		attr.Computed = true
+		dsResp.Schema.Attributes["uuid"] = attr
 	}
 
-	// Mark sensitive attributes
-	if privateKeysSet, ok := resp.Schema.Attributes["private_keys"].(schema.SetNestedAttribute); ok {
-		sensitiveAttrs := []string{"private_key"}
-		for _, attr := range sensitiveAttrs {
-			makeDataSourceAttributeSensitive(privateKeysSet.NestedObject.Attributes, attr)
-		}
+	resp.Schema = schema.Schema{
+		Description:         "Get a list of Coolify private keys.",
+		MarkdownDescription: "Get a list of Coolify private keys.",
+		Attributes: map[string]schema.Attribute{
+			"private_keys": schema.SetNestedAttribute{
+				Description: "List of private keys",
+				Computed:    true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: dsResp.Schema.Attributes,
+				},
+				CustomType: types.SetType{
+					ElemType: types.ObjectType{
+						AttrTypes: privateKeyDataSourceModel{}.AttributeTypes(),
+					},
+				},
+			},
+		},
+		Blocks: map[string]schema.Block{
+			"filter": createDatasourceFilter(privateKeysFilterNames),
+		},
 	}
 }
 
@@ -60,7 +72,7 @@ func (d *privateKeysDataSource) Configure(ctx context.Context, req datasource.Co
 }
 
 func (d *privateKeysDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var plan privateKeysDataSourceWithFilterModel
+	var plan privateKeysDataSourceModel
 
 	// Read Terraform configuration data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &plan)...)
@@ -99,40 +111,30 @@ func (d *privateKeysDataSource) apiToModel(
 	ctx context.Context,
 	privateKeys *[]api.PrivateKey,
 	filters []filterBlockModel,
-) (privateKeysDataSourceWithFilterModel, diag.Diagnostics) {
+) (privateKeysDataSourceModel, diag.Diagnostics) {
 	var diags diag.Diagnostics
-	var elements []attr.Value
+	var privateKeyValues []privateKeyDataSourceModel
 
 	for _, pk := range *privateKeys {
-		attributes := map[string]attr.Value{
-			"created_at":     types.StringValue(*pk.CreatedAt),
-			"description":    types.StringValue(*pk.Description),
-			"id":             types.Int64Value(int64(*pk.Id)),
-			"is_git_related": types.BoolValue(*pk.IsGitRelated),
-			"name":           types.StringValue(*pk.Name),
-			"private_key":    types.StringValue(*pk.PrivateKey),
-			"team_id":        types.Int64Value(int64(*pk.TeamId)),
-			"updated_at":     types.StringValue(*pk.UpdatedAt),
-			"uuid":           types.StringValue(*pk.Uuid),
-		}
-		if !filterOnAttributes(attributes, filters) {
+		model := privateKeyDataSourceModel{}.FromAPI(&pk)
+
+		if !filterOnStruct(ctx, model, filters) {
 			continue
 		}
 
-		data, diag := datasource_private_keys.NewPrivateKeysValue(
-			datasource_private_keys.PrivateKeysValue{}.AttributeTypes(ctx),
-			attributes)
-		diags.Append(diag...)
-		elements = append(elements, data)
+		privateKeyValues = append(privateKeyValues, model)
 	}
 
-	dataSet, diag := types.SetValue(datasource_private_keys.PrivateKeysValue{}.Type(ctx), elements)
+	dataSet, diag := types.SetValueFrom(ctx, types.ObjectType{
+		AttrTypes: privateKeyDataSourceModel{}.AttributeTypes(),
+	}, privateKeyValues)
 	diags.Append(diag...)
+	if diags.HasError() {
+		return privateKeysDataSourceModel{}, diags
+	}
 
-	return privateKeysDataSourceWithFilterModel{
-		PrivateKeysModel: datasource_private_keys.PrivateKeysModel{
-			PrivateKeys: dataSet,
-		},
-		Filter: filters,
+	return privateKeysDataSourceModel{
+		PrivateKeys: dataSet,
+		Filter:      filters,
 	}, diags
 }
