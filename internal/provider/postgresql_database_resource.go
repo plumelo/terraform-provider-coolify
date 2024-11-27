@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -23,6 +24,7 @@ var (
 	_ resource.Resource                = &postgresqlDatabaseResource{}
 	_ resource.ResourceWithConfigure   = &postgresqlDatabaseResource{}
 	_ resource.ResourceWithImportState = &postgresqlDatabaseResource{}
+	_ resource.ResourceWithModifyPlan  = &postgresqlDatabaseResource{}
 )
 
 type postgresqlDatabaseModelWithInternalDbUrl struct {
@@ -55,6 +57,7 @@ func (r *postgresqlDatabaseResource) Schema(ctx context.Context, req resource.Sc
 	resp.Schema.Attributes["internal_db_url"] = schema.StringAttribute{
 		Computed:            true,
 		Sensitive:           true,
+		PlanModifiers:       []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 		Description:         "Internal URL of the database.",
 		MarkdownDescription: "Internal URL of the database.",
 	}
@@ -343,6 +346,25 @@ func (r *postgresqlDatabaseResource) ImportState(ctx context.Context, req resour
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("project_uuid"), projectUuid)...)
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("environment_name"), environmentName)...)
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("uuid"), uuid)...)
+}
+
+func (r *postgresqlDatabaseResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
+	var plan, state *postgresqlDatabaseModelWithInternalDbUrl
+
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+	if resp.Diagnostics.HasError() || plan == nil || state == nil {
+		return
+	}
+
+	// If the username, password, or db change, the internal URL will change
+	if !plan.PostgresUser.Equal(state.PostgresUser) ||
+		!plan.PostgresPassword.Equal(state.PostgresPassword) ||
+		!plan.PostgresDb.Equal(state.PostgresDb) {
+		plan.InternalDbUrl = types.StringUnknown()
+	}
+
+	resp.Plan.Set(ctx, &plan)
 }
 
 // MARK: Helper functions
