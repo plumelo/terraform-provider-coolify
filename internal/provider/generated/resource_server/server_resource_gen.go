@@ -5,8 +5,10 @@ package resource_server
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
@@ -18,12 +20,6 @@ import (
 func ServerResourceSchema(ctx context.Context) schema.Schema {
 	return schema.Schema{
 		Attributes: map[string]schema.Attribute{
-			"delete_unused_networks": schema.BoolAttribute{
-				Computed: true,
-			},
-			"delete_unused_volumes": schema.BoolAttribute{
-				Computed: true,
-			},
 			"description": schema.StringAttribute{
 				Optional:            true,
 				Computed:            true,
@@ -31,10 +27,14 @@ func ServerResourceSchema(ctx context.Context) schema.Schema {
 				MarkdownDescription: "The description of the server.",
 			},
 			"high_disk_usage_notification_sent": schema.BoolAttribute{
-				Computed: true,
+				Computed:            true,
+				Description:         "The flag to indicate if the high disk usage notification has been sent.",
+				MarkdownDescription: "The flag to indicate if the high disk usage notification has been sent.",
 			},
 			"id": schema.Int64Attribute{
-				Computed: true,
+				Computed:            true,
+				Description:         "The server ID.",
+				MarkdownDescription: "The server ID.",
 			},
 			"instant_validate": schema.BoolAttribute{
 				Optional:            true,
@@ -55,7 +55,9 @@ func ServerResourceSchema(ctx context.Context) schema.Schema {
 				MarkdownDescription: "Is build server.",
 			},
 			"log_drain_notification_sent": schema.BoolAttribute{
-				Computed: true,
+				Computed:            true,
+				Description:         "The flag to indicate if the log drain notification has been sent.",
+				MarkdownDescription: "The flag to indicate if the log drain notification has been sent.",
 			},
 			"name": schema.StringAttribute{
 				Optional:            true,
@@ -63,7 +65,7 @@ func ServerResourceSchema(ctx context.Context) schema.Schema {
 				Description:         "The name of the server.",
 				MarkdownDescription: "The name of the server.",
 			},
-			"port": schema.StringAttribute{
+			"port": schema.Int64Attribute{
 				Optional:            true,
 				Computed:            true,
 				Description:         "The port of the server.",
@@ -75,6 +77,19 @@ func ServerResourceSchema(ctx context.Context) schema.Schema {
 				Description:         "The UUID of the private key.",
 				MarkdownDescription: "The UUID of the private key.",
 			},
+			"proxy_type": schema.StringAttribute{
+				Optional:            true,
+				Computed:            true,
+				Description:         "The proxy type.",
+				MarkdownDescription: "The proxy type.",
+				Validators: []validator.String{
+					stringvalidator.OneOf(
+						"traefik",
+						"caddy",
+						"none",
+					),
+				},
+			},
 			"settings": schema.SingleNestedAttribute{
 				Attributes: map[string]schema.Attribute{
 					"concurrent_builds": schema.Int64Attribute{
@@ -84,10 +99,14 @@ func ServerResourceSchema(ctx context.Context) schema.Schema {
 						Computed: true,
 					},
 					"delete_unused_networks": schema.BoolAttribute{
-						Computed: true,
+						Computed:            true,
+						Description:         "The flag to indicate if the unused networks should be deleted.",
+						MarkdownDescription: "The flag to indicate if the unused networks should be deleted.",
 					},
 					"delete_unused_volumes": schema.BoolAttribute{
-						Computed: true,
+						Computed:            true,
+						Description:         "The flag to indicate if the unused volumes should be deleted.",
+						MarkdownDescription: "The flag to indicate if the unused volumes should be deleted.",
 					},
 					"docker_cleanup_frequency": schema.StringAttribute{
 						Computed: true,
@@ -196,13 +215,19 @@ func ServerResourceSchema(ctx context.Context) schema.Schema {
 				MarkdownDescription: "Server Settings model",
 			},
 			"swarm_cluster": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				Description:         "The swarm cluster configuration.",
+				MarkdownDescription: "The swarm cluster configuration.",
 			},
 			"unreachable_count": schema.Int64Attribute{
-				Computed: true,
+				Computed:            true,
+				Description:         "The unreachable count for your server.",
+				MarkdownDescription: "The unreachable count for your server.",
 			},
 			"unreachable_notification_sent": schema.BoolAttribute{
-				Computed: true,
+				Computed:            true,
+				Description:         "The flag to indicate if the unreachable notification has been sent.",
+				MarkdownDescription: "The flag to indicate if the unreachable notification has been sent.",
 			},
 			"user": schema.StringAttribute{
 				Optional:            true,
@@ -216,15 +241,15 @@ func ServerResourceSchema(ctx context.Context) schema.Schema {
 				MarkdownDescription: "The UUID of the server.",
 			},
 			"validation_logs": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				Description:         "The validation logs.",
+				MarkdownDescription: "The validation logs.",
 			},
 		},
 	}
 }
 
 type ServerModel struct {
-	DeleteUnusedNetworks          types.Bool    `tfsdk:"delete_unused_networks"`
-	DeleteUnusedVolumes           types.Bool    `tfsdk:"delete_unused_volumes"`
 	Description                   types.String  `tfsdk:"description"`
 	HighDiskUsageNotificationSent types.Bool    `tfsdk:"high_disk_usage_notification_sent"`
 	Id                            types.Int64   `tfsdk:"id"`
@@ -233,8 +258,9 @@ type ServerModel struct {
 	IsBuildServer                 types.Bool    `tfsdk:"is_build_server"`
 	LogDrainNotificationSent      types.Bool    `tfsdk:"log_drain_notification_sent"`
 	Name                          types.String  `tfsdk:"name"`
-	Port                          types.String  `tfsdk:"port"`
+	Port                          types.Int64   `tfsdk:"port"`
 	PrivateKeyUuid                types.String  `tfsdk:"private_key_uuid"`
+	ProxyType                     types.String  `tfsdk:"proxy_type"`
 	Settings                      SettingsValue `tfsdk:"settings"`
 	SwarmCluster                  types.String  `tfsdk:"swarm_cluster"`
 	UnreachableCount              types.Int64   `tfsdk:"unreachable_count"`

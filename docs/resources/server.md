@@ -52,22 +52,21 @@ resource "coolify_server" "example" {
 
 - `description` (String) The description of the server.
 - `is_build_server` (Boolean) Is build server.
-- `port` (String) The port of the server.
+- `port` (Number) The port of the server.
+- `proxy_type` (String) The proxy type.
 - `user` (String) The user of the server.
 
 ### Read-Only
 
-- `delete_unused_networks` (Boolean)
-- `delete_unused_volumes` (Boolean)
-- `high_disk_usage_notification_sent` (Boolean)
-- `id` (Number) The ID of this resource.
-- `log_drain_notification_sent` (Boolean)
+- `high_disk_usage_notification_sent` (Boolean) The flag to indicate if the high disk usage notification has been sent.
+- `id` (Number) The server ID.
+- `log_drain_notification_sent` (Boolean) The flag to indicate if the log drain notification has been sent.
 - `settings` (Attributes) Server Settings model (see [below for nested schema](#nestedatt--settings))
-- `swarm_cluster` (String)
-- `unreachable_count` (Number)
-- `unreachable_notification_sent` (Boolean)
+- `swarm_cluster` (String) The swarm cluster configuration.
+- `unreachable_count` (Number) The unreachable count for your server.
+- `unreachable_notification_sent` (Boolean) The flag to indicate if the unreachable notification has been sent.
 - `uuid` (String) The UUID of the server.
-- `validation_logs` (String)
+- `validation_logs` (String) The validation logs.
 
 <a id="nestedatt--settings"></a>
 ### Nested Schema for `settings`
@@ -76,8 +75,8 @@ Read-Only:
 
 - `concurrent_builds` (Number)
 - `created_at` (String)
-- `delete_unused_networks` (Boolean)
-- `delete_unused_volumes` (Boolean)
+- `delete_unused_networks` (Boolean) The flag to indicate if the unused networks should be deleted.
+- `delete_unused_volumes` (Boolean) The flag to indicate if the unused volumes should be deleted.
 - `docker_cleanup_frequency` (String)
 - `docker_cleanup_threshold` (Number)
 - `dynamic_timeout` (Number)

@@ -53,6 +53,11 @@ func TeamDataSourceSchema(ctx context.Context) schema.Schema {
 				Description:         "Whether to send scheduled task notifications via Discord.",
 				MarkdownDescription: "Whether to send scheduled task notifications via Discord.",
 			},
+			"discord_notifications_server_disk_usage": schema.BoolAttribute{
+				Computed:            true,
+				Description:         "Whether to send server disk usage notifications via Discord.",
+				MarkdownDescription: "Whether to send server disk usage notifications via Discord.",
+			},
 			"discord_notifications_status_changes": schema.BoolAttribute{
 				Computed:            true,
 				Description:         "Whether to send status change notifications via Discord.",
@@ -197,6 +202,11 @@ func TeamDataSourceSchema(ctx context.Context) schema.Schema {
 				Description:         "Whether to send scheduled task notifications via SMTP.",
 				MarkdownDescription: "Whether to send scheduled task notifications via SMTP.",
 			},
+			"smtp_notifications_server_disk_usage": schema.BoolAttribute{
+				Computed:            true,
+				Description:         "Whether to send server disk usage notifications via SMTP.",
+				MarkdownDescription: "Whether to send server disk usage notifications via SMTP.",
+			},
 			"smtp_notifications_status_changes": schema.BoolAttribute{
 				Computed:            true,
 				Description:         "Whether to send status change notifications via SMTP.",
@@ -319,6 +329,7 @@ type TeamModel struct {
 	DiscordNotificationsDatabaseBackups                 types.Bool   `tfsdk:"discord_notifications_database_backups"`
 	DiscordNotificationsDeployments                     types.Bool   `tfsdk:"discord_notifications_deployments"`
 	DiscordNotificationsScheduledTasks                  types.Bool   `tfsdk:"discord_notifications_scheduled_tasks"`
+	DiscordNotificationsServerDiskUsage                 types.Bool   `tfsdk:"discord_notifications_server_disk_usage"`
 	DiscordNotificationsStatusChanges                   types.Bool   `tfsdk:"discord_notifications_status_changes"`
 	DiscordNotificationsTest                            types.Bool   `tfsdk:"discord_notifications_test"`
 	DiscordWebhookUrl                                   types.String `tfsdk:"discord_webhook_url"`
@@ -337,6 +348,7 @@ type TeamModel struct {
 	SmtpNotificationsDatabaseBackups                    types.Bool   `tfsdk:"smtp_notifications_database_backups"`
 	SmtpNotificationsDeployments                        types.Bool   `tfsdk:"smtp_notifications_deployments"`
 	SmtpNotificationsScheduledTasks                     types.Bool   `tfsdk:"smtp_notifications_scheduled_tasks"`
+	SmtpNotificationsServerDiskUsage                    types.Bool   `tfsdk:"smtp_notifications_server_disk_usage"`
 	SmtpNotificationsStatusChanges                      types.Bool   `tfsdk:"smtp_notifications_status_changes"`
 	SmtpNotificationsTest                               types.Bool   `tfsdk:"smtp_notifications_test"`
 	SmtpPassword                                        types.String `tfsdk:"smtp_password"`

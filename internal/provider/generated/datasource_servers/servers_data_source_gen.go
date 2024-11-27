@@ -21,32 +21,45 @@ func ServersDataSourceSchema(ctx context.Context) schema.Schema {
 			"servers": schema.SetNestedAttribute{
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"delete_unused_networks": schema.BoolAttribute{
-							Computed: true,
-						},
-						"delete_unused_volumes": schema.BoolAttribute{
-							Computed: true,
-						},
 						"description": schema.StringAttribute{
-							Computed: true,
+							Computed:            true,
+							Description:         "The server description.",
+							MarkdownDescription: "The server description.",
 						},
 						"high_disk_usage_notification_sent": schema.BoolAttribute{
-							Computed: true,
+							Computed:            true,
+							Description:         "The flag to indicate if the high disk usage notification has been sent.",
+							MarkdownDescription: "The flag to indicate if the high disk usage notification has been sent.",
 						},
 						"id": schema.Int64Attribute{
-							Computed: true,
+							Computed:            true,
+							Description:         "The server ID.",
+							MarkdownDescription: "The server ID.",
 						},
 						"ip": schema.StringAttribute{
-							Computed: true,
+							Computed:            true,
+							Description:         "The IP address.",
+							MarkdownDescription: "The IP address.",
 						},
 						"log_drain_notification_sent": schema.BoolAttribute{
-							Computed: true,
+							Computed:            true,
+							Description:         "The flag to indicate if the log drain notification has been sent.",
+							MarkdownDescription: "The flag to indicate if the log drain notification has been sent.",
 						},
 						"name": schema.StringAttribute{
-							Computed: true,
+							Computed:            true,
+							Description:         "The server name.",
+							MarkdownDescription: "The server name.",
 						},
-						"port": schema.StringAttribute{
-							Computed: true,
+						"port": schema.Int64Attribute{
+							Computed:            true,
+							Description:         "The port number.",
+							MarkdownDescription: "The port number.",
+						},
+						"proxy_type": schema.StringAttribute{
+							Computed:            true,
+							Description:         "The proxy type.",
+							MarkdownDescription: "The proxy type.",
 						},
 						"settings": schema.SingleNestedAttribute{
 							Attributes: map[string]schema.Attribute{
@@ -57,10 +70,14 @@ func ServersDataSourceSchema(ctx context.Context) schema.Schema {
 									Computed: true,
 								},
 								"delete_unused_networks": schema.BoolAttribute{
-									Computed: true,
+									Computed:            true,
+									Description:         "The flag to indicate if the unused networks should be deleted.",
+									MarkdownDescription: "The flag to indicate if the unused networks should be deleted.",
 								},
 								"delete_unused_volumes": schema.BoolAttribute{
-									Computed: true,
+									Computed:            true,
+									Description:         "The flag to indicate if the unused volumes should be deleted.",
+									MarkdownDescription: "The flag to indicate if the unused volumes should be deleted.",
 								},
 								"docker_cleanup_frequency": schema.StringAttribute{
 									Computed: true,
@@ -169,22 +186,34 @@ func ServersDataSourceSchema(ctx context.Context) schema.Schema {
 							MarkdownDescription: "Server Settings model",
 						},
 						"swarm_cluster": schema.StringAttribute{
-							Computed: true,
+							Computed:            true,
+							Description:         "The swarm cluster configuration.",
+							MarkdownDescription: "The swarm cluster configuration.",
 						},
 						"unreachable_count": schema.Int64Attribute{
-							Computed: true,
+							Computed:            true,
+							Description:         "The unreachable count for your server.",
+							MarkdownDescription: "The unreachable count for your server.",
 						},
 						"unreachable_notification_sent": schema.BoolAttribute{
-							Computed: true,
+							Computed:            true,
+							Description:         "The flag to indicate if the unreachable notification has been sent.",
+							MarkdownDescription: "The flag to indicate if the unreachable notification has been sent.",
 						},
 						"user": schema.StringAttribute{
-							Computed: true,
+							Computed:            true,
+							Description:         "The user.",
+							MarkdownDescription: "The user.",
 						},
 						"uuid": schema.StringAttribute{
-							Computed: true,
+							Computed:            true,
+							Description:         "The server UUID.",
+							MarkdownDescription: "The server UUID.",
 						},
 						"validation_logs": schema.StringAttribute{
-							Computed: true,
+							Computed:            true,
+							Description:         "The validation logs.",
+							MarkdownDescription: "The validation logs.",
 						},
 					},
 					CustomType: ServersType{
@@ -227,42 +256,6 @@ func (t ServersType) ValueFromObject(ctx context.Context, in basetypes.ObjectVal
 	var diags diag.Diagnostics
 
 	attributes := in.Attributes()
-
-	deleteUnusedNetworksAttribute, ok := attributes["delete_unused_networks"]
-
-	if !ok {
-		diags.AddError(
-			"Attribute Missing",
-			`delete_unused_networks is missing from object`)
-
-		return nil, diags
-	}
-
-	deleteUnusedNetworksVal, ok := deleteUnusedNetworksAttribute.(basetypes.BoolValue)
-
-	if !ok {
-		diags.AddError(
-			"Attribute Wrong Type",
-			fmt.Sprintf(`delete_unused_networks expected to be basetypes.BoolValue, was: %T`, deleteUnusedNetworksAttribute))
-	}
-
-	deleteUnusedVolumesAttribute, ok := attributes["delete_unused_volumes"]
-
-	if !ok {
-		diags.AddError(
-			"Attribute Missing",
-			`delete_unused_volumes is missing from object`)
-
-		return nil, diags
-	}
-
-	deleteUnusedVolumesVal, ok := deleteUnusedVolumesAttribute.(basetypes.BoolValue)
-
-	if !ok {
-		diags.AddError(
-			"Attribute Wrong Type",
-			fmt.Sprintf(`delete_unused_volumes expected to be basetypes.BoolValue, was: %T`, deleteUnusedVolumesAttribute))
-	}
 
 	descriptionAttribute, ok := attributes["description"]
 
@@ -382,12 +375,30 @@ func (t ServersType) ValueFromObject(ctx context.Context, in basetypes.ObjectVal
 		return nil, diags
 	}
 
-	portVal, ok := portAttribute.(basetypes.StringValue)
+	portVal, ok := portAttribute.(basetypes.Int64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`port expected to be basetypes.StringValue, was: %T`, portAttribute))
+			fmt.Sprintf(`port expected to be basetypes.Int64Value, was: %T`, portAttribute))
+	}
+
+	proxyTypeAttribute, ok := attributes["proxy_type"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`proxy_type is missing from object`)
+
+		return nil, diags
+	}
+
+	proxyTypeVal, ok := proxyTypeAttribute.(basetypes.StringValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`proxy_type expected to be basetypes.StringValue, was: %T`, proxyTypeAttribute))
 	}
 
 	settingsAttribute, ok := attributes["settings"]
@@ -521,8 +532,6 @@ func (t ServersType) ValueFromObject(ctx context.Context, in basetypes.ObjectVal
 	}
 
 	return ServersValue{
-		DeleteUnusedNetworks:          deleteUnusedNetworksVal,
-		DeleteUnusedVolumes:           deleteUnusedVolumesVal,
 		Description:                   descriptionVal,
 		HighDiskUsageNotificationSent: highDiskUsageNotificationSentVal,
 		Id:                            idVal,
@@ -530,6 +539,7 @@ func (t ServersType) ValueFromObject(ctx context.Context, in basetypes.ObjectVal
 		LogDrainNotificationSent:      logDrainNotificationSentVal,
 		Name:                          nameVal,
 		Port:                          portVal,
+		ProxyType:                     proxyTypeVal,
 		Settings:                      settingsVal,
 		SwarmCluster:                  swarmClusterVal,
 		UnreachableCount:              unreachableCountVal,
@@ -604,42 +614,6 @@ func NewServersValue(attributeTypes map[string]attr.Type, attributes map[string]
 		return NewServersValueUnknown(), diags
 	}
 
-	deleteUnusedNetworksAttribute, ok := attributes["delete_unused_networks"]
-
-	if !ok {
-		diags.AddError(
-			"Attribute Missing",
-			`delete_unused_networks is missing from object`)
-
-		return NewServersValueUnknown(), diags
-	}
-
-	deleteUnusedNetworksVal, ok := deleteUnusedNetworksAttribute.(basetypes.BoolValue)
-
-	if !ok {
-		diags.AddError(
-			"Attribute Wrong Type",
-			fmt.Sprintf(`delete_unused_networks expected to be basetypes.BoolValue, was: %T`, deleteUnusedNetworksAttribute))
-	}
-
-	deleteUnusedVolumesAttribute, ok := attributes["delete_unused_volumes"]
-
-	if !ok {
-		diags.AddError(
-			"Attribute Missing",
-			`delete_unused_volumes is missing from object`)
-
-		return NewServersValueUnknown(), diags
-	}
-
-	deleteUnusedVolumesVal, ok := deleteUnusedVolumesAttribute.(basetypes.BoolValue)
-
-	if !ok {
-		diags.AddError(
-			"Attribute Wrong Type",
-			fmt.Sprintf(`delete_unused_volumes expected to be basetypes.BoolValue, was: %T`, deleteUnusedVolumesAttribute))
-	}
-
 	descriptionAttribute, ok := attributes["description"]
 
 	if !ok {
@@ -758,12 +732,30 @@ func NewServersValue(attributeTypes map[string]attr.Type, attributes map[string]
 		return NewServersValueUnknown(), diags
 	}
 
-	portVal, ok := portAttribute.(basetypes.StringValue)
+	portVal, ok := portAttribute.(basetypes.Int64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`port expected to be basetypes.StringValue, was: %T`, portAttribute))
+			fmt.Sprintf(`port expected to be basetypes.Int64Value, was: %T`, portAttribute))
+	}
+
+	proxyTypeAttribute, ok := attributes["proxy_type"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`proxy_type is missing from object`)
+
+		return NewServersValueUnknown(), diags
+	}
+
+	proxyTypeVal, ok := proxyTypeAttribute.(basetypes.StringValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`proxy_type expected to be basetypes.StringValue, was: %T`, proxyTypeAttribute))
 	}
 
 	settingsAttribute, ok := attributes["settings"]
@@ -897,8 +889,6 @@ func NewServersValue(attributeTypes map[string]attr.Type, attributes map[string]
 	}
 
 	return ServersValue{
-		DeleteUnusedNetworks:          deleteUnusedNetworksVal,
-		DeleteUnusedVolumes:           deleteUnusedVolumesVal,
 		Description:                   descriptionVal,
 		HighDiskUsageNotificationSent: highDiskUsageNotificationSentVal,
 		Id:                            idVal,
@@ -906,6 +896,7 @@ func NewServersValue(attributeTypes map[string]attr.Type, attributes map[string]
 		LogDrainNotificationSent:      logDrainNotificationSentVal,
 		Name:                          nameVal,
 		Port:                          portVal,
+		ProxyType:                     proxyTypeVal,
 		Settings:                      settingsVal,
 		SwarmCluster:                  swarmClusterVal,
 		UnreachableCount:              unreachableCountVal,
@@ -985,15 +976,14 @@ func (t ServersType) ValueType(ctx context.Context) attr.Value {
 var _ basetypes.ObjectValuable = ServersValue{}
 
 type ServersValue struct {
-	DeleteUnusedNetworks          basetypes.BoolValue   `tfsdk:"delete_unused_networks"`
-	DeleteUnusedVolumes           basetypes.BoolValue   `tfsdk:"delete_unused_volumes"`
 	Description                   basetypes.StringValue `tfsdk:"description"`
 	HighDiskUsageNotificationSent basetypes.BoolValue   `tfsdk:"high_disk_usage_notification_sent"`
 	Id                            basetypes.Int64Value  `tfsdk:"id"`
 	Ip                            basetypes.StringValue `tfsdk:"ip"`
 	LogDrainNotificationSent      basetypes.BoolValue   `tfsdk:"log_drain_notification_sent"`
 	Name                          basetypes.StringValue `tfsdk:"name"`
-	Port                          basetypes.StringValue `tfsdk:"port"`
+	Port                          basetypes.Int64Value  `tfsdk:"port"`
+	ProxyType                     basetypes.StringValue `tfsdk:"proxy_type"`
 	Settings                      basetypes.ObjectValue `tfsdk:"settings"`
 	SwarmCluster                  basetypes.StringValue `tfsdk:"swarm_cluster"`
 	UnreachableCount              basetypes.Int64Value  `tfsdk:"unreachable_count"`
@@ -1005,20 +995,19 @@ type ServersValue struct {
 }
 
 func (v ServersValue) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
-	attrTypes := make(map[string]tftypes.Type, 16)
+	attrTypes := make(map[string]tftypes.Type, 15)
 
 	var val tftypes.Value
 	var err error
 
-	attrTypes["delete_unused_networks"] = basetypes.BoolType{}.TerraformType(ctx)
-	attrTypes["delete_unused_volumes"] = basetypes.BoolType{}.TerraformType(ctx)
 	attrTypes["description"] = basetypes.StringType{}.TerraformType(ctx)
 	attrTypes["high_disk_usage_notification_sent"] = basetypes.BoolType{}.TerraformType(ctx)
 	attrTypes["id"] = basetypes.Int64Type{}.TerraformType(ctx)
 	attrTypes["ip"] = basetypes.StringType{}.TerraformType(ctx)
 	attrTypes["log_drain_notification_sent"] = basetypes.BoolType{}.TerraformType(ctx)
 	attrTypes["name"] = basetypes.StringType{}.TerraformType(ctx)
-	attrTypes["port"] = basetypes.StringType{}.TerraformType(ctx)
+	attrTypes["port"] = basetypes.Int64Type{}.TerraformType(ctx)
+	attrTypes["proxy_type"] = basetypes.StringType{}.TerraformType(ctx)
 	attrTypes["settings"] = basetypes.ObjectType{
 		AttrTypes: SettingsValue{}.AttributeTypes(ctx),
 	}.TerraformType(ctx)
@@ -1033,23 +1022,7 @@ func (v ServersValue) ToTerraformValue(ctx context.Context) (tftypes.Value, erro
 
 	switch v.state {
 	case attr.ValueStateKnown:
-		vals := make(map[string]tftypes.Value, 16)
-
-		val, err = v.DeleteUnusedNetworks.ToTerraformValue(ctx)
-
-		if err != nil {
-			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
-		}
-
-		vals["delete_unused_networks"] = val
-
-		val, err = v.DeleteUnusedVolumes.ToTerraformValue(ctx)
-
-		if err != nil {
-			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
-		}
-
-		vals["delete_unused_volumes"] = val
+		vals := make(map[string]tftypes.Value, 15)
 
 		val, err = v.Description.ToTerraformValue(ctx)
 
@@ -1106,6 +1079,14 @@ func (v ServersValue) ToTerraformValue(ctx context.Context) (tftypes.Value, erro
 		}
 
 		vals["port"] = val
+
+		val, err = v.ProxyType.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["proxy_type"] = val
 
 		val, err = v.Settings.ToTerraformValue(ctx)
 
@@ -1214,15 +1195,14 @@ func (v ServersValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue,
 	}
 
 	attributeTypes := map[string]attr.Type{
-		"delete_unused_networks":            basetypes.BoolType{},
-		"delete_unused_volumes":             basetypes.BoolType{},
 		"description":                       basetypes.StringType{},
 		"high_disk_usage_notification_sent": basetypes.BoolType{},
 		"id":                                basetypes.Int64Type{},
 		"ip":                                basetypes.StringType{},
 		"log_drain_notification_sent":       basetypes.BoolType{},
 		"name":                              basetypes.StringType{},
-		"port":                              basetypes.StringType{},
+		"port":                              basetypes.Int64Type{},
+		"proxy_type":                        basetypes.StringType{},
 		"settings": basetypes.ObjectType{
 			AttrTypes: SettingsValue{}.AttributeTypes(ctx),
 		},
@@ -1245,8 +1225,6 @@ func (v ServersValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue,
 	objVal, diags := types.ObjectValue(
 		attributeTypes,
 		map[string]attr.Value{
-			"delete_unused_networks":            v.DeleteUnusedNetworks,
-			"delete_unused_volumes":             v.DeleteUnusedVolumes,
 			"description":                       v.Description,
 			"high_disk_usage_notification_sent": v.HighDiskUsageNotificationSent,
 			"id":                                v.Id,
@@ -1254,6 +1232,7 @@ func (v ServersValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue,
 			"log_drain_notification_sent":       v.LogDrainNotificationSent,
 			"name":                              v.Name,
 			"port":                              v.Port,
+			"proxy_type":                        v.ProxyType,
 			"settings":                          settings,
 			"swarm_cluster":                     v.SwarmCluster,
 			"unreachable_count":                 v.UnreachableCount,
@@ -1281,14 +1260,6 @@ func (v ServersValue) Equal(o attr.Value) bool {
 		return true
 	}
 
-	if !v.DeleteUnusedNetworks.Equal(other.DeleteUnusedNetworks) {
-		return false
-	}
-
-	if !v.DeleteUnusedVolumes.Equal(other.DeleteUnusedVolumes) {
-		return false
-	}
-
 	if !v.Description.Equal(other.Description) {
 		return false
 	}
@@ -1314,6 +1285,10 @@ func (v ServersValue) Equal(o attr.Value) bool {
 	}
 
 	if !v.Port.Equal(other.Port) {
+		return false
+	}
+
+	if !v.ProxyType.Equal(other.ProxyType) {
 		return false
 	}
 
@@ -1358,15 +1333,14 @@ func (v ServersValue) Type(ctx context.Context) attr.Type {
 
 func (v ServersValue) AttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
-		"delete_unused_networks":            basetypes.BoolType{},
-		"delete_unused_volumes":             basetypes.BoolType{},
 		"description":                       basetypes.StringType{},
 		"high_disk_usage_notification_sent": basetypes.BoolType{},
 		"id":                                basetypes.Int64Type{},
 		"ip":                                basetypes.StringType{},
 		"log_drain_notification_sent":       basetypes.BoolType{},
 		"name":                              basetypes.StringType{},
-		"port":                              basetypes.StringType{},
+		"port":                              basetypes.Int64Type{},
+		"proxy_type":                        basetypes.StringType{},
 		"settings": basetypes.ObjectType{
 			AttrTypes: SettingsValue{}.AttributeTypes(ctx),
 		},

@@ -63,22 +63,21 @@ Required:
 
 Read-Only:
 
-- `delete_unused_networks` (Boolean)
-- `delete_unused_volumes` (Boolean)
-- `description` (String)
-- `high_disk_usage_notification_sent` (Boolean)
-- `id` (Number)
-- `ip` (String)
-- `log_drain_notification_sent` (Boolean)
-- `name` (String)
-- `port` (String)
+- `description` (String) The server description.
+- `high_disk_usage_notification_sent` (Boolean) The flag to indicate if the high disk usage notification has been sent.
+- `id` (Number) The server ID.
+- `ip` (String) The IP address.
+- `log_drain_notification_sent` (Boolean) The flag to indicate if the log drain notification has been sent.
+- `name` (String) The server name.
+- `port` (Number) The port number.
+- `proxy_type` (String) The proxy type.
 - `settings` (Attributes) Server Settings model (see [below for nested schema](#nestedatt--servers--settings))
-- `swarm_cluster` (String)
-- `unreachable_count` (Number)
-- `unreachable_notification_sent` (Boolean)
-- `user` (String)
-- `uuid` (String)
-- `validation_logs` (String)
+- `swarm_cluster` (String) The swarm cluster configuration.
+- `unreachable_count` (Number) The unreachable count for your server.
+- `unreachable_notification_sent` (Boolean) The flag to indicate if the unreachable notification has been sent.
+- `user` (String) The user.
+- `uuid` (String) The server UUID.
+- `validation_logs` (String) The validation logs.
 
 <a id="nestedatt--servers--settings"></a>
 ### Nested Schema for `servers.settings`
@@ -87,8 +86,8 @@ Read-Only:
 
 - `concurrent_builds` (Number)
 - `created_at` (String)
-- `delete_unused_networks` (Boolean)
-- `delete_unused_volumes` (Boolean)
+- `delete_unused_networks` (Boolean) The flag to indicate if the unused networks should be deleted.
+- `delete_unused_volumes` (Boolean) The flag to indicate if the unused volumes should be deleted.
 - `docker_cleanup_frequency` (String)
 - `docker_cleanup_threshold` (Number)
 - `dynamic_timeout` (Number)

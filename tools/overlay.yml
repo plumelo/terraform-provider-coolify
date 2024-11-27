@@ -11,15 +11,6 @@ actions:
         type: string
         format:
 
-  - target: "$.paths['/security/keys/{uuid}'].get.responses.200.content.application/json.schema"
-    description: Fix array response, should be singular object
-    update:
-      $ref: "#/components/schemas/PrivateKey"
-  - target: "$.paths['/servers/{uuid}'].patch.responses.201.content.application/json.schema"
-    description: Fix array response, should be singular object
-    update:
-      $ref: "#/components/schemas/Server"
-
   - target: "$.paths['/security/keys'].patch"
     description: Remove invalid patch operation - should be PATCH /security/keys/{uuid}
     remove: true
@@ -64,7 +55,7 @@ actions:
         security:
           - bearerAuth: []
 
-  - target: $.paths['/servers/{uuid}', '/projects/{uuid}', '/applications/{uuid}', '/security/keys/{uuid}'].patch
+  - target: $.paths['/projects/{uuid}', '/applications/{uuid}', '/security/keys/{uuid}'].patch
     description: add missing `uuid` parameters to patch operations
     update:
       parameters:
@@ -77,32 +68,6 @@ actions:
   - target: "$.components.schemas.Server.properties.proxy"
     description: Remove `proxy` property, it's not being returned reliably
     remove: true
-
-  - target: "$.components.schemas.Server"
-    description: Add `settings` ref on Server properties schema, fix port type
-    update:
-      properties:
-        port:
-          type: string
-        settings:
-          $ref: "#/components/schemas/ServerSetting"
-  - target: "$.paths['/servers'].post.requestBody.content.application/json.schema.properties.port"
-    description: Change port type from int to string
-    update:
-      type: string
-  - target: "$.paths['/servers/{uuid}'].patch.requestBody.content.application/json.schema.properties.port"
-    description: Change port type from int to string
-    update:
-      type: string
-
-  - target: "$.components.schemas.ServerSetting"
-    description: Add 'delete_unused_volumes', 'delete_unused_networks to Server settings schema (incorrectly listed on Server schema)
-    update:
-      properties:
-        delete_unused_volumes:
-          type: boolean
-        delete_unused_networks:
-          type: boolean
 
   - target: "$.paths['/services/{uuid}/envs/bulk'].patch.responses.201.content.application/json.schema"
     description: Fix array response, should be singular object

@@ -37,6 +37,13 @@ const (
 	ApplicationRedirectWww    ApplicationRedirect = "www"
 )
 
+// Defines values for ServerProxyType.
+const (
+	ServerProxyTypeCaddy   ServerProxyType = "caddy"
+	ServerProxyTypeNone    ServerProxyType = "none"
+	ServerProxyTypeTraefik ServerProxyType = "traefik"
+)
+
 // Defines values for CreateDockerfileApplicationJSONBodyBuildPack.
 const (
 	CreateDockerfileApplicationJSONBodyBuildPackDockercompose CreateDockerfileApplicationJSONBodyBuildPack = "dockercompose"
@@ -132,6 +139,20 @@ const (
 	Both   UpdateApplicationByUuidJSONBodyRedirect = "both"
 	NonWww UpdateApplicationByUuidJSONBodyRedirect = "non-www"
 	Www    UpdateApplicationByUuidJSONBodyRedirect = "www"
+)
+
+// Defines values for CreateServerJSONBodyProxyType.
+const (
+	CreateServerJSONBodyProxyTypeCaddy   CreateServerJSONBodyProxyType = "caddy"
+	CreateServerJSONBodyProxyTypeNone    CreateServerJSONBodyProxyType = "none"
+	CreateServerJSONBodyProxyTypeTraefik CreateServerJSONBodyProxyType = "traefik"
+)
+
+// Defines values for UpdateServerByUuidJSONBodyProxyType.
+const (
+	Caddy   UpdateServerByUuidJSONBodyProxyType = "caddy"
+	None    UpdateServerByUuidJSONBodyProxyType = "none"
+	Traefik UpdateServerByUuidJSONBodyProxyType = "traefik"
 )
 
 // Defines values for CreateServiceJSONBodyType.
@@ -252,6 +273,9 @@ type Application struct {
 
 	// CustomLabels Custom labels.
 	CustomLabels *string `json:"custom_labels"`
+
+	// CustomNginxConfiguration Custom Nginx configuration base64 encoded.
+	CustomNginxConfiguration *string `json:"custom_nginx_configuration"`
 
 	// DeletedAt The date and time when the application was deleted.
 	DeletedAt *time.Time `json:"deleted_at"`
@@ -579,31 +603,64 @@ type Project struct {
 
 // Server Server model
 type Server struct {
-	DeleteUnusedNetworks          *bool   `json:"delete_unused_networks,omitempty"`
-	DeleteUnusedVolumes           *bool   `json:"delete_unused_volumes,omitempty"`
-	Description                   *string `json:"description,omitempty"`
-	HighDiskUsageNotificationSent *bool   `json:"high_disk_usage_notification_sent,omitempty"`
-	Id                            *int    `json:"id,omitempty"`
-	Ip                            *string `json:"ip,omitempty"`
-	LogDrainNotificationSent      *bool   `json:"log_drain_notification_sent,omitempty"`
-	Name                          *string `json:"name,omitempty"`
-	Port                          *string `json:"port,omitempty"`
+	// Description The server description.
+	Description *string `json:"description,omitempty"`
+
+	// HighDiskUsageNotificationSent The flag to indicate if the high disk usage notification has been sent.
+	HighDiskUsageNotificationSent *bool `json:"high_disk_usage_notification_sent,omitempty"`
+
+	// Id The server ID.
+	Id *int `json:"id,omitempty"`
+
+	// Ip The IP address.
+	Ip *string `json:"ip,omitempty"`
+
+	// LogDrainNotificationSent The flag to indicate if the log drain notification has been sent.
+	LogDrainNotificationSent *bool `json:"log_drain_notification_sent,omitempty"`
+
+	// Name The server name.
+	Name *string `json:"name,omitempty"`
+
+	// Port The port number.
+	Port *int `json:"port,omitempty"`
+
+	// ProxyType The proxy type.
+	ProxyType *ServerProxyType `json:"proxy_type,omitempty"`
 
 	// Settings Server Settings model
-	Settings                    *ServerSetting `json:"settings,omitempty"`
-	SwarmCluster                *string        `json:"swarm_cluster,omitempty"`
-	UnreachableCount            *int           `json:"unreachable_count,omitempty"`
-	UnreachableNotificationSent *bool          `json:"unreachable_notification_sent,omitempty"`
-	User                        *string        `json:"user,omitempty"`
-	Uuid                        *string        `json:"uuid,omitempty"`
-	ValidationLogs              *string        `json:"validation_logs,omitempty"`
+	Settings *ServerSetting `json:"settings,omitempty"`
+
+	// SwarmCluster The swarm cluster configuration.
+	SwarmCluster *string `json:"swarm_cluster,omitempty"`
+
+	// UnreachableCount The unreachable count for your server.
+	UnreachableCount *int `json:"unreachable_count,omitempty"`
+
+	// UnreachableNotificationSent The flag to indicate if the unreachable notification has been sent.
+	UnreachableNotificationSent *bool `json:"unreachable_notification_sent,omitempty"`
+
+	// User The user.
+	User *string `json:"user,omitempty"`
+
+	// Uuid The server UUID.
+	Uuid *string `json:"uuid,omitempty"`
+
+	// ValidationLogs The validation logs.
+	ValidationLogs *string `json:"validation_logs,omitempty"`
 }
+
+// ServerProxyType The proxy type.
+type ServerProxyType string
 
 // ServerSetting Server Settings model
 type ServerSetting struct {
-	ConcurrentBuilds                  *int    `json:"concurrent_builds,omitempty"`
-	CreatedAt                         *string `json:"created_at,omitempty"`
-	DeleteUnusedNetworks              *bool   `json:"delete_unused_networks,omitempty"`
+	ConcurrentBuilds *int    `json:"concurrent_builds,omitempty"`
+	CreatedAt        *string `json:"created_at,omitempty"`
+
+	// DeleteUnusedNetworks The flag to indicate if the unused networks should be deleted.
+	DeleteUnusedNetworks *bool `json:"delete_unused_networks,omitempty"`
+
+	// DeleteUnusedVolumes The flag to indicate if the unused volumes should be deleted.
 	DeleteUnusedVolumes               *bool   `json:"delete_unused_volumes,omitempty"`
 	DockerCleanupFrequency            *string `json:"docker_cleanup_frequency,omitempty"`
 	DockerCleanupThreshold            *int    `json:"docker_cleanup_threshold,omitempty"`
@@ -719,6 +776,9 @@ type Team struct {
 	// DiscordNotificationsScheduledTasks Whether to send scheduled task notifications via Discord.
 	DiscordNotificationsScheduledTasks *bool `json:"discord_notifications_scheduled_tasks,omitempty"`
 
+	// DiscordNotificationsServerDiskUsage Whether to send server disk usage notifications via Discord.
+	DiscordNotificationsServerDiskUsage *bool `json:"discord_notifications_server_disk_usage,omitempty"`
+
 	// DiscordNotificationsStatusChanges Whether to send status change notifications via Discord.
 	DiscordNotificationsStatusChanges *bool `json:"discord_notifications_status_changes,omitempty"`
 
@@ -772,6 +832,9 @@ type Team struct {
 
 	// SmtpNotificationsScheduledTasks Whether to send scheduled task notifications via SMTP.
 	SmtpNotificationsScheduledTasks *bool `json:"smtp_notifications_scheduled_tasks,omitempty"`
+
+	// SmtpNotificationsServerDiskUsage Whether to send server disk usage notifications via SMTP.
+	SmtpNotificationsServerDiskUsage *bool `json:"smtp_notifications_server_disk_usage,omitempty"`
 
 	// SmtpNotificationsStatusChanges Whether to send status change notifications via SMTP.
 	SmtpNotificationsStatusChanges *bool `json:"smtp_notifications_status_changes,omitempty"`
@@ -2782,14 +2845,20 @@ type CreateServerJSONBody struct {
 	Name *string `json:"name,omitempty"`
 
 	// Port The port of the server.
-	Port *string `json:"port,omitempty"`
+	Port *int `json:"port,omitempty"`
 
 	// PrivateKeyUuid The UUID of the private key.
 	PrivateKeyUuid *string `json:"private_key_uuid,omitempty"`
 
+	// ProxyType The proxy type.
+	ProxyType *CreateServerJSONBodyProxyType `json:"proxy_type,omitempty"`
+
 	// User The user of the server.
 	User *string `json:"user,omitempty"`
 }
+
+// CreateServerJSONBodyProxyType defines parameters for CreateServer.
+type CreateServerJSONBodyProxyType string
 
 // UpdateServerByUuidJSONBody defines parameters for UpdateServerByUuid.
 type UpdateServerByUuidJSONBody struct {
@@ -2809,14 +2878,20 @@ type UpdateServerByUuidJSONBody struct {
 	Name *string `json:"name,omitempty"`
 
 	// Port The port of the server.
-	Port *string `json:"port,omitempty"`
+	Port *int `json:"port,omitempty"`
 
 	// PrivateKeyUuid The UUID of the private key.
 	PrivateKeyUuid *string `json:"private_key_uuid,omitempty"`
 
+	// ProxyType The proxy type.
+	ProxyType *UpdateServerByUuidJSONBodyProxyType `json:"proxy_type,omitempty"`
+
 	// User The user of the server.
 	User *string `json:"user,omitempty"`
 }
+
+// UpdateServerByUuidJSONBodyProxyType defines parameters for UpdateServerByUuid.
+type UpdateServerByUuidJSONBodyProxyType string
 
 // CreateServiceJSONBody defines parameters for CreateService.
 type CreateServiceJSONBody struct {

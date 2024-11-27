@@ -56,6 +56,11 @@ func TeamsDataSourceSchema(ctx context.Context) schema.Schema {
 							Description:         "Whether to send scheduled task notifications via Discord.",
 							MarkdownDescription: "Whether to send scheduled task notifications via Discord.",
 						},
+						"discord_notifications_server_disk_usage": schema.BoolAttribute{
+							Computed:            true,
+							Description:         "Whether to send server disk usage notifications via Discord.",
+							MarkdownDescription: "Whether to send server disk usage notifications via Discord.",
+						},
 						"discord_notifications_status_changes": schema.BoolAttribute{
 							Computed:            true,
 							Description:         "Whether to send status change notifications via Discord.",
@@ -199,6 +204,11 @@ func TeamsDataSourceSchema(ctx context.Context) schema.Schema {
 							Computed:            true,
 							Description:         "Whether to send scheduled task notifications via SMTP.",
 							MarkdownDescription: "Whether to send scheduled task notifications via SMTP.",
+						},
+						"smtp_notifications_server_disk_usage": schema.BoolAttribute{
+							Computed:            true,
+							Description:         "Whether to send server disk usage notifications via SMTP.",
+							MarkdownDescription: "Whether to send server disk usage notifications via SMTP.",
 						},
 						"smtp_notifications_status_changes": schema.BoolAttribute{
 							Computed:            true,
@@ -478,6 +488,24 @@ func (t TeamsType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue
 			fmt.Sprintf(`discord_notifications_scheduled_tasks expected to be basetypes.BoolValue, was: %T`, discordNotificationsScheduledTasksAttribute))
 	}
 
+	discordNotificationsServerDiskUsageAttribute, ok := attributes["discord_notifications_server_disk_usage"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`discord_notifications_server_disk_usage is missing from object`)
+
+		return nil, diags
+	}
+
+	discordNotificationsServerDiskUsageVal, ok := discordNotificationsServerDiskUsageAttribute.(basetypes.BoolValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`discord_notifications_server_disk_usage expected to be basetypes.BoolValue, was: %T`, discordNotificationsServerDiskUsageAttribute))
+	}
+
 	discordNotificationsStatusChangesAttribute, ok := attributes["discord_notifications_status_changes"]
 
 	if !ok {
@@ -800,6 +828,24 @@ func (t TeamsType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`smtp_notifications_scheduled_tasks expected to be basetypes.BoolValue, was: %T`, smtpNotificationsScheduledTasksAttribute))
+	}
+
+	smtpNotificationsServerDiskUsageAttribute, ok := attributes["smtp_notifications_server_disk_usage"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`smtp_notifications_server_disk_usage is missing from object`)
+
+		return nil, diags
+	}
+
+	smtpNotificationsServerDiskUsageVal, ok := smtpNotificationsServerDiskUsageAttribute.(basetypes.BoolValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`smtp_notifications_server_disk_usage expected to be basetypes.BoolValue, was: %T`, smtpNotificationsServerDiskUsageAttribute))
 	}
 
 	smtpNotificationsStatusChangesAttribute, ok := attributes["smtp_notifications_status_changes"]
@@ -1210,6 +1256,7 @@ func (t TeamsType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue
 		DiscordNotificationsDatabaseBackups:  discordNotificationsDatabaseBackupsVal,
 		DiscordNotificationsDeployments:      discordNotificationsDeploymentsVal,
 		DiscordNotificationsScheduledTasks:   discordNotificationsScheduledTasksVal,
+		DiscordNotificationsServerDiskUsage:  discordNotificationsServerDiskUsageVal,
 		DiscordNotificationsStatusChanges:    discordNotificationsStatusChangesVal,
 		DiscordNotificationsTest:             discordNotificationsTestVal,
 		DiscordWebhookUrl:                    discordWebhookUrlVal,
@@ -1228,6 +1275,7 @@ func (t TeamsType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue
 		SmtpNotificationsDatabaseBackups:     smtpNotificationsDatabaseBackupsVal,
 		SmtpNotificationsDeployments:         smtpNotificationsDeploymentsVal,
 		SmtpNotificationsScheduledTasks:      smtpNotificationsScheduledTasksVal,
+		SmtpNotificationsServerDiskUsage:     smtpNotificationsServerDiskUsageVal,
 		SmtpNotificationsStatusChanges:       smtpNotificationsStatusChangesVal,
 		SmtpNotificationsTest:                smtpNotificationsTestVal,
 		SmtpPassword:                         smtpPasswordVal,
@@ -1443,6 +1491,24 @@ func NewTeamsValue(attributeTypes map[string]attr.Type, attributes map[string]at
 			fmt.Sprintf(`discord_notifications_scheduled_tasks expected to be basetypes.BoolValue, was: %T`, discordNotificationsScheduledTasksAttribute))
 	}
 
+	discordNotificationsServerDiskUsageAttribute, ok := attributes["discord_notifications_server_disk_usage"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`discord_notifications_server_disk_usage is missing from object`)
+
+		return NewTeamsValueUnknown(), diags
+	}
+
+	discordNotificationsServerDiskUsageVal, ok := discordNotificationsServerDiskUsageAttribute.(basetypes.BoolValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`discord_notifications_server_disk_usage expected to be basetypes.BoolValue, was: %T`, discordNotificationsServerDiskUsageAttribute))
+	}
+
 	discordNotificationsStatusChangesAttribute, ok := attributes["discord_notifications_status_changes"]
 
 	if !ok {
@@ -1765,6 +1831,24 @@ func NewTeamsValue(attributeTypes map[string]attr.Type, attributes map[string]at
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`smtp_notifications_scheduled_tasks expected to be basetypes.BoolValue, was: %T`, smtpNotificationsScheduledTasksAttribute))
+	}
+
+	smtpNotificationsServerDiskUsageAttribute, ok := attributes["smtp_notifications_server_disk_usage"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`smtp_notifications_server_disk_usage is missing from object`)
+
+		return NewTeamsValueUnknown(), diags
+	}
+
+	smtpNotificationsServerDiskUsageVal, ok := smtpNotificationsServerDiskUsageAttribute.(basetypes.BoolValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`smtp_notifications_server_disk_usage expected to be basetypes.BoolValue, was: %T`, smtpNotificationsServerDiskUsageAttribute))
 	}
 
 	smtpNotificationsStatusChangesAttribute, ok := attributes["smtp_notifications_status_changes"]
@@ -2175,6 +2259,7 @@ func NewTeamsValue(attributeTypes map[string]attr.Type, attributes map[string]at
 		DiscordNotificationsDatabaseBackups:  discordNotificationsDatabaseBackupsVal,
 		DiscordNotificationsDeployments:      discordNotificationsDeploymentsVal,
 		DiscordNotificationsScheduledTasks:   discordNotificationsScheduledTasksVal,
+		DiscordNotificationsServerDiskUsage:  discordNotificationsServerDiskUsageVal,
 		DiscordNotificationsStatusChanges:    discordNotificationsStatusChangesVal,
 		DiscordNotificationsTest:             discordNotificationsTestVal,
 		DiscordWebhookUrl:                    discordWebhookUrlVal,
@@ -2193,6 +2278,7 @@ func NewTeamsValue(attributeTypes map[string]attr.Type, attributes map[string]at
 		SmtpNotificationsDatabaseBackups:     smtpNotificationsDatabaseBackupsVal,
 		SmtpNotificationsDeployments:         smtpNotificationsDeploymentsVal,
 		SmtpNotificationsScheduledTasks:      smtpNotificationsScheduledTasksVal,
+		SmtpNotificationsServerDiskUsage:     smtpNotificationsServerDiskUsageVal,
 		SmtpNotificationsStatusChanges:       smtpNotificationsStatusChangesVal,
 		SmtpNotificationsTest:                smtpNotificationsTestVal,
 		SmtpPassword:                         smtpPasswordVal,
@@ -2294,6 +2380,7 @@ type TeamsValue struct {
 	DiscordNotificationsDatabaseBackups                 basetypes.BoolValue   `tfsdk:"discord_notifications_database_backups"`
 	DiscordNotificationsDeployments                     basetypes.BoolValue   `tfsdk:"discord_notifications_deployments"`
 	DiscordNotificationsScheduledTasks                  basetypes.BoolValue   `tfsdk:"discord_notifications_scheduled_tasks"`
+	DiscordNotificationsServerDiskUsage                 basetypes.BoolValue   `tfsdk:"discord_notifications_server_disk_usage"`
 	DiscordNotificationsStatusChanges                   basetypes.BoolValue   `tfsdk:"discord_notifications_status_changes"`
 	DiscordNotificationsTest                            basetypes.BoolValue   `tfsdk:"discord_notifications_test"`
 	DiscordWebhookUrl                                   basetypes.StringValue `tfsdk:"discord_webhook_url"`
@@ -2312,6 +2399,7 @@ type TeamsValue struct {
 	SmtpNotificationsDatabaseBackups                    basetypes.BoolValue   `tfsdk:"smtp_notifications_database_backups"`
 	SmtpNotificationsDeployments                        basetypes.BoolValue   `tfsdk:"smtp_notifications_deployments"`
 	SmtpNotificationsScheduledTasks                     basetypes.BoolValue   `tfsdk:"smtp_notifications_scheduled_tasks"`
+	SmtpNotificationsServerDiskUsage                    basetypes.BoolValue   `tfsdk:"smtp_notifications_server_disk_usage"`
 	SmtpNotificationsStatusChanges                      basetypes.BoolValue   `tfsdk:"smtp_notifications_status_changes"`
 	SmtpNotificationsTest                               basetypes.BoolValue   `tfsdk:"smtp_notifications_test"`
 	SmtpPassword                                        basetypes.StringValue `tfsdk:"smtp_password"`
@@ -2338,7 +2426,7 @@ type TeamsValue struct {
 }
 
 func (v TeamsValue) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
-	attrTypes := make(map[string]tftypes.Type, 47)
+	attrTypes := make(map[string]tftypes.Type, 49)
 
 	var val tftypes.Value
 	var err error
@@ -2350,6 +2438,7 @@ func (v TeamsValue) ToTerraformValue(ctx context.Context) (tftypes.Value, error)
 	attrTypes["discord_notifications_database_backups"] = basetypes.BoolType{}.TerraformType(ctx)
 	attrTypes["discord_notifications_deployments"] = basetypes.BoolType{}.TerraformType(ctx)
 	attrTypes["discord_notifications_scheduled_tasks"] = basetypes.BoolType{}.TerraformType(ctx)
+	attrTypes["discord_notifications_server_disk_usage"] = basetypes.BoolType{}.TerraformType(ctx)
 	attrTypes["discord_notifications_status_changes"] = basetypes.BoolType{}.TerraformType(ctx)
 	attrTypes["discord_notifications_test"] = basetypes.BoolType{}.TerraformType(ctx)
 	attrTypes["discord_webhook_url"] = basetypes.StringType{}.TerraformType(ctx)
@@ -2370,6 +2459,7 @@ func (v TeamsValue) ToTerraformValue(ctx context.Context) (tftypes.Value, error)
 	attrTypes["smtp_notifications_database_backups"] = basetypes.BoolType{}.TerraformType(ctx)
 	attrTypes["smtp_notifications_deployments"] = basetypes.BoolType{}.TerraformType(ctx)
 	attrTypes["smtp_notifications_scheduled_tasks"] = basetypes.BoolType{}.TerraformType(ctx)
+	attrTypes["smtp_notifications_server_disk_usage"] = basetypes.BoolType{}.TerraformType(ctx)
 	attrTypes["smtp_notifications_status_changes"] = basetypes.BoolType{}.TerraformType(ctx)
 	attrTypes["smtp_notifications_test"] = basetypes.BoolType{}.TerraformType(ctx)
 	attrTypes["smtp_password"] = basetypes.StringType{}.TerraformType(ctx)
@@ -2397,7 +2487,7 @@ func (v TeamsValue) ToTerraformValue(ctx context.Context) (tftypes.Value, error)
 
 	switch v.state {
 	case attr.ValueStateKnown:
-		vals := make(map[string]tftypes.Value, 47)
+		vals := make(map[string]tftypes.Value, 49)
 
 		val, err = v.CreatedAt.ToTerraformValue(ctx)
 
@@ -2454,6 +2544,14 @@ func (v TeamsValue) ToTerraformValue(ctx context.Context) (tftypes.Value, error)
 		}
 
 		vals["discord_notifications_scheduled_tasks"] = val
+
+		val, err = v.DiscordNotificationsServerDiskUsage.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["discord_notifications_server_disk_usage"] = val
 
 		val, err = v.DiscordNotificationsStatusChanges.ToTerraformValue(ctx)
 
@@ -2598,6 +2696,14 @@ func (v TeamsValue) ToTerraformValue(ctx context.Context) (tftypes.Value, error)
 		}
 
 		vals["smtp_notifications_scheduled_tasks"] = val
+
+		val, err = v.SmtpNotificationsServerDiskUsage.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["smtp_notifications_server_disk_usage"] = val
 
 		val, err = v.SmtpNotificationsStatusChanges.ToTerraformValue(ctx)
 
@@ -2834,17 +2940,18 @@ func (v TeamsValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, d
 	}
 
 	attributeTypes := map[string]attr.Type{
-		"created_at":                             basetypes.StringType{},
-		"custom_server_limit":                    basetypes.StringType{},
-		"description":                            basetypes.StringType{},
-		"discord_enabled":                        basetypes.BoolType{},
-		"discord_notifications_database_backups": basetypes.BoolType{},
-		"discord_notifications_deployments":      basetypes.BoolType{},
-		"discord_notifications_scheduled_tasks":  basetypes.BoolType{},
-		"discord_notifications_status_changes":   basetypes.BoolType{},
-		"discord_notifications_test":             basetypes.BoolType{},
-		"discord_webhook_url":                    basetypes.StringType{},
-		"id":                                     basetypes.Int64Type{},
+		"created_at":                              basetypes.StringType{},
+		"custom_server_limit":                     basetypes.StringType{},
+		"description":                             basetypes.StringType{},
+		"discord_enabled":                         basetypes.BoolType{},
+		"discord_notifications_database_backups":  basetypes.BoolType{},
+		"discord_notifications_deployments":       basetypes.BoolType{},
+		"discord_notifications_scheduled_tasks":   basetypes.BoolType{},
+		"discord_notifications_server_disk_usage": basetypes.BoolType{},
+		"discord_notifications_status_changes":    basetypes.BoolType{},
+		"discord_notifications_test":              basetypes.BoolType{},
+		"discord_webhook_url":                     basetypes.StringType{},
+		"id":                                      basetypes.Int64Type{},
 		"members": basetypes.ListType{
 			ElemType: MembersValue{}.Type(ctx),
 		},
@@ -2861,6 +2968,7 @@ func (v TeamsValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, d
 		"smtp_notifications_database_backups":     basetypes.BoolType{},
 		"smtp_notifications_deployments":          basetypes.BoolType{},
 		"smtp_notifications_scheduled_tasks":      basetypes.BoolType{},
+		"smtp_notifications_server_disk_usage":    basetypes.BoolType{},
 		"smtp_notifications_status_changes":       basetypes.BoolType{},
 		"smtp_notifications_test":                 basetypes.BoolType{},
 		"smtp_password":                           basetypes.StringType{},
@@ -2903,6 +3011,7 @@ func (v TeamsValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, d
 			"discord_notifications_database_backups":  v.DiscordNotificationsDatabaseBackups,
 			"discord_notifications_deployments":       v.DiscordNotificationsDeployments,
 			"discord_notifications_scheduled_tasks":   v.DiscordNotificationsScheduledTasks,
+			"discord_notifications_server_disk_usage": v.DiscordNotificationsServerDiskUsage,
 			"discord_notifications_status_changes":    v.DiscordNotificationsStatusChanges,
 			"discord_notifications_test":              v.DiscordNotificationsTest,
 			"discord_webhook_url":                     v.DiscordWebhookUrl,
@@ -2921,6 +3030,7 @@ func (v TeamsValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, d
 			"smtp_notifications_database_backups":     v.SmtpNotificationsDatabaseBackups,
 			"smtp_notifications_deployments":          v.SmtpNotificationsDeployments,
 			"smtp_notifications_scheduled_tasks":      v.SmtpNotificationsScheduledTasks,
+			"smtp_notifications_server_disk_usage":    v.SmtpNotificationsServerDiskUsage,
 			"smtp_notifications_status_changes":       v.SmtpNotificationsStatusChanges,
 			"smtp_notifications_test":                 v.SmtpNotificationsTest,
 			"smtp_password":                           v.SmtpPassword,
@@ -2988,6 +3098,10 @@ func (v TeamsValue) Equal(o attr.Value) bool {
 	}
 
 	if !v.DiscordNotificationsScheduledTasks.Equal(other.DiscordNotificationsScheduledTasks) {
+		return false
+	}
+
+	if !v.DiscordNotificationsServerDiskUsage.Equal(other.DiscordNotificationsServerDiskUsage) {
 		return false
 	}
 
@@ -3060,6 +3174,10 @@ func (v TeamsValue) Equal(o attr.Value) bool {
 	}
 
 	if !v.SmtpNotificationsScheduledTasks.Equal(other.SmtpNotificationsScheduledTasks) {
+		return false
+	}
+
+	if !v.SmtpNotificationsServerDiskUsage.Equal(other.SmtpNotificationsServerDiskUsage) {
 		return false
 	}
 
@@ -3164,17 +3282,18 @@ func (v TeamsValue) Type(ctx context.Context) attr.Type {
 
 func (v TeamsValue) AttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
-		"created_at":                             basetypes.StringType{},
-		"custom_server_limit":                    basetypes.StringType{},
-		"description":                            basetypes.StringType{},
-		"discord_enabled":                        basetypes.BoolType{},
-		"discord_notifications_database_backups": basetypes.BoolType{},
-		"discord_notifications_deployments":      basetypes.BoolType{},
-		"discord_notifications_scheduled_tasks":  basetypes.BoolType{},
-		"discord_notifications_status_changes":   basetypes.BoolType{},
-		"discord_notifications_test":             basetypes.BoolType{},
-		"discord_webhook_url":                    basetypes.StringType{},
-		"id":                                     basetypes.Int64Type{},
+		"created_at":                              basetypes.StringType{},
+		"custom_server_limit":                     basetypes.StringType{},
+		"description":                             basetypes.StringType{},
+		"discord_enabled":                         basetypes.BoolType{},
+		"discord_notifications_database_backups":  basetypes.BoolType{},
+		"discord_notifications_deployments":       basetypes.BoolType{},
+		"discord_notifications_scheduled_tasks":   basetypes.BoolType{},
+		"discord_notifications_server_disk_usage": basetypes.BoolType{},
+		"discord_notifications_status_changes":    basetypes.BoolType{},
+		"discord_notifications_test":              basetypes.BoolType{},
+		"discord_webhook_url":                     basetypes.StringType{},
+		"id":                                      basetypes.Int64Type{},
 		"members": basetypes.ListType{
 			ElemType: MembersValue{}.Type(ctx),
 		},
@@ -3191,6 +3310,7 @@ func (v TeamsValue) AttributeTypes(ctx context.Context) map[string]attr.Type {
 		"smtp_notifications_database_backups":     basetypes.BoolType{},
 		"smtp_notifications_deployments":          basetypes.BoolType{},
 		"smtp_notifications_scheduled_tasks":      basetypes.BoolType{},
+		"smtp_notifications_server_disk_usage":    basetypes.BoolType{},
 		"smtp_notifications_status_changes":       basetypes.BoolType{},
 		"smtp_notifications_test":                 basetypes.BoolType{},
 		"smtp_password":                           basetypes.StringType{},

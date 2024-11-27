@@ -37,6 +37,7 @@ data "coolify_application" "example" {
 - `custom_docker_run_options` (String) Custom docker run options.
 - `custom_healthcheck_found` (Boolean) Custom healthcheck found.
 - `custom_labels` (String) Custom labels.
+- `custom_nginx_configuration` (String) Custom Nginx configuration base64 encoded.
 - `deleted_at` (String) The date and time when the application was deleted.
 - `description` (String) The application description.
 - `destination_id` (Number) Destination identifier.

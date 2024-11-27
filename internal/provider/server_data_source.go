@@ -124,7 +124,8 @@ func (d *serverDataSource) ApiToModel(
 		Ip:                            optionalString(response.Ip),
 		LogDrainNotificationSent:      optionalBool(response.LogDrainNotificationSent),
 		Name:                          optionalString(response.Name),
-		Port:                          optionalString(response.Port),
+		Port:                          optionalInt64(response.Port),
+		ProxyType:                     optionalString((*string)(response.ProxyType)), // enum value
 		Settings:                      settings,
 		SwarmCluster:                  optionalString(response.SwarmCluster),
 		UnreachableCount:              optionalInt64(response.UnreachableCount),

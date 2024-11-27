@@ -67,9 +67,15 @@ func (r *serverResource) Create(ctx context.Context, req resource.CreateRequest,
 		InstantValidate: plan.InstantValidate.ValueBoolPointer(),
 		Ip:              plan.Ip.ValueStringPointer(),
 		IsBuildServer:   plan.IsBuildServer.ValueBoolPointer(),
-		Port:            plan.Port.ValueStringPointer(),
-		PrivateKeyUuid:  plan.PrivateKeyUuid.ValueStringPointer(),
-		User:            plan.User.ValueStringPointer(),
+		Port: func() *int {
+			if plan.Port.IsUnknown() || plan.Port.IsNull() {
+				return nil
+			}
+			value := int(*plan.Port.ValueInt64Pointer())
+			return &value
+		}(),
+		PrivateKeyUuid: plan.PrivateKeyUuid.ValueStringPointer(),
+		User:           plan.User.ValueStringPointer(),
 	})
 
 	if err != nil {
@@ -144,8 +150,14 @@ func (r *serverResource) Update(ctx context.Context, req resource.UpdateRequest,
 		InstantValidate: plan.InstantValidate.ValueBoolPointer(),
 		Ip:              plan.Ip.ValueStringPointer(),
 		IsBuildServer:   plan.IsBuildServer.ValueBoolPointer(),
-		Port:            plan.Port.ValueStringPointer(),
-		PrivateKeyUuid:  plan.PrivateKeyUuid.ValueStringPointer(),
+		Port: func() *int { // todo: make a reusable fn for these inline conversions
+			if plan.Port.IsUnknown() || plan.Port.IsNull() {
+				return nil
+			}
+			value := int(*plan.Port.ValueInt64Pointer())
+			return &value
+		}(),
+		PrivateKeyUuid: plan.PrivateKeyUuid.ValueStringPointer(),
 		User: func() *string {
 			if plan.User.IsUnknown() {
 				return nil
@@ -219,8 +231,6 @@ func (r *serverResource) copyMissingAttributes(
 
 	// Values that are incorrectly mapped in API
 	data.Id = data.Settings.ServerId
-	data.DeleteUnusedNetworks = data.Settings.DeleteUnusedNetworks
-	data.DeleteUnusedVolumes = data.Settings.DeleteUnusedVolumes
 }
 
 func (r *serverResource) ReadFromAPI(
@@ -302,7 +312,7 @@ func (r *serverResource) ApiToModel(
 		IsBuildServer:                 optionalBool(response.Settings.IsBuildServer),
 		LogDrainNotificationSent:      optionalBool(response.LogDrainNotificationSent),
 		Name:                          optionalString(response.Name),
-		Port:                          optionalString(response.Port),
+		Port:                          optionalInt64(response.Port),
 		SwarmCluster:                  optionalString(response.SwarmCluster),
 		UnreachableCount:              optionalInt64(response.UnreachableCount),
 		UnreachableNotificationSent:   optionalBool(response.UnreachableNotificationSent),
@@ -311,6 +321,7 @@ func (r *serverResource) ApiToModel(
 		ValidationLogs:                optionalString(response.ValidationLogs),
 
 		// Proxy:                         resource_server.NewProxyValueUnknown(),
+		ProxyType:       optionalString((*string)(response.ProxyType)), // enum value
 		PrivateKeyUuid:  types.StringUnknown(),
 		InstantValidate: types.BoolUnknown(),
 		Settings:        settings,

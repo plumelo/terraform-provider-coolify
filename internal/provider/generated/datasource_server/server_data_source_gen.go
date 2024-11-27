@@ -18,32 +18,45 @@ import (
 func ServerDataSourceSchema(ctx context.Context) schema.Schema {
 	return schema.Schema{
 		Attributes: map[string]schema.Attribute{
-			"delete_unused_networks": schema.BoolAttribute{
-				Computed: true,
-			},
-			"delete_unused_volumes": schema.BoolAttribute{
-				Computed: true,
-			},
 			"description": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				Description:         "The server description.",
+				MarkdownDescription: "The server description.",
 			},
 			"high_disk_usage_notification_sent": schema.BoolAttribute{
-				Computed: true,
+				Computed:            true,
+				Description:         "The flag to indicate if the high disk usage notification has been sent.",
+				MarkdownDescription: "The flag to indicate if the high disk usage notification has been sent.",
 			},
 			"id": schema.Int64Attribute{
-				Computed: true,
+				Computed:            true,
+				Description:         "The server ID.",
+				MarkdownDescription: "The server ID.",
 			},
 			"ip": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				Description:         "The IP address.",
+				MarkdownDescription: "The IP address.",
 			},
 			"log_drain_notification_sent": schema.BoolAttribute{
-				Computed: true,
+				Computed:            true,
+				Description:         "The flag to indicate if the log drain notification has been sent.",
+				MarkdownDescription: "The flag to indicate if the log drain notification has been sent.",
 			},
 			"name": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				Description:         "The server name.",
+				MarkdownDescription: "The server name.",
 			},
-			"port": schema.StringAttribute{
-				Computed: true,
+			"port": schema.Int64Attribute{
+				Computed:            true,
+				Description:         "The port number.",
+				MarkdownDescription: "The port number.",
+			},
+			"proxy_type": schema.StringAttribute{
+				Computed:            true,
+				Description:         "The proxy type.",
+				MarkdownDescription: "The proxy type.",
 			},
 			"settings": schema.SingleNestedAttribute{
 				Attributes: map[string]schema.Attribute{
@@ -54,10 +67,14 @@ func ServerDataSourceSchema(ctx context.Context) schema.Schema {
 						Computed: true,
 					},
 					"delete_unused_networks": schema.BoolAttribute{
-						Computed: true,
+						Computed:            true,
+						Description:         "The flag to indicate if the unused networks should be deleted.",
+						MarkdownDescription: "The flag to indicate if the unused networks should be deleted.",
 					},
 					"delete_unused_volumes": schema.BoolAttribute{
-						Computed: true,
+						Computed:            true,
+						Description:         "The flag to indicate if the unused volumes should be deleted.",
+						MarkdownDescription: "The flag to indicate if the unused volumes should be deleted.",
 					},
 					"docker_cleanup_frequency": schema.StringAttribute{
 						Computed: true,
@@ -166,16 +183,24 @@ func ServerDataSourceSchema(ctx context.Context) schema.Schema {
 				MarkdownDescription: "Server Settings model",
 			},
 			"swarm_cluster": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				Description:         "The swarm cluster configuration.",
+				MarkdownDescription: "The swarm cluster configuration.",
 			},
 			"unreachable_count": schema.Int64Attribute{
-				Computed: true,
+				Computed:            true,
+				Description:         "The unreachable count for your server.",
+				MarkdownDescription: "The unreachable count for your server.",
 			},
 			"unreachable_notification_sent": schema.BoolAttribute{
-				Computed: true,
+				Computed:            true,
+				Description:         "The flag to indicate if the unreachable notification has been sent.",
+				MarkdownDescription: "The flag to indicate if the unreachable notification has been sent.",
 			},
 			"user": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				Description:         "The user.",
+				MarkdownDescription: "The user.",
 			},
 			"uuid": schema.StringAttribute{
 				Required:            true,
@@ -183,22 +208,23 @@ func ServerDataSourceSchema(ctx context.Context) schema.Schema {
 				MarkdownDescription: "Server's UUID",
 			},
 			"validation_logs": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				Description:         "The validation logs.",
+				MarkdownDescription: "The validation logs.",
 			},
 		},
 	}
 }
 
 type ServerModel struct {
-	DeleteUnusedNetworks          types.Bool    `tfsdk:"delete_unused_networks"`
-	DeleteUnusedVolumes           types.Bool    `tfsdk:"delete_unused_volumes"`
 	Description                   types.String  `tfsdk:"description"`
 	HighDiskUsageNotificationSent types.Bool    `tfsdk:"high_disk_usage_notification_sent"`
 	Id                            types.Int64   `tfsdk:"id"`
 	Ip                            types.String  `tfsdk:"ip"`
 	LogDrainNotificationSent      types.Bool    `tfsdk:"log_drain_notification_sent"`
 	Name                          types.String  `tfsdk:"name"`
-	Port                          types.String  `tfsdk:"port"`
+	Port                          types.Int64   `tfsdk:"port"`
+	ProxyType                     types.String  `tfsdk:"proxy_type"`
 	Settings                      SettingsValue `tfsdk:"settings"`
 	SwarmCluster                  types.String  `tfsdk:"swarm_cluster"`
 	UnreachableCount              types.Int64   `tfsdk:"unreachable_count"`

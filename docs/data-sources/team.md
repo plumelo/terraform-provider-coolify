@@ -46,6 +46,7 @@ output "current_team_id" {
 - `discord_notifications_database_backups` (Boolean) Whether to send database backup notifications via Discord.
 - `discord_notifications_deployments` (Boolean) Whether to send deployment notifications via Discord.
 - `discord_notifications_scheduled_tasks` (Boolean) Whether to send scheduled task notifications via Discord.
+- `discord_notifications_server_disk_usage` (Boolean) Whether to send server disk usage notifications via Discord.
 - `discord_notifications_status_changes` (Boolean) Whether to send status change notifications via Discord.
 - `discord_notifications_test` (Boolean) Whether to send test notifications via Discord.
 - `discord_webhook_url` (String, Sensitive) The Discord webhook URL.
@@ -63,6 +64,7 @@ output "current_team_id" {
 - `smtp_notifications_database_backups` (Boolean) Whether to send database backup notifications via SMTP.
 - `smtp_notifications_deployments` (Boolean) Whether to send deployment notifications via SMTP.
 - `smtp_notifications_scheduled_tasks` (Boolean) Whether to send scheduled task notifications via SMTP.
+- `smtp_notifications_server_disk_usage` (Boolean) Whether to send server disk usage notifications via SMTP.
 - `smtp_notifications_status_changes` (Boolean) Whether to send status change notifications via SMTP.
 - `smtp_notifications_test` (Boolean) Whether to send test notifications via SMTP.
 - `smtp_password` (String, Sensitive) The SMTP password.

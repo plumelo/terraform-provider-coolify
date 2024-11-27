@@ -75,6 +75,13 @@
 						}
 					},
 					{
+						"name": "custom_nginx_configuration",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "Custom Nginx configuration base64 encoded."
+						}
+					},
+					{
 						"name": "deleted_at",
 						"string": {
 							"computed_optional_required": "computed",
@@ -863,57 +870,59 @@
 						}
 					},
 					{
-						"name": "delete_unused_networks",
-						"bool": {
-							"computed_optional_required": "computed"
-						}
-					},
-					{
-						"name": "delete_unused_volumes",
-						"bool": {
-							"computed_optional_required": "computed"
-						}
-					},
-					{
 						"name": "description",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The server description."
 						}
 					},
 					{
 						"name": "high_disk_usage_notification_sent",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The flag to indicate if the high disk usage notification has been sent."
 						}
 					},
 					{
 						"name": "id",
 						"int64": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The server ID."
 						}
 					},
 					{
 						"name": "ip",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The IP address."
 						}
 					},
 					{
 						"name": "log_drain_notification_sent",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The flag to indicate if the log drain notification has been sent."
 						}
 					},
 					{
 						"name": "name",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The server name."
 						}
 					},
 					{
 						"name": "port",
+						"int64": {
+							"computed_optional_required": "computed",
+							"description": "The port number."
+						}
+					},
+					{
+						"name": "proxy_type",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The proxy type."
 						}
 					},
 					{
@@ -936,13 +945,15 @@
 								{
 									"name": "delete_unused_networks",
 									"bool": {
-										"computed_optional_required": "computed"
+										"computed_optional_required": "computed",
+										"description": "The flag to indicate if the unused networks should be deleted."
 									}
 								},
 								{
 									"name": "delete_unused_volumes",
 									"bool": {
-										"computed_optional_required": "computed"
+										"computed_optional_required": "computed",
+										"description": "The flag to indicate if the unused volumes should be deleted."
 									}
 								},
 								{
@@ -1144,31 +1155,36 @@
 					{
 						"name": "swarm_cluster",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The swarm cluster configuration."
 						}
 					},
 					{
 						"name": "unreachable_count",
 						"int64": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The unreachable count for your server."
 						}
 					},
 					{
 						"name": "unreachable_notification_sent",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The flag to indicate if the unreachable notification has been sent."
 						}
 					},
 					{
 						"name": "user",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The user."
 						}
 					},
 					{
 						"name": "validation_logs",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The validation logs."
 						}
 					}
 				]
@@ -1290,57 +1306,59 @@
 							"nested_object": {
 								"attributes": [
 									{
-										"name": "delete_unused_networks",
-										"bool": {
-											"computed_optional_required": "computed"
-										}
-									},
-									{
-										"name": "delete_unused_volumes",
-										"bool": {
-											"computed_optional_required": "computed"
-										}
-									},
-									{
 										"name": "description",
 										"string": {
-											"computed_optional_required": "computed"
+											"computed_optional_required": "computed",
+											"description": "The server description."
 										}
 									},
 									{
 										"name": "high_disk_usage_notification_sent",
 										"bool": {
-											"computed_optional_required": "computed"
+											"computed_optional_required": "computed",
+											"description": "The flag to indicate if the high disk usage notification has been sent."
 										}
 									},
 									{
 										"name": "id",
 										"int64": {
-											"computed_optional_required": "computed"
+											"computed_optional_required": "computed",
+											"description": "The server ID."
 										}
 									},
 									{
 										"name": "ip",
 										"string": {
-											"computed_optional_required": "computed"
+											"computed_optional_required": "computed",
+											"description": "The IP address."
 										}
 									},
 									{
 										"name": "log_drain_notification_sent",
 										"bool": {
-											"computed_optional_required": "computed"
+											"computed_optional_required": "computed",
+											"description": "The flag to indicate if the log drain notification has been sent."
 										}
 									},
 									{
 										"name": "name",
 										"string": {
-											"computed_optional_required": "computed"
+											"computed_optional_required": "computed",
+											"description": "The server name."
 										}
 									},
 									{
 										"name": "port",
+										"int64": {
+											"computed_optional_required": "computed",
+											"description": "The port number."
+										}
+									},
+									{
+										"name": "proxy_type",
 										"string": {
-											"computed_optional_required": "computed"
+											"computed_optional_required": "computed",
+											"description": "The proxy type."
 										}
 									},
 									{
@@ -1363,13 +1381,15 @@
 												{
 													"name": "delete_unused_networks",
 													"bool": {
-														"computed_optional_required": "computed"
+														"computed_optional_required": "computed",
+														"description": "The flag to indicate if the unused networks should be deleted."
 													}
 												},
 												{
 													"name": "delete_unused_volumes",
 													"bool": {
-														"computed_optional_required": "computed"
+														"computed_optional_required": "computed",
+														"description": "The flag to indicate if the unused volumes should be deleted."
 													}
 												},
 												{
@@ -1571,37 +1591,43 @@
 									{
 										"name": "swarm_cluster",
 										"string": {
-											"computed_optional_required": "computed"
+											"computed_optional_required": "computed",
+											"description": "The swarm cluster configuration."
 										}
 									},
 									{
 										"name": "unreachable_count",
 										"int64": {
-											"computed_optional_required": "computed"
+											"computed_optional_required": "computed",
+											"description": "The unreachable count for your server."
 										}
 									},
 									{
 										"name": "unreachable_notification_sent",
 										"bool": {
-											"computed_optional_required": "computed"
+											"computed_optional_required": "computed",
+											"description": "The flag to indicate if the unreachable notification has been sent."
 										}
 									},
 									{
 										"name": "user",
 										"string": {
-											"computed_optional_required": "computed"
+											"computed_optional_required": "computed",
+											"description": "The user."
 										}
 									},
 									{
 										"name": "uuid",
 										"string": {
-											"computed_optional_required": "computed"
+											"computed_optional_required": "computed",
+											"description": "The server UUID."
 										}
 									},
 									{
 										"name": "validation_logs",
 										"string": {
-											"computed_optional_required": "computed"
+											"computed_optional_required": "computed",
+											"description": "The validation logs."
 										}
 									}
 								]
@@ -1805,6 +1831,13 @@
 						}
 					},
 					{
+						"name": "discord_notifications_server_disk_usage",
+						"bool": {
+							"computed_optional_required": "computed",
+							"description": "Whether to send server disk usage notifications via Discord."
+						}
+					},
+					{
 						"name": "discord_notifications_status_changes",
 						"bool": {
 							"computed_optional_required": "computed",
@@ -1988,6 +2021,13 @@
 						"bool": {
 							"computed_optional_required": "computed",
 							"description": "Whether to send scheduled task notifications via SMTP."
+						}
+					},
+					{
+						"name": "smtp_notifications_server_disk_usage",
+						"bool": {
+							"computed_optional_required": "computed",
+							"description": "Whether to send server disk usage notifications via SMTP."
 						}
 					},
 					{
@@ -2207,6 +2247,13 @@
 										}
 									},
 									{
+										"name": "discord_notifications_server_disk_usage",
+										"bool": {
+											"computed_optional_required": "computed",
+											"description": "Whether to send server disk usage notifications via Discord."
+										}
+									},
+									{
 										"name": "discord_notifications_status_changes",
 										"bool": {
 											"computed_optional_required": "computed",
@@ -2397,6 +2444,13 @@
 										"bool": {
 											"computed_optional_required": "computed",
 											"description": "Whether to send scheduled task notifications via SMTP."
+										}
+									},
+									{
+										"name": "smtp_notifications_server_disk_usage",
+										"bool": {
+											"computed_optional_required": "computed",
+											"description": "Whether to send server disk usage notifications via SMTP."
 										}
 									},
 									{
@@ -2993,7 +3047,7 @@
 					},
 					{
 						"name": "port",
-						"string": {
+						"int64": {
 							"computed_optional_required": "computed_optional",
 							"description": "The port of the server."
 						}
@@ -3003,6 +3057,25 @@
 						"string": {
 							"computed_optional_required": "computed_optional",
 							"description": "The UUID of the private key."
+						}
+					},
+					{
+						"name": "proxy_type",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "The proxy type.",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.OneOf(\n\"traefik\",\n\"caddy\",\n\"none\",\n)"
+									}
+								}
+							]
 						}
 					},
 					{
@@ -3020,33 +3093,24 @@
 						}
 					},
 					{
-						"name": "delete_unused_networks",
-						"bool": {
-							"computed_optional_required": "computed"
-						}
-					},
-					{
-						"name": "delete_unused_volumes",
-						"bool": {
-							"computed_optional_required": "computed"
-						}
-					},
-					{
 						"name": "high_disk_usage_notification_sent",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The flag to indicate if the high disk usage notification has been sent."
 						}
 					},
 					{
 						"name": "id",
 						"int64": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The server ID."
 						}
 					},
 					{
 						"name": "log_drain_notification_sent",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The flag to indicate if the log drain notification has been sent."
 						}
 					},
 					{
@@ -3069,13 +3133,15 @@
 								{
 									"name": "delete_unused_networks",
 									"bool": {
-										"computed_optional_required": "computed"
+										"computed_optional_required": "computed",
+										"description": "The flag to indicate if the unused networks should be deleted."
 									}
 								},
 								{
 									"name": "delete_unused_volumes",
 									"bool": {
-										"computed_optional_required": "computed"
+										"computed_optional_required": "computed",
+										"description": "The flag to indicate if the unused volumes should be deleted."
 									}
 								},
 								{
@@ -3277,25 +3343,29 @@
 					{
 						"name": "swarm_cluster",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The swarm cluster configuration."
 						}
 					},
 					{
 						"name": "unreachable_count",
 						"int64": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The unreachable count for your server."
 						}
 					},
 					{
 						"name": "unreachable_notification_sent",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The flag to indicate if the unreachable notification has been sent."
 						}
 					},
 					{
 						"name": "validation_logs",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The validation logs."
 						}
 					}
 				]

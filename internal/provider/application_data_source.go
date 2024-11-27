@@ -89,6 +89,7 @@ func (d *applicationDataSource) ApiToModel(
 		CustomDockerRunOptions:          optionalString(response.CustomDockerRunOptions),
 		CustomHealthcheckFound:          optionalBool(response.CustomHealthcheckFound),
 		CustomLabels:                    optionalString(response.CustomLabels),
+		CustomNginxConfiguration:        optionalString(response.CustomNginxConfiguration),
 		DeletedAt:                       optionalTime(response.DeletedAt),
 		Description:                     optionalString(response.Description),
 		DestinationId:                   optionalInt64(response.DestinationId),

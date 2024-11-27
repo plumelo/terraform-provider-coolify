@@ -57,6 +57,11 @@ func ApplicationDataSourceSchema(ctx context.Context) schema.Schema {
 				Description:         "Custom labels.",
 				MarkdownDescription: "Custom labels.",
 			},
+			"custom_nginx_configuration": schema.StringAttribute{
+				Computed:            true,
+				Description:         "Custom Nginx configuration base64 encoded.",
+				MarkdownDescription: "Custom Nginx configuration base64 encoded.",
+			},
 			"deleted_at": schema.StringAttribute{
 				Computed:            true,
 				Description:         "The date and time when the application was deleted.",
@@ -406,6 +411,7 @@ type ApplicationModel struct {
 	CustomDockerRunOptions          types.String `tfsdk:"custom_docker_run_options"`
 	CustomHealthcheckFound          types.Bool   `tfsdk:"custom_healthcheck_found"`
 	CustomLabels                    types.String `tfsdk:"custom_labels"`
+	CustomNginxConfiguration        types.String `tfsdk:"custom_nginx_configuration"`
 	DeletedAt                       types.String `tfsdk:"deleted_at"`
 	Description                     types.String `tfsdk:"description"`
 	DestinationId                   types.Int64  `tfsdk:"destination_id"`

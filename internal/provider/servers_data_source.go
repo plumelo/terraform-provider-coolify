@@ -145,17 +145,15 @@ func (d *serversDataSource) apiToModel(
 			"ip":                                optionalString(sv.Ip),
 			"log_drain_notification_sent":       optionalBool(sv.LogDrainNotificationSent),
 			"name":                              optionalString(sv.Name),
-			"port":                              optionalString(sv.Port),
+			"port":                              optionalInt64(sv.Port),
 			"settings":                          settings,
 			"swarm_cluster":                     optionalString(sv.SwarmCluster),
 			"unreachable_count":                 optionalInt64(sv.UnreachableCount),
 			"unreachable_notification_sent":     optionalBool(sv.UnreachableNotificationSent),
+			"proxy_type":                        optionalString((*string)(sv.ProxyType)), // enum value
 			"user":                              optionalString(sv.User),
 			"uuid":                              optionalString(sv.Uuid),
 			"validation_logs":                   optionalString(sv.ValidationLogs),
-			// TODO: Wrong in Coolify schema
-			"delete_unused_networks": optionalBool(sv.Settings.DeleteUnusedNetworks),
-			"delete_unused_volumes":  optionalBool(sv.Settings.DeleteUnusedVolumes),
 		}
 
 		if !filterOnAttributes(attributes, filters) {
