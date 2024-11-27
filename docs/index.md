@@ -3,14 +3,14 @@
 page_title: "coolify Provider"
 subcategory: ""
 description: |-
-  The "coolify" provider facilitates interaction with resources supported by Coolify https://coolify.io/ v4.0.0-beta.364 and later.
+  The "coolify" provider facilitates interaction with resources supported by Coolify https://coolify.io/ v4.0.0-beta.373 and later.
   Before using this provider, you must configure it with your credentials, typically by setting the environment variable COOLIFY_TOKEN.
   For instructions on obtaining an API token, refer to Coolify's API documentation https://coolify.io/docs/api-reference/authorization#generate.
 ---
 
 # coolify Provider
 
-The "coolify" provider facilitates interaction with resources supported by [Coolify](https://coolify.io/) v4.0.0-beta.364 and later.
+The "coolify" provider facilitates interaction with resources supported by [Coolify](https://coolify.io/) v4.0.0-beta.373 and later.
 
 Before using this provider, you must configure it with your credentials, typically by setting the environment variable `COOLIFY_TOKEN`.
 
