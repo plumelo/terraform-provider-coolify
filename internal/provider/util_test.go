@@ -134,3 +134,149 @@ func TestBase64DecodeAttr(t *testing.T) {
 		})
 	}
 }
+
+func TestCombineResourceSchemas(t *testing.T) {
+	tests := []struct {
+		name     string
+		schemas  []res_schema.Schema
+		expected res_schema.Schema
+	}{
+		{
+			name:    "empty schemas",
+			schemas: []res_schema.Schema{},
+			expected: res_schema.Schema{
+				Attributes: map[string]res_schema.Attribute{},
+				Blocks:     map[string]res_schema.Block{},
+			},
+		},
+		{
+			name: "single schema",
+			schemas: []res_schema.Schema{
+				{
+					Description: "Test schema",
+					Attributes: map[string]res_schema.Attribute{
+						"attr1": res_schema.StringAttribute{Description: "Attribute 1"},
+					},
+					Blocks: map[string]res_schema.Block{
+						"block1": res_schema.SingleNestedBlock{Description: "Block 1"},
+					},
+				},
+			},
+			expected: res_schema.Schema{
+				Description: "Test schema",
+				Attributes: map[string]res_schema.Attribute{
+					"attr1": res_schema.StringAttribute{Description: "Attribute 1"},
+				},
+				Blocks: map[string]res_schema.Block{
+					"block1": res_schema.SingleNestedBlock{Description: "Block 1"},
+				},
+			},
+		},
+		{
+			name: "multiple schemas with overlapping fields",
+			schemas: []res_schema.Schema{
+				{
+					Description: "Schema 1",
+					Attributes: map[string]res_schema.Attribute{
+						"attr1": res_schema.StringAttribute{Description: "Attribute 1"},
+					},
+				},
+				{
+					Description: "Schema 2",
+					Attributes: map[string]res_schema.Attribute{
+						"attr1": res_schema.StringAttribute{Description: "Attribute 1 Override"},
+						"attr2": res_schema.StringAttribute{Description: "Attribute 2"},
+					},
+				},
+			},
+			expected: res_schema.Schema{
+				Description: "Schema 2",
+				Attributes: map[string]res_schema.Attribute{
+					"attr1": res_schema.StringAttribute{Description: "Attribute 1 Override"},
+					"attr2": res_schema.StringAttribute{Description: "Attribute 2"},
+				},
+				Blocks: map[string]res_schema.Block{},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := combineResourceSchemas(tt.schemas...)
+			assert.Equal(t, tt.expected, result)
+		})
+	}
+}
+
+func TestCombineDataSourceSchemas(t *testing.T) {
+	tests := []struct {
+		name     string
+		schemas  []ds_schema.Schema
+		expected ds_schema.Schema
+	}{
+		{
+			name:    "empty schemas",
+			schemas: []ds_schema.Schema{},
+			expected: ds_schema.Schema{
+				Attributes: map[string]ds_schema.Attribute{},
+				Blocks:     map[string]ds_schema.Block{},
+			},
+		},
+		{
+			name: "single schema",
+			schemas: []ds_schema.Schema{
+				{
+					Description: "Test schema",
+					Attributes: map[string]ds_schema.Attribute{
+						"attr1": ds_schema.StringAttribute{Description: "Attribute 1"},
+					},
+					Blocks: map[string]ds_schema.Block{
+						"block1": ds_schema.SingleNestedBlock{Description: "Block 1"},
+					},
+				},
+			},
+			expected: ds_schema.Schema{
+				Description: "Test schema",
+				Attributes: map[string]ds_schema.Attribute{
+					"attr1": ds_schema.StringAttribute{Description: "Attribute 1"},
+				},
+				Blocks: map[string]ds_schema.Block{
+					"block1": ds_schema.SingleNestedBlock{Description: "Block 1"},
+				},
+			},
+		},
+		{
+			name: "multiple schemas with overlapping fields",
+			schemas: []ds_schema.Schema{
+				{
+					Description: "Schema 1",
+					Attributes: map[string]ds_schema.Attribute{
+						"attr1": ds_schema.StringAttribute{Description: "Attribute 1"},
+					},
+				},
+				{
+					Description: "Schema 2",
+					Attributes: map[string]ds_schema.Attribute{
+						"attr1": ds_schema.StringAttribute{Description: "Attribute 1 Override"},
+						"attr2": ds_schema.StringAttribute{Description: "Attribute 2"},
+					},
+				},
+			},
+			expected: ds_schema.Schema{
+				Description: "Schema 2",
+				Attributes: map[string]ds_schema.Attribute{
+					"attr1": ds_schema.StringAttribute{Description: "Attribute 1 Override"},
+					"attr2": ds_schema.StringAttribute{Description: "Attribute 2"},
+				},
+				Blocks: map[string]ds_schema.Block{},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := combineDataSourceSchemas(tt.schemas...)
+			assert.Equal(t, tt.expected, result)
+		})
+	}
+}
