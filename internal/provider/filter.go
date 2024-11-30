@@ -91,20 +91,20 @@ func attributeValueToString(value attr.Value) string {
 	return value.String()
 }
 
-type structWithAttributeMap interface {
-	Attributes() map[string]attr.Value
+type filterableStructModel interface {
+	FilterAttributes() map[string]attr.Value
 }
 
 func filterOnStruct(
 	ctx context.Context,
-	item structWithAttributeMap,
+	item filterableStructModel,
 	filters []filterBlockModel,
 ) bool {
 	if len(filters) == 0 {
 		return true
 	}
 
-	attributes := item.Attributes()
+	attributes := item.FilterAttributes()
 
 	for _, filter := range filters {
 		filterName := filter.Name.ValueString()

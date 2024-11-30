@@ -20,13 +20,13 @@ type privateKeyModel struct {
 	UpdatedAt    types.String `tfsdk:"updated_at"`
 }
 
-var _ modelWithAttributes = privateKeyModel{}
+var _ filterableStructModel = privateKeyModel{}
 
 type privateKeyResourceModel = privateKeyModel
 type privateKeyDataSourceModel = privateKeyModel
 type privateKeysDataSourceModel struct {
-	PrivateKeys types.Set          `tfsdk:"private_keys"`
-	Filter      []filterBlockModel `tfsdk:"filter"`
+	PrivateKeys []privateKeyDataSourceModel `tfsdk:"private_keys"`
+	Filter      []filterBlockModel          `tfsdk:"filter"`
 }
 
 func (m privateKeyModel) FromAPI(apiModel *api.PrivateKey) privateKeyModel {
@@ -44,34 +44,13 @@ func (m privateKeyModel) FromAPI(apiModel *api.PrivateKey) privateKeyModel {
 	}
 }
 
-// Helpers required for types.Set
+var privateKeysFilterNames = []string{"name", "description", "team_id", "is_git_related"}
 
-func (m privateKeyModel) AttributeTypes() map[string]attr.Type {
-	return map[string]attr.Type{
-		"description":    types.StringType,
-		"fingerprint":    types.StringType,
-		"id":             types.Int64Type,
-		"is_git_related": types.BoolType,
-		"name":           types.StringType,
-		"private_key":    types.StringType,
-		"team_id":        types.Int64Type,
-		"uuid":           types.StringType,
-		"created_at":     types.StringType,
-		"updated_at":     types.StringType,
-	}
-}
-
-func (m privateKeyModel) Attributes() map[string]attr.Value {
+func (m privateKeyModel) FilterAttributes() map[string]attr.Value {
 	return map[string]attr.Value{
 		"description":    m.Description,
-		"fingerprint":    m.Fingerprint,
-		"id":             m.Id,
 		"is_git_related": m.IsGitRelated,
 		"name":           m.Name,
-		"private_key":    m.PrivateKey,
 		"team_id":        m.TeamId,
-		"uuid":           m.Uuid,
-		"created_at":     m.CreatedAt,
-		"updated_at":     m.UpdatedAt,
 	}
 }

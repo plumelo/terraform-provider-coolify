@@ -8,7 +8,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"terraform-provider-coolify/internal/api"
 	"terraform-provider-coolify/internal/provider/util"
@@ -24,8 +23,6 @@ func NewPrivateKeysDataSource() datasource.DataSource {
 type privateKeysDataSource struct {
 	providerData CoolifyProviderData
 }
-
-var privateKeysFilterNames = []string{"name", "description", "team_id", "is_git_related"}
 
 func (d *privateKeysDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_private_keys"
@@ -53,11 +50,6 @@ func (d *privateKeysDataSource) Schema(ctx context.Context, req datasource.Schem
 				Computed:    true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: dsResp.Schema.Attributes,
-				},
-				CustomType: types.SetType{
-					ElemType: types.ObjectType{
-						AttrTypes: privateKeyDataSourceModel{}.AttributeTypes(),
-					},
 				},
 			},
 		},
@@ -125,16 +117,8 @@ func (d *privateKeysDataSource) apiToModel(
 		privateKeyValues = append(privateKeyValues, model)
 	}
 
-	dataSet, diag := types.SetValueFrom(ctx, types.ObjectType{
-		AttrTypes: privateKeyDataSourceModel{}.AttributeTypes(),
-	}, privateKeyValues)
-	diags.Append(diag...)
-	if diags.HasError() {
-		return privateKeysDataSourceModel{}, diags
-	}
-
 	return privateKeysDataSourceModel{
-		PrivateKeys: dataSet,
+		PrivateKeys: privateKeyValues,
 		Filter:      filters,
 	}, diags
 }

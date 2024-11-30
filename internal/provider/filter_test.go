@@ -185,14 +185,14 @@ type mockStruct struct {
 	attributes map[string]attr.Value
 }
 
-func (m mockStruct) Attributes() map[string]attr.Value {
+func (m mockStruct) FilterAttributes() map[string]attr.Value {
 	return m.attributes
 }
 
 func TestFilterOnStruct(t *testing.T) {
 	tests := []struct {
 		name     string
-		item     structWithAttributeMap
+		item     filterableStructModel
 		filters  []filterBlockModel
 		expected bool
 	}{

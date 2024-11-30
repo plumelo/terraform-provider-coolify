@@ -6,23 +6,20 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestPrivateKeyModel_AttributeTypes(t *testing.T) {
-	model := privateKeyModel{}
-
-	expected := generateAttrTypesFromStruct(t, model)
-	actual := model.AttributeTypes()
-
-	assert.Equal(t, expected, actual, "AttributeTypes should return the correct attribute types")
-}
-
 func TestPrivateKeyModel_Attributes(t *testing.T) {
 	model := privateKeyModel{}
 
 	expected := generateAttrTypesFromStruct(t, model)
-	actual := model.Attributes()
+	actual := model.FilterAttributes()
 
-	for key := range expected {
+	for _, key := range privateKeysFilterNames {
 		_, exists := actual[key]
-		assert.True(t, exists, "Key %q should exist in Attributes", key)
+		assert.True(t, exists, "Key %q should exist in actual attributes", key)
 	}
+
+	for key := range actual {
+		_, exists := expected[key]
+		assert.True(t, exists, "Key %q should exist in expected attributes", key)
+	}
+
 }

@@ -3,20 +3,12 @@ package provider
 import (
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	datasource_schema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resource_schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 )
-
-type modelWithAttributes = interface {
-	// Attributes is required for filtering
-	Attributes() map[string]attr.Value
-	// AttributeTypes is required for List/Set type parsing
-	AttributeTypes() map[string]attr.Type
-}
 
 func makeResourceAttributeRequired(
 	attributes map[string]resource_schema.Attribute,
