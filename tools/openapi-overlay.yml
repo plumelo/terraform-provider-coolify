@@ -2176,6 +2176,9 @@ paths:
                     content:
                         application/json:
                             schema:
+                                required:
+                                    - uuid
+                                    - internal_db_url
                                 properties:
                                     uuid:
                                         type: string
@@ -5201,10 +5204,11 @@ components:
                     type: boolean
                     description: 'The flag to receive marketing emails.'
             type: object
-        PostgresqlDatabase:
+        DatabaseCommon:
             type: object
             required:
                 - database_type
+                - uuid
             properties:
                 # Common properties
                 database_type:
@@ -5250,26 +5254,31 @@ components:
                     type: string
                 limits_memory_swappiness:
                     type: integer
-                # PostgreSQL specific properties
-                postgres_conf:
-                    type: string
-                    nullable: true
-                postgres_db:
-                    type: string
-                postgres_user:
-                    type: string
-                postgres_password:
-                    type: string
-                postgres_host_auth_method:
-                    type: string
-                postgres_initdb_args:
-                    type: string
+        PostgresqlDatabase:
+            allOf:
+                - $ref: "#/components/schemas/DatabaseCommon"
+                - type: object
+                  properties:
+                    postgres_conf:
+                        type: string
+                        nullable: true
+                    postgres_db:
+                        type: string
+                    postgres_user:
+                        type: string
+                    postgres_password:
+                        type: string
+                    postgres_host_auth_method:
+                        type: string
+                    postgres_initdb_args:
+                        type: string
         Database:
             discriminator:
                 propertyName: database_type
                 mapping:
                     standalone-postgresql: "#/components/schemas/PostgresqlDatabase"
             oneOf:
+                - $ref: "#/components/schemas/DatabaseCommon" # Added so codegen creates a struct for usage
                 - $ref: "#/components/schemas/PostgresqlDatabase"
     responses:
         '400':

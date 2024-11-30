@@ -331,6 +331,11 @@ func generateAttrTypesFromStruct(t *testing.T, structType any) map[string]attr.T
 			continue
 		}
 
+		if field.Type.Kind() == reflect.Slice {
+			attrTypes[tag] = types.ListType{ElemType: types.ObjectType{}}
+			continue
+		}
+
 		switch field.Type {
 		case reflect.TypeOf(types.Dynamic{}):
 			attrTypes[tag] = types.DynamicType

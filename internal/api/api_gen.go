@@ -517,6 +517,28 @@ type Database struct {
 	union json.RawMessage
 }
 
+// DatabaseCommon defines model for DatabaseCommon.
+type DatabaseCommon struct {
+	CreatedAt               *time.Time `json:"created_at,omitempty"`
+	DatabaseType            string     `json:"database_type"`
+	DeletedAt               *time.Time `json:"deleted_at,omitempty"`
+	Description             *string    `json:"description,omitempty"`
+	Image                   *string    `json:"image,omitempty"`
+	InternalDbUrl           *string    `json:"internal_db_url,omitempty"`
+	IsPublic                *bool      `json:"is_public,omitempty"`
+	LimitsCpuShares         *int       `json:"limits_cpu_shares,omitempty"`
+	LimitsCpus              *string    `json:"limits_cpus,omitempty"`
+	LimitsCpuset            *string    `json:"limits_cpuset"`
+	LimitsMemory            *string    `json:"limits_memory,omitempty"`
+	LimitsMemoryReservation *string    `json:"limits_memory_reservation,omitempty"`
+	LimitsMemorySwap        *string    `json:"limits_memory_swap,omitempty"`
+	LimitsMemorySwappiness  *int       `json:"limits_memory_swappiness,omitempty"`
+	Name                    *string    `json:"name,omitempty"`
+	PublicPort              *int       `json:"public_port"`
+	UpdatedAt               *time.Time `json:"updated_at,omitempty"`
+	Uuid                    string     `json:"uuid"`
+}
+
 // Environment Environment model
 type Environment struct {
 	CreatedAt   *string `json:"created_at,omitempty"`
@@ -573,7 +595,7 @@ type PostgresqlDatabase struct {
 	PostgresUser            *string    `json:"postgres_user,omitempty"`
 	PublicPort              *int       `json:"public_port"`
 	UpdatedAt               *time.Time `json:"updated_at,omitempty"`
-	Uuid                    *string    `json:"uuid,omitempty"`
+	Uuid                    string     `json:"uuid"`
 }
 
 // PrivateKey Private Key model
@@ -3102,6 +3124,34 @@ type CreateEnvByServiceUuidJSONRequestBody CreateEnvByServiceUuidJSONBody
 // UpdateEnvsByServiceUuidJSONRequestBody defines body for UpdateEnvsByServiceUuid for application/json ContentType.
 type UpdateEnvsByServiceUuidJSONRequestBody UpdateEnvsByServiceUuidJSONBody
 
+// AsDatabaseCommon returns the union data inside the Database as a DatabaseCommon
+func (t Database) AsDatabaseCommon() (DatabaseCommon, error) {
+	var body DatabaseCommon
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDatabaseCommon overwrites any union data inside the Database as the provided DatabaseCommon
+func (t *Database) FromDatabaseCommon(v DatabaseCommon) error {
+	v.DatabaseType = "DatabaseCommon"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDatabaseCommon performs a merge with any union data inside the Database, using the provided DatabaseCommon
+func (t *Database) MergeDatabaseCommon(v DatabaseCommon) error {
+	v.DatabaseType = "DatabaseCommon"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
 // AsPostgresqlDatabase returns the union data inside the Database as a PostgresqlDatabase
 func (t Database) AsPostgresqlDatabase() (PostgresqlDatabase, error) {
 	var body PostgresqlDatabase
@@ -3144,6 +3194,8 @@ func (t Database) ValueByDiscriminator() (interface{}, error) {
 		return nil, err
 	}
 	switch discriminator {
+	case "DatabaseCommon":
+		return t.AsDatabaseCommon()
 	case "standalone-postgresql":
 		return t.AsPostgresqlDatabase()
 	default:
@@ -8945,8 +8997,8 @@ type CreateDatabasePostgresqlResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *struct {
-		InternalDbUrl *string `json:"internal_db_url,omitempty"`
-		Uuid          *string `json:"uuid,omitempty"`
+		InternalDbUrl string `json:"internal_db_url"`
+		Uuid          string `json:"uuid"`
 	}
 	JSON400 *N400
 	JSON401 *N401
@@ -12320,8 +12372,8 @@ func ParseCreateDatabasePostgresqlResponse(rsp *http.Response) (*CreateDatabaseP
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest struct {
-			InternalDbUrl *string `json:"internal_db_url,omitempty"`
-			Uuid          *string `json:"uuid,omitempty"`
+			InternalDbUrl string `json:"internal_db_url"`
+			Uuid          string `json:"uuid"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err

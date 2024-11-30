@@ -77,12 +77,13 @@ actions:
         $ref: "#/components/schemas/EnvironmentVariable"
 
   - target: $.components.schemas
-    description: Add a new schema for a PostgresqlDatabase
+    description: Add common database properties
     update:
-      PostgresqlDatabase:
+      DatabaseCommon:
         type: object
         required:
           - database_type
+          - uuid
         properties:
           # Common properties
           database_type:
@@ -128,20 +129,28 @@ actions:
             type: string
           limits_memory_swappiness:
             type: integer
-          # PostgreSQL specific properties
-          postgres_conf:
-            type: string
-            nullable: true
-          postgres_db:
-            type: string
-          postgres_user:
-            type: string
-          postgres_password:
-            type: string
-          postgres_host_auth_method:
-            type: string
-          postgres_initdb_args:
-            type: string
+
+  - target: $.components.schemas
+    description: Add a new schema for a PostgresqlDatabase
+    update:
+      PostgresqlDatabase:
+        allOf:
+          - $ref: "#/components/schemas/DatabaseCommon"
+          - type: object
+            properties:
+              postgres_conf:
+                type: string
+                nullable: true
+              postgres_db:
+                type: string
+              postgres_user:
+                type: string
+              postgres_password:
+                type: string
+              postgres_host_auth_method:
+                type: string
+              postgres_initdb_args:
+                type: string
 
   - target: $.components.schemas
     description: Add a new schema for a Database
@@ -152,6 +161,7 @@ actions:
           mapping:
             standalone-postgresql: "#/components/schemas/PostgresqlDatabase"
         oneOf:
+          - $ref: "#/components/schemas/DatabaseCommon" # Added so codegen creates a struct for usage
           - $ref: "#/components/schemas/PostgresqlDatabase"
 
   - target: $.paths['/databases/{uuid}'].get.responses.200.content.application/json.schema
@@ -166,12 +176,15 @@ actions:
         $ref: "#/components/schemas/Database"
 
   - target: $.paths['/databases/postgresql'].post.responses
-    description: Add missing properties to response
+    description: Add missing response to database creation
     update:
       "201":
         content:
           application/json:
             schema:
+              required:
+                - uuid
+                - internal_db_url
               properties:
                 uuid:
                   type: string

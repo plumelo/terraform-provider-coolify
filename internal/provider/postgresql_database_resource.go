@@ -10,13 +10,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 
 	"terraform-provider-coolify/internal/api"
-	"terraform-provider-coolify/internal/provider/generated/resource_postgresql_database"
 	"terraform-provider-coolify/internal/provider/util"
 )
 
@@ -27,10 +24,7 @@ var (
 	_ resource.ResourceWithModifyPlan  = &postgresqlDatabaseResource{}
 )
 
-type postgresqlDatabaseModelWithInternalDbUrl struct {
-	resource_postgresql_database.PostgresqlDatabaseModel
-	InternalDbUrl types.String `tfsdk:"internal_db_url"`
-}
+type postgresqlDatabaseResourceModel = postgresqlDatabaseModel
 
 func NewPostgresqlDatabaseResource() resource.Resource {
 	return &postgresqlDatabaseResource{}
@@ -45,66 +39,39 @@ func (r *postgresqlDatabaseResource) Metadata(ctx context.Context, req resource.
 }
 
 func (r *postgresqlDatabaseResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
-	resp.Schema = resource_postgresql_database.PostgresqlDatabaseResourceSchema(ctx)
-	resp.Schema.Description = "Create, read, update, and delete a Coolify database (PostgreSQL) resource."
-
-	if attr, ok := resp.Schema.Attributes["uuid"].(schema.StringAttribute); ok {
-		attr.Optional = false
-		attr.PlanModifiers = append(attr.PlanModifiers, stringplanmodifier.UseStateForUnknown())
-		resp.Schema.Attributes["uuid"] = attr
+	commonSchema := commonDatabaseModel{}.CommonSchema(ctx)
+	postgresqlSchema := schema.Schema{
+		Description: "Create, read, update, and delete a Coolify database (PostgreSQL) resource.",
+		Attributes: map[string]schema.Attribute{
+			"postgres_conf": schema.StringAttribute{
+				Optional:    true,
+				Description: "PostgreSQL conf",
+			},
+			"postgres_db": schema.StringAttribute{
+				Required:    true,
+				Description: "PostgreSQL database",
+			},
+			"postgres_host_auth_method": schema.StringAttribute{
+				Optional:    true,
+				Description: "PostgreSQL host auth method",
+			},
+			"postgres_initdb_args": schema.StringAttribute{
+				Optional:    true,
+				Description: "PostgreSQL initdb args",
+			},
+			"postgres_password": schema.StringAttribute{
+				Required:    true,
+				Sensitive:   true,
+				Description: "PostgreSQL password",
+			},
+			"postgres_user": schema.StringAttribute{
+				Required:    true,
+				Description: "PostgreSQL user",
+			},
+		},
 	}
 
-	resp.Schema.Attributes["internal_db_url"] = schema.StringAttribute{
-		Computed:            true,
-		Sensitive:           true,
-		PlanModifiers:       []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
-		Description:         "Internal URL of the database.",
-		MarkdownDescription: "Internal URL of the database.",
-	}
-
-	requiresReplace := []string{"destination_uuid", "project_uuid", "server_uuid", "environment_name"}
-	for _, attrName := range requiresReplace {
-		if attr, ok := resp.Schema.Attributes[attrName].(schema.StringAttribute); ok {
-			attr.PlanModifiers = append(attr.PlanModifiers, stringplanmodifier.RequiresReplace())
-			resp.Schema.Attributes[attrName] = attr
-		}
-	}
-
-	makeResourceAttributeSensitive(resp.Schema.Attributes, "postgres_password")
-
-	requiredAttrs := []string{"name", "postgres_db", "postgres_user", "postgres_password"}
-	for _, attrName := range requiredAttrs {
-		makeResourceAttributeRequired(resp.Schema.Attributes, attrName)
-	}
-
-	// todo: defaults should be managed by the Coolify API schema
-	// set them here improve user experience and give cleaner tf plan diffs
-	defaults := map[string]interface{}{
-		"destination_uuid": "",
-		"image":            "postgres:16-alpine",
-		"is_public":        false,
-		"instant_deploy":   false,
-		"public_port":      nil,
-
-		"postgres_initdb_args":      nil,
-		"postgres_host_auth_method": nil,
-		"postgres_conf":             nil,
-
-		"limits_cpu_shares":         int64(1024),
-		"limits_cpus":               "0",
-		"limits_cpuset":             nil,
-		"limits_memory":             "0",
-		"limits_memory_reservation": "0",
-		"limits_memory_swap":        "0",
-		"limits_memory_swappiness":  int64(60),
-	}
-
-	for attrName, defaultValue := range defaults {
-		if err := setResourceDefaultValue(resp.Schema.Attributes, attrName, defaultValue); err != nil {
-			resp.Diagnostics.AddError("Error setting default value", err.Error())
-			return
-		}
-	}
+	resp.Schema = mergeResourceSchemas(commonSchema, postgresqlSchema)
 }
 
 func (r *postgresqlDatabaseResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
@@ -112,7 +79,7 @@ func (r *postgresqlDatabaseResource) Configure(ctx context.Context, req resource
 }
 
 func (r *postgresqlDatabaseResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan postgresqlDatabaseModelWithInternalDbUrl
+	var plan postgresqlDatabaseResourceModel
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
@@ -183,12 +150,11 @@ func (r *postgresqlDatabaseResource) Create(ctx context.Context, req resource.Cr
 		return
 	}
 
-	data := r.ReadFromAPI(ctx, &resp.Diagnostics, *createResp.JSON201.Uuid)
-	r.copyMissingAttributes(&plan, &data)
+	data := r.ReadFromAPI(ctx, &resp.Diagnostics, createResp.JSON201.Uuid, plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 func (r *postgresqlDatabaseResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state postgresqlDatabaseModelWithInternalDbUrl
+	var state postgresqlDatabaseResourceModel
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
 	if resp.Diagnostics.HasError() {
@@ -203,14 +169,13 @@ func (r *postgresqlDatabaseResource) Read(ctx context.Context, req resource.Read
 		return
 	}
 
-	data := r.ReadFromAPI(ctx, &resp.Diagnostics, state.Uuid.ValueString())
-	r.copyMissingAttributes(&state, &data)
+	data := r.ReadFromAPI(ctx, &resp.Diagnostics, state.Uuid.ValueString(), state)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
 func (r *postgresqlDatabaseResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan postgresqlDatabaseModelWithInternalDbUrl
-	var state postgresqlDatabaseModelWithInternalDbUrl
+	var plan postgresqlDatabaseResourceModel
+	var state postgresqlDatabaseResourceModel
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
@@ -292,13 +257,12 @@ func (r *postgresqlDatabaseResource) Update(ctx context.Context, req resource.Up
 		r.providerData.client.RestartDatabaseByUuid(ctx, uuid)
 	}
 
-	data := r.ReadFromAPI(ctx, &resp.Diagnostics, uuid)
-	r.copyMissingAttributes(&plan, &data)
+	data := r.ReadFromAPI(ctx, &resp.Diagnostics, uuid, plan)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
 func (r *postgresqlDatabaseResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state postgresqlDatabaseModelWithInternalDbUrl
+	var state postgresqlDatabaseResourceModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
@@ -349,7 +313,7 @@ func (r *postgresqlDatabaseResource) ImportState(ctx context.Context, req resour
 }
 
 func (r *postgresqlDatabaseResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
-	var plan, state *postgresqlDatabaseModelWithInternalDbUrl
+	var plan, state *postgresqlDatabaseResourceModel
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
@@ -358,9 +322,9 @@ func (r *postgresqlDatabaseResource) ModifyPlan(ctx context.Context, req resourc
 	}
 
 	// If the username, password, or db change, the internal URL will change
-	if !plan.PostgresUser.Equal(state.PostgresUser) ||
-		!plan.PostgresPassword.Equal(state.PostgresPassword) ||
-		!plan.PostgresDb.Equal(state.PostgresDb) {
+	if !(plan.PostgresUser.Equal(state.PostgresUser) &&
+		plan.PostgresPassword.Equal(state.PostgresPassword) &&
+		plan.PostgresDb.Equal(state.PostgresDb)) {
 		plan.InternalDbUrl = types.StringUnknown()
 	}
 
@@ -369,81 +333,33 @@ func (r *postgresqlDatabaseResource) ModifyPlan(ctx context.Context, req resourc
 
 // MARK: Helper functions
 
-func (r *postgresqlDatabaseResource) copyMissingAttributes(
-	plan *postgresqlDatabaseModelWithInternalDbUrl,
-	data *postgresqlDatabaseModelWithInternalDbUrl,
-) {
-	// Values that are not returned in API response
-	data.DestinationUuid = plan.DestinationUuid
-	data.ProjectUuid = plan.ProjectUuid
-	data.ServerUuid = plan.ServerUuid
-	data.EnvironmentName = plan.EnvironmentName
-
-	data.InstantDeploy = plan.InstantDeploy
-}
-
 func (r *postgresqlDatabaseResource) ReadFromAPI(
 	ctx context.Context,
 	diags *diag.Diagnostics,
 	uuid string,
-) postgresqlDatabaseModelWithInternalDbUrl {
+	state postgresqlDatabaseResourceModel,
+) postgresqlDatabaseResourceModel {
 	readResp, err := r.providerData.client.GetDatabaseByUuidWithResponse(ctx, uuid)
 	if err != nil {
 		diags.AddError(
 			fmt.Sprintf("Error reading postgresql database: uuid=%s", uuid),
 			err.Error(),
 		)
-		return postgresqlDatabaseModelWithInternalDbUrl{}
+		return postgresqlDatabaseResourceModel{}
 	}
 
 	if readResp.StatusCode() != http.StatusOK {
 		diags.AddError(
 			"Unexpected HTTP status code reading postgresql database",
 			fmt.Sprintf("Received %s for postgresql database: uuid=%s. Details: %s", readResp.Status(), uuid, readResp.Body))
-		return postgresqlDatabaseModelWithInternalDbUrl{}
+		return postgresqlDatabaseResourceModel{}
 	}
 
-	return r.ApiToModel(ctx, diags, readResp.JSON200)
-}
-
-func (r *postgresqlDatabaseResource) ApiToModel(
-	ctx context.Context,
-	diags *diag.Diagnostics,
-	response *api.Database,
-) postgresqlDatabaseModelWithInternalDbUrl {
-	resp, err := response.AsPostgresqlDatabase()
+	result, err := postgresqlDatabaseResourceModel{}.FromAPI(readResp.JSON200, state)
 	if err != nil {
 		diags.AddError("Error converting API response to model", err.Error())
-		return postgresqlDatabaseModelWithInternalDbUrl{}
+		return postgresqlDatabaseResourceModel{}
 	}
 
-	return postgresqlDatabaseModelWithInternalDbUrl{
-		PostgresqlDatabaseModel: resource_postgresql_database.PostgresqlDatabaseModel{
-			Description:             optionalString(resp.Description),
-			Name:                    optionalString(resp.Name),
-			Uuid:                    optionalString(resp.Uuid),
-			PostgresUser:            optionalString(resp.PostgresUser),
-			PostgresPassword:        optionalString(resp.PostgresPassword),
-			PostgresDb:              optionalString(resp.PostgresDb),
-			PostgresConf:            optionalString(resp.PostgresConf),
-			PostgresHostAuthMethod:  optionalString(resp.PostgresHostAuthMethod),
-			PostgresInitdbArgs:      optionalString(resp.PostgresInitdbArgs),
-			DestinationUuid:         types.StringUnknown(),
-			ProjectUuid:             types.StringUnknown(),
-			ServerUuid:              types.StringUnknown(),
-			EnvironmentName:         types.StringUnknown(),
-			Image:                   optionalString(resp.Image),
-			InstantDeploy:           types.BoolUnknown(),
-			IsPublic:                optionalBool(resp.IsPublic),
-			PublicPort:              optionalInt64(resp.PublicPort),
-			LimitsCpuShares:         optionalInt64(resp.LimitsCpuShares),
-			LimitsCpus:              optionalString(resp.LimitsCpus),
-			LimitsCpuset:            optionalString(resp.LimitsCpuset),
-			LimitsMemory:            optionalString(resp.LimitsMemory),
-			LimitsMemoryReservation: optionalString(resp.LimitsMemoryReservation),
-			LimitsMemorySwap:        optionalString(resp.LimitsMemorySwap),
-			LimitsMemorySwappiness:  optionalInt64(resp.LimitsMemorySwappiness),
-		},
-		InternalDbUrl: optionalString(resp.InternalDbUrl),
-	}
+	return result
 }

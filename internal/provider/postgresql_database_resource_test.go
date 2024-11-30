@@ -1,19 +1,15 @@
 package provider_test
 
 import (
-	"context"
 	"fmt"
 	"regexp"
 	"testing"
 
-	tfresource "github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/knownvalue"
 	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/hashicorp/terraform-plugin-testing/tfjsonpath"
-
-	"terraform-provider-coolify/internal/provider"
 )
 
 func TestAccPostgresqlDatabaseResource(t *testing.T) {
@@ -116,11 +112,4 @@ func TestAccPostgresqlDatabaseResource(t *testing.T) {
 			},
 		},
 	})
-}
-
-func TestPostgresqlDatabaseResourceSchema(t *testing.T) {
-	ctx := context.Background()
-	rs := provider.NewPostgresqlDatabaseResource()
-	resp := &tfresource.SchemaResponse{}
-	rs.Schema(ctx, tfresource.SchemaRequest{}, resp)
 }
