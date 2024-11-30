@@ -35,7 +35,7 @@ output "current_team_id" {
 
 ### Optional
 
-- `id` (Number) Team ID
+- `id` (Number) The unique identifier of the team.
 
 ### Read-Only
 

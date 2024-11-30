@@ -14,6 +14,8 @@ import (
 var _ datasource.DataSource = &privateKeyDataSource{}
 var _ datasource.DataSourceWithConfigure = &privateKeyDataSource{}
 
+type privateKeyDataSourceModel = privateKeyModel
+
 func NewPrivateKeyDataSource() datasource.DataSource {
 	return &privateKeyDataSource{}
 }

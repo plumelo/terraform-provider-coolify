@@ -111,7 +111,6 @@ func TestAccTeamsDataSource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resName, "teams.0.members.0.email"),
 				),
 			},
-
 			// Test with_members=false should still work
 			{
 				Config: `

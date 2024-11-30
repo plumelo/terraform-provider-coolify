@@ -22,13 +22,6 @@ type privateKeyModel struct {
 
 var _ filterableStructModel = privateKeyModel{}
 
-type privateKeyResourceModel = privateKeyModel
-type privateKeyDataSourceModel = privateKeyModel
-type privateKeysDataSourceModel struct {
-	PrivateKeys []privateKeyDataSourceModel `tfsdk:"private_keys"`
-	Filter      []filterBlockModel          `tfsdk:"filter"`
-}
-
 func (m privateKeyModel) FromAPI(apiModel *api.PrivateKey) privateKeyModel {
 	return privateKeyModel{
 		Description:  optionalString(apiModel.Description),

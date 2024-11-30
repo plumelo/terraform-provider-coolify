@@ -16,6 +16,11 @@ import (
 var _ datasource.DataSource = &privateKeysDataSource{}
 var _ datasource.DataSourceWithConfigure = &privateKeysDataSource{}
 
+type privateKeysDataSourceModel struct {
+	PrivateKeys []privateKeyDataSourceModel `tfsdk:"private_keys"`
+	Filter      []filterBlockModel          `tfsdk:"filter"`
+}
+
 func NewPrivateKeysDataSource() datasource.DataSource {
 	return &privateKeysDataSource{}
 }

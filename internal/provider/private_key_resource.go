@@ -27,6 +27,8 @@ var (
 	_ resource.ResourceWithModifyPlan  = &privateKeyResource{}
 )
 
+type privateKeyResourceModel = privateKeyModel
+
 func NewPrivateKeyResource() resource.Resource {
 	return &privateKeyResource{}
 }
