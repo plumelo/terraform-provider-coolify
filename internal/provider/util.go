@@ -5,6 +5,8 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
+	ds_schema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	res_schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
@@ -48,6 +50,49 @@ func optionalStringListValue(values *[]string) types.List {
 	}
 
 	return types.ListValueMust(types.StringType, elems)
+}
+
+func tfStringToOptionalString(value types.String) *string {
+	if value.IsNull() || value.IsUnknown() {
+		return nil
+	}
+	return value.ValueStringPointer()
+}
+
+func tfStringToRequiredString(value types.String) string {
+	if value.IsNull() || value.IsUnknown() {
+		return ""
+	}
+	return value.ValueString()
+}
+
+func tfBoolToOptionalBool(value types.Bool) *bool {
+	if value.IsNull() || value.IsUnknown() {
+		return nil
+	}
+	return value.ValueBoolPointer()
+}
+
+func tfBoolToRequiredBool(value types.Bool) bool {
+	if value.IsNull() || value.IsUnknown() {
+		return false
+	}
+	return value.ValueBool()
+}
+
+func tfInt64ToOptionalInt(value types.Int64) *int {
+	if value.IsNull() || value.IsUnknown() {
+		return nil
+	}
+	v := int(value.ValueInt64())
+	return &v
+}
+
+func tfInt64ToRequiredInt(value types.Int64) int {
+	if value.IsNull() || value.IsUnknown() {
+		return 0
+	}
+	return int(value.ValueInt64())
 }
 
 func base64Encode(value *string) *string {
