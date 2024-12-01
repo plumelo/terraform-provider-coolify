@@ -34,6 +34,7 @@ func NewAPIClient(version, server, apiToken string, retry RetryConfig) (*ClientW
 	retryClient.RetryWaitMin = time.Duration(retry.MinWait) * time.Second
 	retryClient.RetryWaitMax = time.Duration(retry.MaxWait) * time.Second
 	retryClient.Backoff = retryablehttp.DefaultBackoff
+	retryClient.Logger = nil
 
 	httpClient := retryClient.StandardClient()
 
