@@ -67,19 +67,24 @@ jobs:
         with:
           go-version-file: "go.mod"
           cache: true
-      - run: go install github.com/jstemmer/go-junit-report/v2@latest
       - run: |
+          go clean -testcache
           go test -v \
-          -cover -coverprofile=coverage.txt -covermode=atomic \
-          ./... 2>&1 | go-junit-report -set-exit-code > junit.xml
+            -cover -coverprofile=coverage.txt -covermode=atomic \
+            ./... 2>&1 | tee test-output
+          go install github.com/jstemmer/go-junit-report/v2@latest
+          $(go env GOPATH)/bin/go-junit-report -in test-output -set-exit-code -iocopy	-out junit.xml
 
       - uses: codecov/codecov-action@015f24e6818733317a2da2edd6290ab26238649a # v5.0.7
+        if: ${{ !startsWith(github.head_ref, 'renovate/') }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-      - if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@9739113ad922ea0a9abb4b2c0f8bf6a4aa8ef820 # v1.0.1
+          flags: unit
+      - uses: codecov/test-results-action@9739113ad922ea0a9abb4b2c0f8bf6a4aa8ef820 # v1.0.1
+        if: ${{ !cancelled() }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          flags: unit
 
   acceptance:
     name: Acceptance Tests
@@ -116,24 +121,28 @@ jobs:
           statedir: /tmp/tailscale-state/
           tags: tag:ci
           version: 1.76.1
-
-      - run: go install github.com/jstemmer/go-junit-report/v2@latest
       - run: |
+          go clean -testcache
           go test -v \
-          -cover -coverprofile=coverage.txt -covermode=atomic \
-          -run '^(TestAcc|TestProtocol6ProviderServerConfigure)' \
-          ./internal/provider/ 2>&1 | go-junit-report -set-exit-code > junit.xml
+            -cover -coverprofile=coverage.txt -covermode=atomic \
+            -run '^(TestAcc|TestProtocol6ProviderServerConfigure)' \
+            ./internal/provider/ 2>&1 | tee test-output
+          go install github.com/jstemmer/go-junit-report/v2@latest
+          $(go env GOPATH)/bin/go-junit-report -in test-output -set-exit-code -iocopy	-out junit.xml
         env:
           TF_ACC: "1"
+          TF_LOG: WARN
           COOLIFY_ENDPOINT: ${{ secrets.ACC_COOLIFY_ENDPOINT }}
           COOLIFY_TOKEN: ${{ secrets.ACC_COOLIFY_TOKEN }}
         timeout-minutes: 10
 
       - uses: codecov/codecov-action@015f24e6818733317a2da2edd6290ab26238649a # v5.0.7
-        if: matrix.terraform == '1.9.*'
+        if: ${{ !startsWith(github.head_ref, 'renovate/') }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          flags: acceptance
       - uses: codecov/test-results-action@9739113ad922ea0a9abb4b2c0f8bf6a4aa8ef820 # v1.0.1
-        if: ${{ !cancelled() && matrix.terraform == '1.9.*' }}
+        if: ${{ !cancelled() }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          flags: acceptance
