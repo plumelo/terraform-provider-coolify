@@ -87,30 +87,51 @@ jobs:
           flags: unit
 
   acceptance:
+    if: ${{ !contains(github.event.head_commit.message, '[skip acc]') }}
     name: Acceptance Tests
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    if: ${{ !contains(github.event.head_commit.message, '[skip acc]') }}
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.tool }}-${{ matrix.version }}
+      cancel-in-progress: true
+
     strategy:
+      fail-fast: false
       # todo: parallelism isn't working due to acceptance test resource name collision
       max-parallel: 1
-      fail-fast: false
       matrix:
-        terraform:
-          # - "1.5.7" # todo: Coolify AccTest server is being rate limited, causing test failures
-          - "1.9.*"
+        include:
+          # - tool: terraform
+          #   version: v1.5.7
+          - tool: terraform
+            version: v1.9.x
+          - tool: opentofu
+            version: v1.8.x
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
         with:
           go-version-file: "go.mod"
           cache: true
-      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
-        with:
-          terraform_version: ${{ matrix.terraform }}
-          terraform_wrapper: false
       - run: go mod download
+
+      - if: matrix.tool == 'terraform'
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+        with:
+          terraform_version: ${{ matrix.version }}
+          terraform_wrapper: false
+      - if: matrix.tool == 'opentofu'
+        uses: opentofu/setup-opentofu@12f4debbf681675350b6cd1f0ff8ecfbda62027b # v1.0.4
+        with:
+          tofu_version: ${{ matrix.version }}
+          tofu_wrapper: false
+      - if: matrix.tool == 'opentofu'
+        run: |
+          echo TF_ACC_TERRAFORM_PATH="$(which tofu)" >> $GITHUB_ENV
+          echo TF_ACC_PROVIDER_NAMESPACE="hashicorp" >> $GITHUB_ENV
+          echo TF_ACC_PROVIDER_HOST="registry.opentofu.org" >> $GITHUB_ENV
 
       - uses: tailscale/github-action@67573e622a7b555a2f4e2078c6ad161201e3e91e # Avoiding "v2" tag due to outdated action
         with:
@@ -120,7 +141,7 @@ jobs:
           authkey: ${{ secrets.TS_AUTHKEY }}
           statedir: /tmp/tailscale-state/
           tags: tag:ci
-          version: 1.76.1
+          version: 1.76.6
       - run: |
           go clean -testcache
           go test -v \
