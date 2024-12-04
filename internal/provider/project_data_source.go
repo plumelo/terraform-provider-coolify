@@ -49,7 +49,7 @@ func (d *projectDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		return
 	}
 
-	response, err := d.providerData.client.GetProjectByUuidWithResponse(ctx, plan.Uuid.ValueString())
+	response, err := d.providerData.Client.GetProjectByUuidWithResponse(ctx, plan.Uuid.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading project", err.Error(),

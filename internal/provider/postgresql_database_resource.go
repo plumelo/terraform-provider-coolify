@@ -90,7 +90,7 @@ func (r *postgresqlDatabaseResource) Create(ctx context.Context, req resource.Cr
 		"name": plan.Name.ValueString(),
 	})
 
-	createResp, err := r.providerData.client.CreateDatabasePostgresqlWithResponse(ctx, api.CreateDatabasePostgresqlJSONRequestBody{
+	createResp, err := r.providerData.Client.CreateDatabasePostgresqlWithResponse(ctx, api.CreateDatabasePostgresqlJSONRequestBody{
 		Description:     plan.Description.ValueStringPointer(),
 		Name:            plan.Name.ValueStringPointer(),
 		DestinationUuid: plan.DestinationUuid.ValueStringPointer(),
@@ -199,7 +199,7 @@ func (r *postgresqlDatabaseResource) Update(ctx context.Context, req resource.Up
 		"uuid": uuid,
 	})
 
-	updateResp, err := r.providerData.client.UpdateDatabaseByUuidWithResponse(ctx, uuid, api.UpdateDatabaseByUuidJSONRequestBody{
+	updateResp, err := r.providerData.Client.UpdateDatabaseByUuidWithResponse(ctx, uuid, api.UpdateDatabaseByUuidJSONRequestBody{
 		Description: plan.Description.ValueStringPointer(),
 		Image:       plan.Image.ValueStringPointer(),
 		IsPublic:    plan.IsPublic.ValueBoolPointer(),
@@ -254,7 +254,7 @@ func (r *postgresqlDatabaseResource) Update(ctx context.Context, req resource.Up
 	}
 
 	if plan.InstantDeploy.ValueBool() {
-		r.providerData.client.RestartDatabaseByUuid(ctx, uuid)
+		r.providerData.Client.RestartDatabaseByUuid(ctx, uuid)
 	}
 
 	data := r.ReadFromAPI(ctx, &resp.Diagnostics, uuid, plan)
@@ -274,7 +274,7 @@ func (r *postgresqlDatabaseResource) Delete(ctx context.Context, req resource.De
 	tflog.Debug(ctx, "Deleting postgresql database", map[string]interface{}{
 		"uuid": state.Uuid.ValueString(),
 	})
-	deleteResp, err := r.providerData.client.DeleteDatabaseByUuidWithResponse(ctx, state.Uuid.ValueString(), &api.DeleteDatabaseByUuidParams{
+	deleteResp, err := r.providerData.Client.DeleteDatabaseByUuidWithResponse(ctx, state.Uuid.ValueString(), &api.DeleteDatabaseByUuidParams{
 		DeleteConfigurations:    types.BoolValue(true).ValueBoolPointer(),
 		DeleteVolumes:           types.BoolValue(true).ValueBoolPointer(),
 		DockerCleanup:           types.BoolValue(true).ValueBoolPointer(),
@@ -339,7 +339,7 @@ func (r *postgresqlDatabaseResource) ReadFromAPI(
 	uuid string,
 	state postgresqlDatabaseResourceModel,
 ) postgresqlDatabaseResourceModel {
-	readResp, err := r.providerData.client.GetDatabaseByUuidWithResponse(ctx, uuid)
+	readResp, err := r.providerData.Client.GetDatabaseByUuidWithResponse(ctx, uuid)
 	if err != nil {
 		diags.AddError(
 			fmt.Sprintf("Error reading postgresql database: uuid=%s", uuid),

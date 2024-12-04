@@ -81,7 +81,7 @@ func (d *teamsDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		return
 	}
 
-	listResponse, err := d.providerData.client.ListTeamsWithResponse(ctx)
+	listResponse, err := d.providerData.Client.ListTeamsWithResponse(ctx)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading teams", err.Error(),
@@ -120,7 +120,7 @@ func (d *teamsDataSource) apiToModel(
 	for _, team := range *teams {
 		if team.Members == nil && withMembers.ValueBool() {
 			// Fetch members separately if requested and not included in team response
-			teamMembersResponse, err := d.providerData.client.GetMembersByTeamIdWithResponse(ctx, *team.Id)
+			teamMembersResponse, err := d.providerData.Client.GetMembersByTeamIdWithResponse(ctx, *team.Id)
 			if err != nil {
 				diags.AddError(
 					"Error reading team members",

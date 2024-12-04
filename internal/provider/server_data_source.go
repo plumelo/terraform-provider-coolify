@@ -48,7 +48,7 @@ func (d *serverDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	response, err := d.providerData.client.GetServerByUuidWithResponse(ctx, plan.Uuid.ValueString())
+	response, err := d.providerData.Client.GetServerByUuidWithResponse(ctx, plan.Uuid.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading server", err.Error(),

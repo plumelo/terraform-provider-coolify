@@ -102,7 +102,7 @@ func (r *privateKeyResource) Create(ctx context.Context, req resource.CreateRequ
 	tflog.Debug(ctx, "Creating private key", map[string]interface{}{
 		"name": plan.Name.ValueString(),
 	})
-	createResp, err := r.providerData.client.CreatePrivateKeyWithResponse(ctx, api.CreatePrivateKeyJSONRequestBody{
+	createResp, err := r.providerData.Client.CreatePrivateKeyWithResponse(ctx, api.CreatePrivateKeyJSONRequestBody{
 		Description: plan.Description.ValueStringPointer(),
 		Name:        plan.Name.ValueStringPointer(),
 		PrivateKey:  plan.PrivateKey.ValueString(),
@@ -171,7 +171,7 @@ func (r *privateKeyResource) Update(ctx context.Context, req resource.UpdateRequ
 	tflog.Debug(ctx, "Updating private key", map[string]interface{}{
 		"uuid": uuid,
 	})
-	updateResp, err := r.providerData.client.UpdatePrivateKeyWithResponse(ctx, uuid, api.UpdatePrivateKeyJSONRequestBody{
+	updateResp, err := r.providerData.Client.UpdatePrivateKeyWithResponse(ctx, uuid, api.UpdatePrivateKeyJSONRequestBody{
 		Name:        plan.Name.ValueStringPointer(),
 		Description: plan.Description.ValueStringPointer(),
 		PrivateKey:  plan.PrivateKey.ValueString(),
@@ -209,7 +209,7 @@ func (r *privateKeyResource) Delete(ctx context.Context, req resource.DeleteRequ
 	tflog.Debug(ctx, "Deleting private key", map[string]interface{}{
 		"uuid": state.Uuid.ValueString(),
 	})
-	deleteResp, err := r.providerData.client.DeletePrivateKeyByUuidWithResponse(ctx, state.Uuid.ValueString())
+	deleteResp, err := r.providerData.Client.DeletePrivateKeyByUuidWithResponse(ctx, state.Uuid.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete private key, got error: %s", err))
 		return
@@ -250,7 +250,7 @@ func (r *privateKeyResource) readFromAPI(
 	diags *diag.Diagnostics,
 	uuid string,
 ) privateKeyResourceModel {
-	readResp, err := r.providerData.client.GetPrivateKeyByUuidWithResponse(ctx, uuid)
+	readResp, err := r.providerData.Client.GetPrivateKeyByUuidWithResponse(ctx, uuid)
 	if err != nil {
 		diags.AddError(
 			fmt.Sprintf("Error reading private key: uuid=%s", uuid),

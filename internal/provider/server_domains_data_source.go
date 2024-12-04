@@ -48,7 +48,7 @@ func (d *serverDomainsDataSource) Read(ctx context.Context, req datasource.ReadR
 		return
 	}
 
-	response, err := d.providerData.client.GetDomainsByServerUuidWithResponse(ctx, plan.Uuid.ValueString())
+	response, err := d.providerData.Client.GetDomainsByServerUuidWithResponse(ctx, plan.Uuid.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading server domains", err.Error(),

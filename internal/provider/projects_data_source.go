@@ -75,7 +75,7 @@ func (d *projectsDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 
-	listResponse, err := d.providerData.client.ListProjectsWithResponse(ctx)
+	listResponse, err := d.providerData.Client.ListProjectsWithResponse(ctx)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading projects", err.Error(),

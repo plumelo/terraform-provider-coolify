@@ -60,7 +60,7 @@ func (d *serversDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		return
 	}
 
-	listResponse, err := d.providerData.client.ListServersWithResponse(ctx)
+	listResponse, err := d.providerData.Client.ListServersWithResponse(ctx)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading servers", err.Error(),

@@ -49,7 +49,7 @@ type CoolifyProvider struct {
 }
 
 type CoolifyProviderData struct {
-	client *api.ClientWithResponses
+	Client *api.ClientWithResponses
 }
 
 type CoolifyProviderModel struct {
@@ -219,7 +219,7 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 	tflog.Info(ctx, "Successfully connected to Coolify API", map[string]interface{}{"version": currentVersion})
 
 	providerData := &CoolifyProviderData{
-		client: client,
+		Client: client,
 	}
 
 	resp.ResourceData = providerData

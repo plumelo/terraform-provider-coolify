@@ -78,7 +78,7 @@ func (d *privateKeysDataSource) Read(ctx context.Context, req datasource.ReadReq
 		return
 	}
 
-	listResponse, err := d.providerData.client.ListPrivateKeysWithResponse(ctx)
+	listResponse, err := d.providerData.Client.ListPrivateKeysWithResponse(ctx)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading private keys", err.Error(),

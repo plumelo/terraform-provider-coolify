@@ -298,7 +298,7 @@ func (d *teamDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 
 	if !plan.Id.IsNull() {
 		// Get team by ID
-		teamResp, err := d.providerData.client.GetTeamByIdWithResponse(ctx, int(plan.Id.ValueInt64()))
+		teamResp, err := d.providerData.Client.GetTeamByIdWithResponse(ctx, int(plan.Id.ValueInt64()))
 		if err != nil {
 			resp.Diagnostics.AddError(
 				"Error reading team", err.Error(),
@@ -318,7 +318,7 @@ func (d *teamDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 		teamMembers = team.Members
 	} else {
 		// Get current team
-		teamResp, err := d.providerData.client.GetCurrentTeamWithResponse(ctx)
+		teamResp, err := d.providerData.Client.GetCurrentTeamWithResponse(ctx)
 		if err != nil {
 			resp.Diagnostics.AddError(
 				"Error reading team", err.Error(),
@@ -341,7 +341,7 @@ func (d *teamDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 	// If the API did not provide members, we need to fetch them separately
 	// TODO: Coolify API inconsistency: Spec says members should be returned, but it is not.
 	if teamMembers == nil {
-		teamMembersResponse, err := d.providerData.client.GetMembersByTeamIdWithResponse(ctx, *team.Id)
+		teamMembersResponse, err := d.providerData.Client.GetMembersByTeamIdWithResponse(ctx, *team.Id)
 		if err != nil {
 			resp.Diagnostics.AddError(
 				"Error reading team members", err.Error(),

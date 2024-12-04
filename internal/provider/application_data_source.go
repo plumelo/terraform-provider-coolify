@@ -53,7 +53,7 @@ func (d *applicationDataSource) Read(ctx context.Context, req datasource.ReadReq
 		return
 	}
 
-	applicationResp, err := d.providerData.client.GetApplicationByUuidWithResponse(ctx, plan.Uuid.ValueString())
+	applicationResp, err := d.providerData.Client.GetApplicationByUuidWithResponse(ctx, plan.Uuid.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading application", err.Error(),

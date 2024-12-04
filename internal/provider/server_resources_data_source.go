@@ -48,7 +48,7 @@ func (d *serverResourcesDataSource) Read(ctx context.Context, req datasource.Rea
 		return
 	}
 
-	response, err := d.providerData.client.GetResourcesByServerUuidWithResponse(ctx, plan.Uuid.ValueString())
+	response, err := d.providerData.Client.GetResourcesByServerUuidWithResponse(ctx, plan.Uuid.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading server resources", err.Error(),

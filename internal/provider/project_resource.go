@@ -64,7 +64,7 @@ func (r *projectResource) Create(ctx context.Context, req resource.CreateRequest
 	tflog.Debug(ctx, "Creating project", map[string]interface{}{
 		"name": plan.Name.ValueString(),
 	})
-	createResp, err := r.providerData.client.CreateProjectWithResponse(ctx, api.CreateProjectJSONRequestBody{
+	createResp, err := r.providerData.Client.CreateProjectWithResponse(ctx, api.CreateProjectJSONRequestBody{
 		Description: plan.Description.ValueStringPointer(),
 		Name:        plan.Name.ValueStringPointer(),
 	})
@@ -135,7 +135,7 @@ func (r *projectResource) Update(ctx context.Context, req resource.UpdateRequest
 	tflog.Debug(ctx, "Updating project", map[string]interface{}{
 		"uuid": uuid,
 	})
-	updateResp, err := r.providerData.client.UpdateProjectByUuidWithResponse(ctx, uuid, api.UpdateProjectByUuidJSONRequestBody{
+	updateResp, err := r.providerData.Client.UpdateProjectByUuidWithResponse(ctx, uuid, api.UpdateProjectByUuidJSONRequestBody{
 		Description: plan.Description.ValueStringPointer(),
 		Name:        plan.Name.ValueStringPointer(),
 	})
@@ -173,7 +173,7 @@ func (r *projectResource) Delete(ctx context.Context, req resource.DeleteRequest
 	tflog.Debug(ctx, "Deleting project", map[string]interface{}{
 		"uuid": state.Uuid.ValueString(),
 	})
-	deleteResp, err := r.providerData.client.DeleteProjectByUuidWithResponse(ctx, state.Uuid.ValueString())
+	deleteResp, err := r.providerData.Client.DeleteProjectByUuidWithResponse(ctx, state.Uuid.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete project, got error: %s", err))
 		return
@@ -203,7 +203,7 @@ func (r *projectResource) ReadFromAPI(
 	diags *diag.Diagnostics,
 	uuid string,
 ) resource_project.ProjectModel {
-	readResp, err := r.providerData.client.GetProjectByUuidWithResponse(ctx, uuid)
+	readResp, err := r.providerData.Client.GetProjectByUuidWithResponse(ctx, uuid)
 	if err != nil {
 		diags.AddError(
 			fmt.Sprintf("Error reading project: uuid=%s", uuid),

@@ -53,7 +53,7 @@ func (d *serviceDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		return
 	}
 
-	serviceResp, err := d.providerData.client.GetServiceByUuidWithResponse(ctx, plan.Uuid.ValueString())
+	serviceResp, err := d.providerData.Client.GetServiceByUuidWithResponse(ctx, plan.Uuid.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading service", err.Error(),
