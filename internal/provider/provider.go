@@ -48,10 +48,6 @@ type CoolifyProvider struct {
 	version string
 }
 
-type CoolifyProviderData struct {
-	Client *api.ClientWithResponses
-}
-
 type CoolifyProviderModel struct {
 	Endpoint types.String      `tfsdk:"endpoint"`
 	Token    types.String      `tfsdk:"token"`
@@ -218,12 +214,8 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 	tflog.Info(ctx, "Successfully connected to Coolify API", map[string]interface{}{"version": currentVersion})
 
-	providerData := &CoolifyProviderData{
-		Client: client,
-	}
-
-	resp.ResourceData = providerData
-	resp.DataSourceData = providerData
+	resp.ResourceData = client
+	resp.DataSourceData = client
 }
 
 func (p *CoolifyProvider) Resources(ctx context.Context) []func() resource.Resource {

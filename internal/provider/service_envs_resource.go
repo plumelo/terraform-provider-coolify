@@ -31,7 +31,7 @@ func NewServiceEnvsResource() resource.Resource {
 }
 
 type serviceEnvsResource struct {
-	providerData CoolifyProviderData
+	client *api.ClientWithResponses
 }
 
 type serviceEnvsResourceModel struct {
@@ -93,7 +93,7 @@ func (r *serviceEnvsResource) Schema(ctx context.Context, req resource.SchemaReq
 }
 
 func (r *serviceEnvsResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	util.ProviderDataFromResourceConfigureRequest(req, &r.providerData, resp)
+	util.ProviderDataFromResourceConfigureRequest(req, &r.client, resp)
 }
 
 func (r *serviceEnvsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -110,7 +110,7 @@ func (r *serviceEnvsResource) Create(ctx context.Context, req resource.CreateReq
 
 	uuid := plan.Uuid.ValueString()
 	for i, env := range plan.Env {
-		createResp, err := r.providerData.Client.CreateEnvByServiceUuidWithResponse(ctx, uuid, api.CreateEnvByServiceUuidJSONRequestBody{
+		createResp, err := r.client.CreateEnvByServiceUuidWithResponse(ctx, uuid, api.CreateEnvByServiceUuidJSONRequestBody{
 			IsBuildTime: env.IsBuildTime.ValueBoolPointer(),
 			IsLiteral:   env.IsLiteral.ValueBoolPointer(),
 			IsPreview:   env.IsPreview.ValueBoolPointer(),
@@ -205,7 +205,7 @@ func (r *serviceEnvsResource) Update(ctx context.Context, req resource.UpdateReq
 	// Delete envs that are in state but not in plan
 	for key, env := range stateEnvs {
 		if _, exists := planEnvs[key]; !exists {
-			_, err := r.providerData.Client.DeleteEnvByServiceUuidWithResponse(ctx, uuid, env.Uuid.ValueString())
+			_, err := r.client.DeleteEnvByServiceUuidWithResponse(ctx, uuid, env.Uuid.ValueString())
 			if err != nil {
 				resp.Diagnostics.AddError(
 					fmt.Sprintf("Error deleting service env: key=%s, uuid=%s", key, uuid),
@@ -230,7 +230,7 @@ func (r *serviceEnvsResource) Update(ctx context.Context, req resource.UpdateReq
 	}
 
 	if len(bulkUpdateEnvs) > 0 {
-		updateResp, err := r.providerData.Client.UpdateEnvsByServiceUuidWithResponse(ctx, uuid, api.UpdateEnvsByServiceUuidJSONRequestBody{
+		updateResp, err := r.client.UpdateEnvsByServiceUuidWithResponse(ctx, uuid, api.UpdateEnvsByServiceUuidJSONRequestBody{
 			Data: bulkUpdateEnvs,
 		})
 
@@ -305,7 +305,7 @@ func (r *serviceEnvsResource) deleteFromAPI(
 	uuid string,
 	envUuid string,
 ) (diags diag.Diagnostics) {
-	_, err := r.providerData.Client.DeleteEnvByServiceUuidWithResponse(ctx, uuid, envUuid)
+	_, err := r.client.DeleteEnvByServiceUuidWithResponse(ctx, uuid, envUuid)
 	if err != nil {
 		diags.AddError("Client Error", fmt.Sprintf("Unable to delete service envs, got error: %s", err))
 	}
@@ -317,7 +317,7 @@ func (r *serviceEnvsResource) readFromAPI(
 	diags *diag.Diagnostics,
 	uuid string,
 ) serviceEnvsResourceModel {
-	readResp, err := r.providerData.Client.ListEnvsByServiceUuidWithResponse(ctx, uuid)
+	readResp, err := r.client.ListEnvsByServiceUuidWithResponse(ctx, uuid)
 	if err != nil {
 		diags.AddError(
 			fmt.Sprintf("Error reading service envs: uuid=%s", uuid),

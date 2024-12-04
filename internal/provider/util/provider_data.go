@@ -10,8 +10,8 @@ func ProviderDataFromDataSourceConfigureRequest[ProviderData interface{}](req da
 		return false
 	}
 
-	if providerData, ok := req.ProviderData.(*ProviderData); ok {
-		*out = *providerData
+	if providerData, ok := req.ProviderData.(ProviderData); ok {
+		*out = providerData
 
 		return true
 	}
@@ -26,8 +26,8 @@ func ProviderDataFromResourceConfigureRequest[ProviderData interface{}](req reso
 		return false
 	}
 
-	if providerData, ok := req.ProviderData.(*ProviderData); ok {
-		*out = *providerData
+	if providerData, ok := req.ProviderData.(ProviderData); ok {
+		*out = providerData
 
 		return true
 	}

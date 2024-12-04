@@ -23,7 +23,7 @@ func NewProjectDataSource() datasource.DataSource {
 }
 
 type projectDataSource struct {
-	providerData CoolifyProviderData
+	client *api.ClientWithResponses
 }
 
 func (d *projectDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -36,7 +36,7 @@ func (d *projectDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 }
 
 func (d *projectDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	util.ProviderDataFromDataSourceConfigureRequest(req, &d.providerData, resp)
+	util.ProviderDataFromDataSourceConfigureRequest(req, &d.client, resp)
 }
 
 func (d *projectDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
@@ -49,7 +49,7 @@ func (d *projectDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		return
 	}
 
-	response, err := d.providerData.Client.GetProjectByUuidWithResponse(ctx, plan.Uuid.ValueString())
+	response, err := d.client.GetProjectByUuidWithResponse(ctx, plan.Uuid.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading project", err.Error(),

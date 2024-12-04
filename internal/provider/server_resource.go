@@ -28,7 +28,7 @@ func NewServerResource() resource.Resource {
 }
 
 type serverResource struct {
-	providerData CoolifyProviderData
+	client *api.ClientWithResponses
 }
 
 func (r *serverResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -47,7 +47,7 @@ func (r *serverResource) Schema(ctx context.Context, req resource.SchemaRequest,
 }
 
 func (r *serverResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	util.ProviderDataFromResourceConfigureRequest(req, &r.providerData, resp)
+	util.ProviderDataFromResourceConfigureRequest(req, &r.client, resp)
 }
 
 func (r *serverResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -61,7 +61,7 @@ func (r *serverResource) Create(ctx context.Context, req resource.CreateRequest,
 	tflog.Debug(ctx, "Creating server", map[string]interface{}{
 		"name": plan.Name.ValueString(),
 	})
-	createResp, err := r.providerData.Client.CreateServerWithResponse(ctx, api.CreateServerJSONRequestBody{
+	createResp, err := r.client.CreateServerWithResponse(ctx, api.CreateServerJSONRequestBody{
 		Description:     plan.Description.ValueStringPointer(),
 		Name:            plan.Name.ValueStringPointer(),
 		InstantValidate: plan.InstantValidate.ValueBoolPointer(),
@@ -144,7 +144,7 @@ func (r *serverResource) Update(ctx context.Context, req resource.UpdateRequest,
 	tflog.Debug(ctx, "Updating server", map[string]interface{}{
 		"uuid": uuid,
 	})
-	updateResp, err := r.providerData.Client.UpdateServerByUuidWithResponse(ctx, uuid, api.UpdateServerByUuidJSONRequestBody{
+	updateResp, err := r.client.UpdateServerByUuidWithResponse(ctx, uuid, api.UpdateServerByUuidJSONRequestBody{
 		Description:     plan.Description.ValueStringPointer(),
 		Name:            plan.Name.ValueStringPointer(),
 		InstantValidate: plan.InstantValidate.ValueBoolPointer(),
@@ -199,7 +199,7 @@ func (r *serverResource) Delete(ctx context.Context, req resource.DeleteRequest,
 	tflog.Debug(ctx, "Deleting server", map[string]interface{}{
 		"uuid": state.Uuid.ValueString(),
 	})
-	deleteResp, err := r.providerData.Client.DeleteServerByUuidWithResponse(ctx, state.Uuid.ValueString())
+	deleteResp, err := r.client.DeleteServerByUuidWithResponse(ctx, state.Uuid.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete server, got error: %s", err))
 		return
@@ -238,7 +238,7 @@ func (r *serverResource) ReadFromAPI(
 	diags *diag.Diagnostics,
 	uuid string,
 ) resource_server.ServerModel {
-	readResp, err := r.providerData.Client.GetServerByUuidWithResponse(ctx, uuid)
+	readResp, err := r.client.GetServerByUuidWithResponse(ctx, uuid)
 	if err != nil {
 		diags.AddError(
 			fmt.Sprintf("Error reading server: uuid=%s", uuid),

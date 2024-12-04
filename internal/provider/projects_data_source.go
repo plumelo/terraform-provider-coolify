@@ -24,7 +24,7 @@ func NewProjectsDataSource() datasource.DataSource {
 }
 
 type projectsDataSource struct {
-	providerData CoolifyProviderData
+	client *api.ClientWithResponses
 }
 
 type projectsDataSourceWithFilterModel struct {
@@ -62,7 +62,7 @@ func (d *projectsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 }
 
 func (d *projectsDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	util.ProviderDataFromDataSourceConfigureRequest(req, &d.providerData, resp)
+	util.ProviderDataFromDataSourceConfigureRequest(req, &d.client, resp)
 }
 
 func (d *projectsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
@@ -75,7 +75,7 @@ func (d *projectsDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 
-	listResponse, err := d.providerData.Client.ListProjectsWithResponse(ctx)
+	listResponse, err := d.client.ListProjectsWithResponse(ctx)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading projects", err.Error(),

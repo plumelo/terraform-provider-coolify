@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
+	"terraform-provider-coolify/internal/api"
 	"terraform-provider-coolify/internal/provider/generated/datasource_server_domains"
 	"terraform-provider-coolify/internal/provider/util"
 )
@@ -22,7 +23,7 @@ func NewServerDomainsDataSource() datasource.DataSource {
 }
 
 type serverDomainsDataSource struct {
-	providerData CoolifyProviderData
+	client *api.ClientWithResponses
 }
 
 func (d *serverDomainsDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -35,7 +36,7 @@ func (d *serverDomainsDataSource) Schema(ctx context.Context, req datasource.Sch
 }
 
 func (d *serverDomainsDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	util.ProviderDataFromDataSourceConfigureRequest(req, &d.providerData, resp)
+	util.ProviderDataFromDataSourceConfigureRequest(req, &d.client, resp)
 }
 
 func (d *serverDomainsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
@@ -48,7 +49,7 @@ func (d *serverDomainsDataSource) Read(ctx context.Context, req datasource.ReadR
 		return
 	}
 
-	response, err := d.providerData.Client.GetDomainsByServerUuidWithResponse(ctx, plan.Uuid.ValueString())
+	response, err := d.client.GetDomainsByServerUuidWithResponse(ctx, plan.Uuid.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading server domains", err.Error(),

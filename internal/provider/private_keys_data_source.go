@@ -26,7 +26,7 @@ func NewPrivateKeysDataSource() datasource.DataSource {
 }
 
 type privateKeysDataSource struct {
-	providerData CoolifyProviderData
+	client *api.ClientWithResponses
 }
 
 func (d *privateKeysDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -65,7 +65,7 @@ func (d *privateKeysDataSource) Schema(ctx context.Context, req datasource.Schem
 }
 
 func (d *privateKeysDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	util.ProviderDataFromDataSourceConfigureRequest(req, &d.providerData, resp)
+	util.ProviderDataFromDataSourceConfigureRequest(req, &d.client, resp)
 }
 
 func (d *privateKeysDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
@@ -78,7 +78,7 @@ func (d *privateKeysDataSource) Read(ctx context.Context, req datasource.ReadReq
 		return
 	}
 
-	listResponse, err := d.providerData.Client.ListPrivateKeysWithResponse(ctx)
+	listResponse, err := d.client.ListPrivateKeysWithResponse(ctx)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading private keys", err.Error(),

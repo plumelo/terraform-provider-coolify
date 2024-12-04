@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
+	"terraform-provider-coolify/internal/api"
 	"terraform-provider-coolify/internal/provider/generated/datasource_server_resources"
 	"terraform-provider-coolify/internal/provider/util"
 )
@@ -22,7 +23,7 @@ func NewServerResourcesDataSource() datasource.DataSource {
 }
 
 type serverResourcesDataSource struct {
-	providerData CoolifyProviderData
+	client *api.ClientWithResponses
 }
 
 func (d *serverResourcesDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -35,7 +36,7 @@ func (d *serverResourcesDataSource) Schema(ctx context.Context, req datasource.S
 }
 
 func (d *serverResourcesDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	util.ProviderDataFromDataSourceConfigureRequest(req, &d.providerData, resp)
+	util.ProviderDataFromDataSourceConfigureRequest(req, &d.client, resp)
 }
 
 func (d *serverResourcesDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
@@ -48,7 +49,7 @@ func (d *serverResourcesDataSource) Read(ctx context.Context, req datasource.Rea
 		return
 	}
 
-	response, err := d.providerData.Client.GetResourcesByServerUuidWithResponse(ctx, plan.Uuid.ValueString())
+	response, err := d.client.GetResourcesByServerUuidWithResponse(ctx, plan.Uuid.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading server resources", err.Error(),

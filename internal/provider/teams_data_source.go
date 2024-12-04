@@ -28,7 +28,7 @@ func NewTeamsDataSource() datasource.DataSource {
 }
 
 type teamsDataSource struct {
-	providerData CoolifyProviderData
+	client *api.ClientWithResponses
 }
 
 func (d *teamsDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -68,7 +68,7 @@ func (d *teamsDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 }
 
 func (d *teamsDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	util.ProviderDataFromDataSourceConfigureRequest(req, &d.providerData, resp)
+	util.ProviderDataFromDataSourceConfigureRequest(req, &d.client, resp)
 }
 
 func (d *teamsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
@@ -81,7 +81,7 @@ func (d *teamsDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		return
 	}
 
-	listResponse, err := d.providerData.Client.ListTeamsWithResponse(ctx)
+	listResponse, err := d.client.ListTeamsWithResponse(ctx)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading teams", err.Error(),
@@ -120,7 +120,7 @@ func (d *teamsDataSource) apiToModel(
 	for _, team := range *teams {
 		if team.Members == nil && withMembers.ValueBool() {
 			// Fetch members separately if requested and not included in team response
-			teamMembersResponse, err := d.providerData.Client.GetMembersByTeamIdWithResponse(ctx, *team.Id)
+			teamMembersResponse, err := d.client.GetMembersByTeamIdWithResponse(ctx, *team.Id)
 			if err != nil {
 				diags.AddError(
 					"Error reading team members",

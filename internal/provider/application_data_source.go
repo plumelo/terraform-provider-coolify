@@ -21,7 +21,7 @@ func NewApplicationDataSource() datasource.DataSource {
 }
 
 type applicationDataSource struct {
-	providerData CoolifyProviderData
+	client *api.ClientWithResponses
 }
 
 func (d *applicationDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -40,7 +40,7 @@ func (d *applicationDataSource) Schema(ctx context.Context, req datasource.Schem
 }
 
 func (d *applicationDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	util.ProviderDataFromDataSourceConfigureRequest(req, &d.providerData, resp)
+	util.ProviderDataFromDataSourceConfigureRequest(req, &d.client, resp)
 }
 
 func (d *applicationDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
@@ -53,7 +53,7 @@ func (d *applicationDataSource) Read(ctx context.Context, req datasource.ReadReq
 		return
 	}
 
-	applicationResp, err := d.providerData.Client.GetApplicationByUuidWithResponse(ctx, plan.Uuid.ValueString())
+	applicationResp, err := d.client.GetApplicationByUuidWithResponse(ctx, plan.Uuid.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading application", err.Error(),

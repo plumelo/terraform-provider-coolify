@@ -24,7 +24,7 @@ func NewServersDataSource() datasource.DataSource {
 }
 
 type serversDataSource struct {
-	providerData CoolifyProviderData
+	client *api.ClientWithResponses
 }
 
 type serversDataSourceWithFilterModel struct {
@@ -47,7 +47,7 @@ func (d *serversDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 	}
 }
 func (d *serversDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	util.ProviderDataFromDataSourceConfigureRequest(req, &d.providerData, resp)
+	util.ProviderDataFromDataSourceConfigureRequest(req, &d.client, resp)
 }
 
 func (d *serversDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
@@ -60,7 +60,7 @@ func (d *serversDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		return
 	}
 
-	listResponse, err := d.providerData.Client.ListServersWithResponse(ctx)
+	listResponse, err := d.client.ListServersWithResponse(ctx)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading servers", err.Error(),

@@ -22,7 +22,7 @@ func NewServerDataSource() datasource.DataSource {
 }
 
 type serverDataSource struct {
-	providerData CoolifyProviderData
+	client *api.ClientWithResponses
 }
 
 func (d *serverDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -35,7 +35,7 @@ func (d *serverDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 }
 
 func (d *serverDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	util.ProviderDataFromDataSourceConfigureRequest(req, &d.providerData, resp)
+	util.ProviderDataFromDataSourceConfigureRequest(req, &d.client, resp)
 }
 
 func (d *serverDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
@@ -48,7 +48,7 @@ func (d *serverDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	response, err := d.providerData.Client.GetServerByUuidWithResponse(ctx, plan.Uuid.ValueString())
+	response, err := d.client.GetServerByUuidWithResponse(ctx, plan.Uuid.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading server", err.Error(),

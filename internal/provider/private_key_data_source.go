@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
+	"terraform-provider-coolify/internal/api"
 	"terraform-provider-coolify/internal/provider/util"
 )
 
@@ -21,7 +22,7 @@ func NewPrivateKeyDataSource() datasource.DataSource {
 }
 
 type privateKeyDataSource struct {
-	providerData CoolifyProviderData
+	client *api.ClientWithResponses
 }
 
 func (d *privateKeyDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -70,7 +71,7 @@ func (d *privateKeyDataSource) Schema(ctx context.Context, req datasource.Schema
 }
 
 func (d *privateKeyDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	util.ProviderDataFromDataSourceConfigureRequest(req, &d.providerData, resp)
+	util.ProviderDataFromDataSourceConfigureRequest(req, &d.client, resp)
 }
 
 func (d *privateKeyDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
@@ -81,7 +82,7 @@ func (d *privateKeyDataSource) Read(ctx context.Context, req datasource.ReadRequ
 		return
 	}
 
-	privateKey, err := d.providerData.Client.GetPrivateKeyByUuidWithResponse(ctx, plan.Uuid.ValueString())
+	privateKey, err := d.client.GetPrivateKeyByUuidWithResponse(ctx, plan.Uuid.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading private key", err.Error(),
