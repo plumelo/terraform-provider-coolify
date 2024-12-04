@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 
 	"terraform-provider-coolify/internal/api"
+	"terraform-provider-coolify/internal/flatten"
 	"terraform-provider-coolify/internal/provider/generated/datasource_service"
 	"terraform-provider-coolify/internal/provider/util"
 )
@@ -80,23 +81,23 @@ func (d *serviceDataSource) ApiToModel(
 	response *api.Service,
 ) datasource_service.ServiceModel {
 	return datasource_service.ServiceModel{
-		ConfigHash:                      optionalString(response.ConfigHash),
-		ConnectToDockerNetwork:          optionalBool(response.ConnectToDockerNetwork),
-		CreatedAt:                       optionalString(response.CreatedAt),
-		DeletedAt:                       optionalString(response.DeletedAt),
-		Description:                     optionalString(response.Description),
-		DestinationId:                   optionalInt64(response.DestinationId),
-		DestinationType:                 optionalString(response.DestinationType),
-		DockerCompose:                   optionalString(response.DockerCompose),
-		DockerComposeRaw:                optionalString(response.DockerComposeRaw),
-		EnvironmentId:                   optionalInt64(response.EnvironmentId),
-		Id:                              optionalInt64(response.Id),
-		IsContainerLabelEscapeEnabled:   optionalBool(response.IsContainerLabelEscapeEnabled),
-		IsContainerLabelReadonlyEnabled: optionalBool(response.IsContainerLabelReadonlyEnabled),
-		Name:                            optionalString(response.Name),
-		ServerId:                        optionalInt64(response.ServerId),
-		ServiceType:                     optionalString((*string)(response.ServiceType)), // enum value
-		UpdatedAt:                       optionalString(response.UpdatedAt),
-		Uuid:                            optionalString(response.Uuid),
+		ConfigHash:                      flatten.String(response.ConfigHash),
+		ConnectToDockerNetwork:          flatten.Bool(response.ConnectToDockerNetwork),
+		CreatedAt:                       flatten.String(response.CreatedAt),
+		DeletedAt:                       flatten.String(response.DeletedAt),
+		Description:                     flatten.String(response.Description),
+		DestinationId:                   flatten.Int64(response.DestinationId),
+		DestinationType:                 flatten.String(response.DestinationType),
+		DockerCompose:                   flatten.String(response.DockerCompose),
+		DockerComposeRaw:                flatten.String(response.DockerComposeRaw),
+		EnvironmentId:                   flatten.Int64(response.EnvironmentId),
+		Id:                              flatten.Int64(response.Id),
+		IsContainerLabelEscapeEnabled:   flatten.Bool(response.IsContainerLabelEscapeEnabled),
+		IsContainerLabelReadonlyEnabled: flatten.Bool(response.IsContainerLabelReadonlyEnabled),
+		Name:                            flatten.String(response.Name),
+		ServerId:                        flatten.Int64(response.ServerId),
+		ServiceType:                     flatten.String((*string)(response.ServiceType)), // enum value
+		UpdatedAt:                       flatten.String(response.UpdatedAt),
+		Uuid:                            flatten.String(response.Uuid),
 	}
 }

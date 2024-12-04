@@ -2,98 +2,11 @@ package provider
 
 import (
 	"encoding/base64"
-	"time"
 
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	ds_schema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	res_schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
-
-func optionalTime(value *time.Time) types.String {
-	if value == nil {
-		return types.StringNull()
-	}
-	return types.StringValue(value.Format(time.RFC3339Nano))
-}
-
-func optionalString(value *string) types.String {
-	if value == nil {
-		return types.StringNull()
-	}
-	return types.StringValue(*value)
-}
-
-func optionalInt64(value *int) types.Int64 {
-	if value == nil {
-		return types.Int64Null()
-	}
-	return types.Int64Value(int64(*value))
-}
-
-func optionalBool(value *bool) types.Bool {
-	if value == nil {
-		return types.BoolNull()
-	}
-	return types.BoolValue(*value)
-}
-
-// optionalStringListValue converts a list of strings to a ListValue.
-func optionalStringListValue(values *[]string) types.List {
-	if values == nil {
-		return types.ListNull(types.StringType)
-	}
-
-	elems := make([]attr.Value, len(*values))
-	for i, v := range *values {
-		elems[i] = types.StringValue(v)
-	}
-
-	return types.ListValueMust(types.StringType, elems)
-}
-
-func tfStringToOptionalString(value types.String) *string {
-	if value.IsNull() || value.IsUnknown() {
-		return nil
-	}
-	return value.ValueStringPointer()
-}
-
-func tfStringToRequiredString(value types.String) string {
-	if value.IsNull() || value.IsUnknown() {
-		return ""
-	}
-	return value.ValueString()
-}
-
-func tfBoolToOptionalBool(value types.Bool) *bool {
-	if value.IsNull() || value.IsUnknown() {
-		return nil
-	}
-	return value.ValueBoolPointer()
-}
-
-func tfBoolToRequiredBool(value types.Bool) bool {
-	if value.IsNull() || value.IsUnknown() {
-		return false
-	}
-	return value.ValueBool()
-}
-
-func tfInt64ToOptionalInt(value types.Int64) *int {
-	if value.IsNull() || value.IsUnknown() {
-		return nil
-	}
-	v := int(value.ValueInt64())
-	return &v
-}
-
-func tfInt64ToRequiredInt(value types.Int64) int {
-	if value.IsNull() || value.IsUnknown() {
-		return 0
-	}
-	return int(value.ValueInt64())
-}
 
 func base64Encode(value *string) *string {
 	if value == nil {

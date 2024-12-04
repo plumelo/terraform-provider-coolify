@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"terraform-provider-coolify/internal/api"
+	"terraform-provider-coolify/internal/flatten"
 	"terraform-provider-coolify/internal/provider/generated/datasource_projects"
 	"terraform-provider-coolify/internal/provider/util"
 )
@@ -116,12 +117,12 @@ func (d *projectsDataSource) apiToModel(
 		if project.Environments != nil {
 			for _, env := range *project.Environments {
 				attributes := map[string]attr.Value{
-					"created_at":  optionalString(env.CreatedAt),
-					"description": optionalString(env.Description),
-					"id":          optionalInt64(env.Id),
-					"name":        optionalString(env.Name),
-					"project_id":  optionalInt64(env.ProjectId),
-					"updated_at":  optionalString(env.UpdatedAt),
+					"created_at":  flatten.String(env.CreatedAt),
+					"description": flatten.String(env.Description),
+					"id":          flatten.Int64(env.Id),
+					"name":        flatten.String(env.Name),
+					"project_id":  flatten.Int64(env.ProjectId),
+					"updated_at":  flatten.String(env.UpdatedAt),
 				}
 
 				data, diag := datasource_projects.NewEnvironmentsValue(
@@ -136,11 +137,11 @@ func (d *projectsDataSource) apiToModel(
 		diags.Append(diag...)
 
 		attributes := map[string]attr.Value{
-			"description":  optionalString(project.Description),
+			"description":  flatten.String(project.Description),
 			"environments": envsList,
-			"id":           optionalInt64(project.Id),
-			"name":         optionalString(project.Name),
-			"uuid":         optionalString(project.Uuid),
+			"id":           flatten.Int64(project.Id),
+			"name":         flatten.String(project.Name),
+			"uuid":         flatten.String(project.Uuid),
 		}
 
 		if !filterOnAttributes(attributes, filters) {

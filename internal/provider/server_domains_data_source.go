@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"terraform-provider-coolify/internal/api"
+	"terraform-provider-coolify/internal/flatten"
 	"terraform-provider-coolify/internal/provider/generated/datasource_server_domains"
 	"terraform-provider-coolify/internal/provider/util"
 )
@@ -83,8 +84,8 @@ func (d *serverDomainsDataSource) ApiToModel(
 
 	for _, svDomain := range *response {
 		attributes := map[string]attr.Value{
-			"domains": optionalStringListValue(svDomain.Domains),
-			"ip":      optionalString(svDomain.Ip),
+			"domains": flatten.StringList(svDomain.Domains),
+			"ip":      flatten.String(svDomain.Ip),
 		}
 
 		// todo: add `server_domains` filtering

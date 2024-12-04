@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 
 	"terraform-provider-coolify/internal/api"
+	"terraform-provider-coolify/internal/flatten"
 	"terraform-provider-coolify/internal/provider/generated/datasource_project"
 	"terraform-provider-coolify/internal/provider/generated/resource_project"
 	"terraform-provider-coolify/internal/provider/util"
@@ -230,12 +231,12 @@ func (r *projectResource) ApiToModel(
 	var elements []attr.Value
 	for _, env := range *response.Environments {
 		attributes := map[string]attr.Value{
-			"created_at":  optionalString(env.CreatedAt),
-			"description": optionalString(env.Description),
-			"id":          optionalInt64(env.Id),
-			"name":        optionalString(env.Name),
-			"project_id":  optionalInt64(env.ProjectId),
-			"updated_at":  optionalString(env.UpdatedAt),
+			"created_at":  flatten.String(env.CreatedAt),
+			"description": flatten.String(env.Description),
+			"id":          flatten.Int64(env.Id),
+			"name":        flatten.String(env.Name),
+			"project_id":  flatten.Int64(env.ProjectId),
+			"updated_at":  flatten.String(env.UpdatedAt),
 		}
 
 		data, diag := datasource_project.NewEnvironmentsValue(
@@ -248,10 +249,10 @@ func (r *projectResource) ApiToModel(
 	diags.Append(diag...)
 
 	return resource_project.ProjectModel{
-		Description:  optionalString(response.Description),
+		Description:  flatten.String(response.Description),
 		Environments: dataList,
-		Id:           optionalInt64(response.Id),
-		Name:         optionalString(response.Name),
-		Uuid:         optionalString(response.Uuid),
+		Id:           flatten.Int64(response.Id),
+		Name:         flatten.String(response.Name),
+		Uuid:         flatten.String(response.Uuid),
 	}
 }

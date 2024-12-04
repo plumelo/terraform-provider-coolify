@@ -15,6 +15,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 
 	"terraform-provider-coolify/internal/api"
+	"terraform-provider-coolify/internal/flatten"
 	"terraform-provider-coolify/internal/provider/generated/resource_application_envs"
 	"terraform-provider-coolify/internal/provider/util"
 )
@@ -336,14 +337,14 @@ func (r *applicationEnvsResource) apiToModel(
 	envs := make([]resource_application_envs.ApplicationEnvsModel, len(*response))
 	for i, env := range *response {
 		envs[i] = resource_application_envs.ApplicationEnvsModel{
-			IsBuildTime: optionalBool(env.IsBuildTime),
-			IsLiteral:   optionalBool(env.IsLiteral),
-			IsMultiline: optionalBool(env.IsMultiline),
-			IsPreview:   optionalBool(env.IsPreview),
-			IsShownOnce: optionalBool(env.IsShownOnce),
-			Key:         optionalString(env.Key),
-			Uuid:        optionalString(env.Uuid),
-			Value:       optionalString(env.Value),
+			IsBuildTime: flatten.Bool(env.IsBuildTime),
+			IsLiteral:   flatten.Bool(env.IsLiteral),
+			IsMultiline: flatten.Bool(env.IsMultiline),
+			IsPreview:   flatten.Bool(env.IsPreview),
+			IsShownOnce: flatten.Bool(env.IsShownOnce),
+			Key:         flatten.String(env.Key),
+			Uuid:        flatten.String(env.Uuid),
+			Value:       flatten.String(env.Value),
 		}
 	}
 

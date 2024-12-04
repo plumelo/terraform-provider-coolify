@@ -5,6 +5,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"terraform-provider-coolify/internal/api"
+	"terraform-provider-coolify/internal/flatten"
 )
 
 type privateKeyModel struct {
@@ -24,16 +25,16 @@ var _ filterableStructModel = privateKeyModel{}
 
 func (m privateKeyModel) FromAPI(apiModel *api.PrivateKey) privateKeyModel {
 	return privateKeyModel{
-		Description:  optionalString(apiModel.Description),
-		Fingerprint:  optionalString(apiModel.Fingerprint),
-		Id:           optionalInt64(apiModel.Id),
-		IsGitRelated: optionalBool(apiModel.IsGitRelated),
-		Name:         optionalString(apiModel.Name),
-		PrivateKey:   optionalString(apiModel.PrivateKey),
-		TeamId:       optionalInt64(apiModel.TeamId),
-		Uuid:         optionalString(apiModel.Uuid),
-		CreatedAt:    optionalString(apiModel.CreatedAt),
-		UpdatedAt:    optionalString(apiModel.UpdatedAt),
+		Description:  flatten.String(apiModel.Description),
+		Fingerprint:  flatten.String(apiModel.Fingerprint),
+		Id:           flatten.Int64(apiModel.Id),
+		IsGitRelated: flatten.Bool(apiModel.IsGitRelated),
+		Name:         flatten.String(apiModel.Name),
+		PrivateKey:   flatten.String(apiModel.PrivateKey),
+		TeamId:       flatten.Int64(apiModel.TeamId),
+		Uuid:         flatten.String(apiModel.Uuid),
+		CreatedAt:    flatten.String(apiModel.CreatedAt),
+		UpdatedAt:    flatten.String(apiModel.UpdatedAt),
 	}
 }
 

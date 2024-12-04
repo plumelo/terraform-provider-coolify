@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"terraform-provider-coolify/internal/api"
+	"terraform-provider-coolify/internal/flatten"
 )
 
 type postgresqlDatabaseModel struct {
@@ -25,11 +26,11 @@ func (m postgresqlDatabaseModel) FromAPI(apiModel *api.Database, state postgresq
 
 	return postgresqlDatabaseModel{
 		commonDatabaseModel:    commonDatabaseModel{}.FromAPI(apiModel, state.commonDatabaseModel),
-		PostgresConf:           optionalString(db.PostgresConf),
-		PostgresDb:             optionalString(db.PostgresDb),
-		PostgresHostAuthMethod: optionalString(db.PostgresHostAuthMethod),
-		PostgresInitdbArgs:     optionalString(db.PostgresInitdbArgs),
-		PostgresPassword:       optionalString(db.PostgresPassword),
-		PostgresUser:           optionalString(db.PostgresUser),
+		PostgresConf:           flatten.String(db.PostgresConf),
+		PostgresDb:             flatten.String(db.PostgresDb),
+		PostgresHostAuthMethod: flatten.String(db.PostgresHostAuthMethod),
+		PostgresInitdbArgs:     flatten.String(db.PostgresInitdbArgs),
+		PostgresPassword:       flatten.String(db.PostgresPassword),
+		PostgresUser:           flatten.String(db.PostgresUser),
 	}, nil
 }

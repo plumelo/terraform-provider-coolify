@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"terraform-provider-coolify/internal/api"
+	"terraform-provider-coolify/internal/flatten"
 )
 
 type commonDatabaseModel struct {
@@ -152,23 +153,23 @@ func (m commonDatabaseModel) FromAPI(apiModel *api.Database, state commonDatabas
 
 	return commonDatabaseModel{
 		Uuid:                    types.StringValue(db.Uuid),
-		Name:                    optionalString(db.Name),
-		Description:             optionalString(db.Description),
+		Name:                    flatten.String(db.Name),
+		Description:             flatten.String(db.Description),
 		ServerUuid:              state.ServerUuid, // Values not returned by API, so use the plan value
 		ProjectUuid:             state.ProjectUuid,
 		EnvironmentName:         state.EnvironmentName,
 		DestinationUuid:         state.DestinationUuid,
 		InstantDeploy:           state.InstantDeploy,
-		InternalDbUrl:           optionalString(db.InternalDbUrl),
-		Image:                   optionalString(db.Image),
-		IsPublic:                optionalBool(db.IsPublic),
-		PublicPort:              optionalInt64(db.PublicPort),
-		LimitsCpuShares:         optionalInt64(db.LimitsCpuShares),
-		LimitsCpus:              optionalString(db.LimitsCpus),
-		LimitsCpuset:            optionalString(db.LimitsCpuset),
-		LimitsMemory:            optionalString(db.LimitsMemory),
-		LimitsMemoryReservation: optionalString(db.LimitsMemoryReservation),
-		LimitsMemorySwap:        optionalString(db.LimitsMemorySwap),
-		LimitsMemorySwappiness:  optionalInt64(db.LimitsMemorySwappiness),
+		InternalDbUrl:           flatten.String(db.InternalDbUrl),
+		Image:                   flatten.String(db.Image),
+		IsPublic:                flatten.Bool(db.IsPublic),
+		PublicPort:              flatten.Int64(db.PublicPort),
+		LimitsCpuShares:         flatten.Int64(db.LimitsCpuShares),
+		LimitsCpus:              flatten.String(db.LimitsCpus),
+		LimitsCpuset:            flatten.String(db.LimitsCpuset),
+		LimitsMemory:            flatten.String(db.LimitsMemory),
+		LimitsMemoryReservation: flatten.String(db.LimitsMemoryReservation),
+		LimitsMemorySwap:        flatten.String(db.LimitsMemorySwap),
+		LimitsMemorySwappiness:  flatten.Int64(db.LimitsMemorySwappiness),
 	}
 }

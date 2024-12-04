@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"terraform-provider-coolify/internal/api"
+	"terraform-provider-coolify/internal/flatten"
 	"terraform-provider-coolify/internal/provider/generated/datasource_server_resources"
 	"terraform-provider-coolify/internal/provider/util"
 )
@@ -88,13 +89,13 @@ func (d *serverResourcesDataSource) ApiToModel(
 
 	for _, svRes := range *response {
 		attributes := map[string]attr.Value{
-			"created_at": optionalString(svRes.CreatedAt),
-			"id":         optionalInt64(svRes.Id),
-			"name":       optionalString(svRes.Name),
-			"status":     optionalString(svRes.Status),
-			"type":       optionalString(svRes.Type),
-			"updated_at": optionalString(svRes.UpdatedAt),
-			"uuid":       optionalString(svRes.Uuid),
+			"created_at": flatten.String(svRes.CreatedAt),
+			"id":         flatten.Int64(svRes.Id),
+			"name":       flatten.String(svRes.Name),
+			"status":     flatten.String(svRes.Status),
+			"type":       flatten.String(svRes.Type),
+			"updated_at": flatten.String(svRes.UpdatedAt),
+			"uuid":       flatten.String(svRes.Uuid),
 		}
 
 		// todo: add `server_resources` filtering
