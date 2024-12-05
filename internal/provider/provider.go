@@ -19,18 +19,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 
 	"terraform-provider-coolify/internal/api"
-)
-
-const (
-	ENV_KEY_ENDPOINT = "COOLIFY_ENDPOINT"
-	ENV_KEY_TOKEN    = "COOLIFY_TOKEN"
-
-	DEFAULT_COOLIFY_ENDPOINT = "https://app.coolify.io/api/v1"
-	MIN_COOLIFY_VERSION      = "4.0.0-beta.373"
-
-	DEFAULT_RETRY_ATTEMPTS = 4
-	DEFAULT_RETRY_MIN_WAIT = 1
-	DEFAULT_RETRY_MAX_WAIT = 30
+	"terraform-provider-coolify/internal/consts"
+	"terraform-provider-coolify/internal/service"
 )
 
 // Ensure the implementation satisfies the expected interfaces.
@@ -74,16 +64,16 @@ func (p *CoolifyProvider) Metadata(ctx context.Context, req provider.MetadataReq
 }
 
 func (p *CoolifyProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
-	hasEnvToken := os.Getenv(ENV_KEY_TOKEN) != ""
+	hasEnvToken := os.Getenv(consts.ENV_KEY_TOKEN) != ""
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "" +
-			"The \"coolify\" provider facilitates interaction with resources supported by [Coolify](https://coolify.io/) v" + MIN_COOLIFY_VERSION + " and later.\n\n" +
-			"Before using this provider, you must configure it with your credentials, typically by setting the environment variable `" + ENV_KEY_TOKEN + "`.\n\n" +
+			"The \"coolify\" provider facilitates interaction with resources supported by [Coolify](https://coolify.io/) v" + consts.MIN_COOLIFY_VERSION + " and later.\n\n" +
+			"Before using this provider, you must configure it with your credentials, typically by setting the environment variable `" + consts.ENV_KEY_TOKEN + "`.\n\n" +
 			"For instructions on obtaining an API token, refer to Coolify's [API documentation](https://coolify.io/docs/api-reference/authorization#generate).",
 		Attributes: map[string]schema.Attribute{
 			"endpoint": schema.StringAttribute{
 				Optional:    true,
-				Description: "Coolify endpoint. If not set, checks env for `" + ENV_KEY_ENDPOINT + "`. Default: `" + DEFAULT_COOLIFY_ENDPOINT + "`.",
+				Description: "Coolify endpoint. If not set, checks env for `" + consts.ENV_KEY_ENDPOINT + "`. Default: `" + consts.DEFAULT_COOLIFY_ENDPOINT + "`.",
 			},
 			"token": schema.StringAttribute{
 				Required:  !hasEnvToken,
@@ -92,7 +82,7 @@ func (p *CoolifyProvider) Schema(ctx context.Context, req provider.SchemaRequest
 				Validators: []validator.String{
 					stringvalidator.RegexMatches(api.TokenRegex, api.ErrInvalidToken.Error()),
 				},
-				Description: "Coolify token. If not set, checks env for `" + ENV_KEY_TOKEN + "`.",
+				Description: "Coolify token. If not set, checks env for `" + consts.ENV_KEY_TOKEN + "`.",
 			},
 			"retry": schema.SingleNestedAttribute{
 				Optional:    true,
@@ -100,15 +90,15 @@ func (p *CoolifyProvider) Schema(ctx context.Context, req provider.SchemaRequest
 				Attributes: map[string]schema.Attribute{
 					"attempts": schema.Int64Attribute{
 						Optional:    true,
-						Description: fmt.Sprintf("Maximum number of retries for HTTP requests. Default: %d", DEFAULT_RETRY_ATTEMPTS),
+						Description: fmt.Sprintf("Maximum number of retries for HTTP requests. Default: %d", consts.DEFAULT_RETRY_ATTEMPTS),
 					},
 					"min_wait": schema.Int64Attribute{
 						Optional:    true,
-						Description: fmt.Sprintf("Minimum time to wait between retries in seconds. Default: %d", DEFAULT_RETRY_MIN_WAIT),
+						Description: fmt.Sprintf("Minimum time to wait between retries in seconds. Default: %d", consts.DEFAULT_RETRY_MIN_WAIT),
 					},
 					"max_wait": schema.Int64Attribute{
 						Optional:    true,
-						Description: fmt.Sprintf("Maximum time to wait between retries in seconds. Default: %d", DEFAULT_RETRY_MAX_WAIT),
+						Description: fmt.Sprintf("Maximum time to wait between retries in seconds. Default: %d", consts.DEFAULT_RETRY_MAX_WAIT),
 					},
 				},
 			},
@@ -118,9 +108,9 @@ func (p *CoolifyProvider) Schema(ctx context.Context, req provider.SchemaRequest
 
 func GetRetryConfig(config *RetryConfigModel) api.RetryConfig {
 	retryConfig := api.RetryConfig{
-		MaxAttempts: DEFAULT_RETRY_ATTEMPTS,
-		MinWait:     DEFAULT_RETRY_MIN_WAIT,
-		MaxWait:     DEFAULT_RETRY_MAX_WAIT,
+		MaxAttempts: consts.DEFAULT_RETRY_ATTEMPTS,
+		MinWait:     consts.DEFAULT_RETRY_MIN_WAIT,
+		MaxWait:     consts.DEFAULT_RETRY_MAX_WAIT,
 	}
 
 	if config != nil {
@@ -152,7 +142,7 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 	} else if apiEndpointFromEnv, found := os.LookupEnv("COOLIFY_ENDPOINT"); found {
 		apiEndpoint = apiEndpointFromEnv
 	} else {
-		apiEndpoint = DEFAULT_COOLIFY_ENDPOINT
+		apiEndpoint = consts.DEFAULT_COOLIFY_ENDPOINT
 	}
 
 	if apiEndpoint == "" {
@@ -163,7 +153,7 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 	if !data.Token.IsNull() {
 		apiToken = data.Token.ValueString()
 	} else {
-		if apiTokenFromEnv, found := os.LookupEnv(ENV_KEY_TOKEN); found {
+		if apiTokenFromEnv, found := os.LookupEnv(consts.ENV_KEY_TOKEN); found {
 			apiToken = apiTokenFromEnv
 		}
 	}
@@ -204,10 +194,10 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 	currentVersion := string(versionResp.Body)
 
-	if !isVersionCompatible(currentVersion, MIN_COOLIFY_VERSION) {
+	if !isVersionCompatible(currentVersion, consts.MIN_COOLIFY_VERSION) {
 		resp.Diagnostics.AddError(
 			"Unsupported API version",
-			fmt.Sprintf("The Coolify API version %s is not supported. The minimum supported version is %s", currentVersion, MIN_COOLIFY_VERSION),
+			fmt.Sprintf("The Coolify API version %s is not supported. The minimum supported version is %s", currentVersion, consts.MIN_COOLIFY_VERSION),
 		)
 		return
 	}
@@ -220,29 +210,29 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 func (p *CoolifyProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
-		NewPrivateKeyResource,
-		NewServerResource,
-		NewProjectResource,
-		NewApplicationEnvsResource,
-		NewServiceEnvsResource,
-		NewPostgresqlDatabaseResource,
+		service.NewPrivateKeyResource,
+		service.NewServerResource,
+		service.NewProjectResource,
+		service.NewApplicationEnvsResource,
+		service.NewServiceEnvsResource,
+		service.NewPostgresqlDatabaseResource,
 	}
 }
 
 func (p *CoolifyProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
-		NewPrivateKeyDataSource,
-		NewPrivateKeysDataSource,
-		NewTeamDataSource,
-		NewTeamsDataSource,
-		NewServerDataSource,
-		NewServersDataSource,
-		NewServerResourcesDataSource,
-		NewServerDomainsDataSource,
-		NewProjectDataSource,
-		NewProjectsDataSource,
-		NewApplicationDataSource,
-		NewServiceDataSource,
+		service.NewPrivateKeyDataSource,
+		service.NewPrivateKeysDataSource,
+		service.NewTeamDataSource,
+		service.NewTeamsDataSource,
+		service.NewServerDataSource,
+		service.NewServersDataSource,
+		service.NewServerResourcesDataSource,
+		service.NewServerDomainsDataSource,
+		service.NewProjectDataSource,
+		service.NewProjectsDataSource,
+		service.NewApplicationDataSource,
+		service.NewServiceDataSource,
 	}
 }
 

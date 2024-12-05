@@ -6,22 +6,16 @@ import (
 	"os"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-framework/providerserver"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
-	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"terraform-provider-coolify/internal/acctest"
 	"terraform-provider-coolify/internal/api"
+	"terraform-provider-coolify/internal/consts"
 	"terraform-provider-coolify/internal/provider"
-)
-
-var (
-	testAccProtoV6ProviderFactories = map[string]func() (tfprotov6.ProviderServer, error){
-		"coolify": providerserver.NewProtocol6WithError(provider.New("test")()),
-	}
 )
 
 const (
@@ -39,8 +33,8 @@ func testAccPreCheck(t *testing.T) {
 	}
 
 	variables := []string{
-		provider.ENV_KEY_ENDPOINT,
-		provider.ENV_KEY_TOKEN,
+		consts.ENV_KEY_ENDPOINT,
+		consts.ENV_KEY_TOKEN,
 	}
 
 	for _, variable := range variables {
@@ -76,7 +70,7 @@ func providerConfigDynamicValue(config map[string]interface{}) (tfprotov6.Dynami
 func TestProtocol6ProviderServerSchemaVersion(t *testing.T) {
 	t.Parallel()
 
-	providerServer, err := testAccProtoV6ProviderFactories["coolify"]()
+	providerServer, err := acctest.TestAccProtoV6ProviderFactories["coolify"]()
 	require.NotNil(t, providerServer)
 	require.NoError(t, err)
 
@@ -91,8 +85,8 @@ func TestProtocol6ProviderServerSchemaVersion(t *testing.T) {
 func TestProtocol6ProviderServerConfigure(t *testing.T) {
 	testAccPreCheck(t)
 
-	accEndpoint := os.Getenv(provider.ENV_KEY_ENDPOINT)
-	accToken := os.Getenv(provider.ENV_KEY_TOKEN)
+	accEndpoint := os.Getenv(consts.ENV_KEY_ENDPOINT)
+	accToken := os.Getenv(consts.ENV_KEY_TOKEN)
 
 	tests := map[string]struct {
 		config          map[string]interface{}
@@ -134,14 +128,14 @@ func TestProtocol6ProviderServerConfigure(t *testing.T) {
 		},
 		"env: endpoint": {
 			env: map[string]string{
-				provider.ENV_KEY_ENDPOINT: accEndpoint,
+				consts.ENV_KEY_ENDPOINT: accEndpoint,
 			},
 			expectedSuccess: false,
 		},
 		"env: endpoint,token": {
 			env: map[string]string{
-				provider.ENV_KEY_ENDPOINT: accEndpoint,
-				provider.ENV_KEY_TOKEN:    accToken,
+				consts.ENV_KEY_ENDPOINT: accEndpoint,
+				consts.ENV_KEY_TOKEN:    accToken,
 			},
 			expectedSuccess: true,
 		},
@@ -150,7 +144,7 @@ func TestProtocol6ProviderServerConfigure(t *testing.T) {
 				"endpoint": accEndpoint,
 			},
 			env: map[string]string{
-				provider.ENV_KEY_TOKEN: accToken,
+				consts.ENV_KEY_TOKEN: accToken,
 			},
 			expectedSuccess: true,
 		},
@@ -158,13 +152,13 @@ func TestProtocol6ProviderServerConfigure(t *testing.T) {
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			t.Setenv(provider.ENV_KEY_ENDPOINT, "")
-			t.Setenv(provider.ENV_KEY_TOKEN, "")
+			t.Setenv(consts.ENV_KEY_ENDPOINT, "")
+			t.Setenv(consts.ENV_KEY_TOKEN, "")
 			for key, value := range test.env {
 				t.Setenv(key, value)
 			}
 
-			providerServer, err := testAccProtoV6ProviderFactories["coolify"]()
+			providerServer, err := acctest.TestAccProtoV6ProviderFactories["coolify"]()
 			require.NotNil(t, providerServer)
 			require.NoError(t, err)
 
@@ -195,17 +189,17 @@ func TestGetRetryConfig(t *testing.T) {
 		"nil config": {
 			input: nil,
 			expected: api.RetryConfig{
-				MaxAttempts: provider.DEFAULT_RETRY_ATTEMPTS,
-				MinWait:     provider.DEFAULT_RETRY_MIN_WAIT,
-				MaxWait:     provider.DEFAULT_RETRY_MAX_WAIT,
+				MaxAttempts: consts.DEFAULT_RETRY_ATTEMPTS,
+				MinWait:     consts.DEFAULT_RETRY_MIN_WAIT,
+				MaxWait:     consts.DEFAULT_RETRY_MAX_WAIT,
 			},
 		},
 		"empty config": {
 			input: &provider.RetryConfigModel{},
 			expected: api.RetryConfig{
-				MaxAttempts: provider.DEFAULT_RETRY_ATTEMPTS,
-				MinWait:     provider.DEFAULT_RETRY_MIN_WAIT,
-				MaxWait:     provider.DEFAULT_RETRY_MAX_WAIT,
+				MaxAttempts: consts.DEFAULT_RETRY_ATTEMPTS,
+				MinWait:     consts.DEFAULT_RETRY_MIN_WAIT,
+				MaxWait:     consts.DEFAULT_RETRY_MAX_WAIT,
 			},
 		},
 		"partial config": {
@@ -214,8 +208,8 @@ func TestGetRetryConfig(t *testing.T) {
 			},
 			expected: api.RetryConfig{
 				MaxAttempts: 5,
-				MinWait:     provider.DEFAULT_RETRY_MIN_WAIT,
-				MaxWait:     provider.DEFAULT_RETRY_MAX_WAIT,
+				MinWait:     consts.DEFAULT_RETRY_MIN_WAIT,
+				MaxWait:     consts.DEFAULT_RETRY_MAX_WAIT,
 			},
 		},
 		"full config": {
@@ -238,13 +232,4 @@ func TestGetRetryConfig(t *testing.T) {
 			assert.Equal(t, tc.expected, result)
 		})
 	}
-}
-
-// MARK: Helper functions
-
-const TestAccNamePrefix = "tf-acc"
-
-func getRandomResourceName(resType string) string {
-	generatedIdentifier := acctest.RandStringFromCharSet(10, acctest.CharSetAlpha)
-	return fmt.Sprintf("%s-%s-%s", TestAccNamePrefix, resType, generatedIdentifier)
 }
