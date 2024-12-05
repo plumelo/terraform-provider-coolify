@@ -16,6 +16,8 @@
 
 # Terraform Provider for [Coolify](https://coolify.io/) _v4_
 
+_This project is a community-driven initiative and is not affiliated with or an official product of Coolify._
+
 Documentation: https://registry.terraform.io/providers/SierraJC/coolify/latest/docs
 
 The Coolify provider enables Terraform to manage [Coolify](https://coolify.io/) _v4 (beta)_ resources.
