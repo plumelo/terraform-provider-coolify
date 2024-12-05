@@ -148,7 +148,7 @@ jobs:
           go test -v \
             -cover -coverprofile=coverage.txt -covermode=atomic \
             -run '^(TestAcc|TestProtocol6ProviderServerConfigure)' \
-            ./internal/provider/ 2>&1 | tee test-output
+            ./... 2>&1 | tee test-output
           go install github.com/jstemmer/go-junit-report/v2@latest
           $(go env GOPATH)/bin/go-junit-report -in test-output -set-exit-code -iocopy	-out junit.xml
         env:
