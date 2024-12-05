@@ -4,12 +4,14 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	"terraform-provider-coolify/internal/testutils"
 )
 
 func TestTeamModel_Attributes(t *testing.T) {
 	model := teamModel{}
 
-	expected := generateAttrTypesFromStruct(t, model)
+	expected := testutils.GenerateAttrTypesFromStruct(t, model)
 	actual := model.FilterAttributes()
 
 	for _, key := range teamsFilterNames {
