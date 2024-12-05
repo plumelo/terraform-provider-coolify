@@ -18,4 +18,4 @@ comment:
 ignore:
   - "main.go" # Main package
   - "internal/**/*_gen.go" # Generated files
-  - "internal/acctest/**/*" # Acceptance test helpers
+  - "internal/acctest" # Acceptance test helpers
