@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/stretchr/testify/assert"
 )
@@ -336,4 +337,16 @@ func TestFilterOnStruct(t *testing.T) {
 			assert.Equal(t, tt.expected, result)
 		})
 	}
+}
+
+func TestCreateDatasourceFilter(t *testing.T) {
+	allowedFields := []string{"field1", "field2", "field3"}
+	block := CreateDatasourceFilter(allowedFields)
+
+	listBlock, ok := block.(schema.ListNestedBlock)
+	assert.True(t, ok, "Expected block to be a ListNestedBlock")
+
+	attributes := listBlock.NestedObject.Attributes
+	assert.Contains(t, attributes, "name", "Block should contain 'name' attribute")
+	assert.Contains(t, attributes, "values", "Block should contain 'values' attribute")
 }

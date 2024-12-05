@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"terraform-provider-coolify/internal/api"
+	"terraform-provider-coolify/internal/filter"
 	"terraform-provider-coolify/internal/provider/util"
 )
 
@@ -20,7 +21,7 @@ var _ datasource.DataSourceWithConfigure = &teamsDataSource{}
 type teamsDataSourceModel struct {
 	Teams       []teamDataSourceModel `tfsdk:"teams"`
 	WithMembers types.Bool            `tfsdk:"with_members"`
-	Filter      []filterBlockModel    `tfsdk:"filter"`
+	Filter      []filter.BlockModel   `tfsdk:"filter"`
 }
 
 func NewTeamsDataSource() datasource.DataSource {
@@ -62,7 +63,7 @@ func (d *teamsDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			},
 		},
 		Blocks: map[string]schema.Block{
-			"filter": createDatasourceFilter(teamsFilterNames),
+			"filter": filter.CreateDatasourceFilter(teamsFilterNames),
 		},
 	}
 }
@@ -110,7 +111,7 @@ func (d *teamsDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 func (d *teamsDataSource) apiToModel(
 	ctx context.Context,
 	teams *[]api.Team,
-	filters []filterBlockModel,
+	filters []filter.BlockModel,
 	withMembers types.Bool,
 ) (teamsDataSourceModel, diag.Diagnostics) {
 
@@ -144,7 +145,7 @@ func (d *teamsDataSource) apiToModel(
 
 		model := teamDataSourceModel{}.FromAPI(&team)
 
-		if !filterOnStruct(ctx, model, filters) {
+		if !filter.OnStruct(ctx, model, filters) {
 			continue
 		}
 

@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 
 	"terraform-provider-coolify/internal/api"
+	"terraform-provider-coolify/internal/filter"
 	"terraform-provider-coolify/internal/provider/util"
 )
 
@@ -18,7 +19,7 @@ var _ datasource.DataSourceWithConfigure = &privateKeysDataSource{}
 
 type privateKeysDataSourceModel struct {
 	PrivateKeys []privateKeyDataSourceModel `tfsdk:"private_keys"`
-	Filter      []filterBlockModel          `tfsdk:"filter"`
+	Filter      []filter.BlockModel         `tfsdk:"filter"`
 }
 
 func NewPrivateKeysDataSource() datasource.DataSource {
@@ -59,7 +60,7 @@ func (d *privateKeysDataSource) Schema(ctx context.Context, req datasource.Schem
 			},
 		},
 		Blocks: map[string]schema.Block{
-			"filter": createDatasourceFilter(privateKeysFilterNames),
+			"filter": filter.CreateDatasourceFilter(privateKeysFilterNames),
 		},
 	}
 }
@@ -107,7 +108,7 @@ func (d *privateKeysDataSource) Read(ctx context.Context, req datasource.ReadReq
 func (d *privateKeysDataSource) apiToModel(
 	ctx context.Context,
 	privateKeys *[]api.PrivateKey,
-	filters []filterBlockModel,
+	filters []filter.BlockModel,
 ) (privateKeysDataSourceModel, diag.Diagnostics) {
 	var diags diag.Diagnostics
 	var privateKeyValues []privateKeyDataSourceModel
@@ -115,7 +116,7 @@ func (d *privateKeysDataSource) apiToModel(
 	for _, pk := range *privateKeys {
 		model := privateKeyDataSourceModel{}.FromAPI(&pk)
 
-		if !filterOnStruct(ctx, model, filters) {
+		if !filter.OnStruct(ctx, model, filters) {
 			continue
 		}
 

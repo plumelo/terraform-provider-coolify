@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"terraform-provider-coolify/internal/api"
+	"terraform-provider-coolify/internal/filter"
 	"terraform-provider-coolify/internal/flatten"
 	"terraform-provider-coolify/internal/provider/generated/datasource_projects"
 	"terraform-provider-coolify/internal/provider/util"
@@ -30,7 +31,7 @@ type projectsDataSource struct {
 
 type projectsDataSourceWithFilterModel struct {
 	datasource_projects.ProjectsModel
-	Filter []filterBlockModel `tfsdk:"filter"`
+	Filter []filter.BlockModel `tfsdk:"filter"`
 }
 
 var projectsFilterNames = []string{"id", "uuid", "name", "description"}
@@ -58,7 +59,7 @@ func (d *projectsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 	}
 
 	resp.Schema.Blocks = map[string]schema.Block{
-		"filter": createDatasourceFilter(projectsFilterNames),
+		"filter": filter.CreateDatasourceFilter(projectsFilterNames),
 	}
 }
 
@@ -105,7 +106,7 @@ func (d *projectsDataSource) Read(ctx context.Context, req datasource.ReadReques
 func (d *projectsDataSource) apiToModel(
 	ctx context.Context,
 	response *[]api.Project,
-	filters []filterBlockModel,
+	filters []filter.BlockModel,
 ) (projectsDataSourceWithFilterModel, diag.Diagnostics) {
 	var diags diag.Diagnostics
 	var projects []attr.Value
@@ -144,7 +145,7 @@ func (d *projectsDataSource) apiToModel(
 			"uuid":         flatten.String(project.Uuid),
 		}
 
-		if !filterOnAttributes(attributes, filters) {
+		if !filter.OnAttributes(attributes, filters) {
 			continue
 		}
 

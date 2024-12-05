@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"terraform-provider-coolify/internal/api"
+	"terraform-provider-coolify/internal/filter"
 	"terraform-provider-coolify/internal/flatten"
 	"terraform-provider-coolify/internal/provider/generated/datasource_servers"
 	"terraform-provider-coolify/internal/provider/util"
@@ -30,7 +31,7 @@ type serversDataSource struct {
 
 type serversDataSourceWithFilterModel struct {
 	datasource_servers.ServersModel
-	Filter []filterBlockModel `tfsdk:"filter"`
+	Filter []filter.BlockModel `tfsdk:"filter"`
 }
 
 var serversFilterNames = []string{"id", "uuid", "user", "ip", "name", "description"}
@@ -44,7 +45,7 @@ func (d *serversDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 	resp.Schema.Description = "Get a list of Coolify servers."
 
 	resp.Schema.Blocks = map[string]schema.Block{
-		"filter": createDatasourceFilter(serversFilterNames),
+		"filter": filter.CreateDatasourceFilter(serversFilterNames),
 	}
 }
 func (d *serversDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
@@ -90,7 +91,7 @@ func (d *serversDataSource) Read(ctx context.Context, req datasource.ReadRequest
 func (d *serversDataSource) apiToModel(
 	ctx context.Context,
 	response *[]api.Server,
-	filters []filterBlockModel,
+	filters []filter.BlockModel,
 ) (serversDataSourceWithFilterModel, diag.Diagnostics) {
 	var diags diag.Diagnostics
 	var elements []attr.Value
@@ -157,7 +158,7 @@ func (d *serversDataSource) apiToModel(
 			"validation_logs":                   flatten.String(sv.ValidationLogs),
 		}
 
-		if !filterOnAttributes(attributes, filters) {
+		if !filter.OnAttributes(attributes, filters) {
 			continue
 		}
 

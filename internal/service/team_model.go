@@ -5,6 +5,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"terraform-provider-coolify/internal/api"
+	"terraform-provider-coolify/internal/filter"
 	"terraform-provider-coolify/internal/flatten"
 )
 
@@ -72,7 +73,7 @@ type teamMemberModel struct {
 	UpdatedAt            types.String `tfsdk:"updated_at"`
 }
 
-var _ filterableStructModel = teamModel{}
+var _ filter.FilterableStructModel = teamModel{}
 
 func (m teamModel) FromAPI(apiModel *api.Team) teamModel {
 	var members []teamMemberModel

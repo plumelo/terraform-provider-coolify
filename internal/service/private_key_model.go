@@ -5,6 +5,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"terraform-provider-coolify/internal/api"
+	"terraform-provider-coolify/internal/filter"
 	"terraform-provider-coolify/internal/flatten"
 )
 
@@ -21,7 +22,7 @@ type privateKeyModel struct {
 	UpdatedAt    types.String `tfsdk:"updated_at"`
 }
 
-var _ filterableStructModel = privateKeyModel{}
+var _ filter.FilterableStructModel = privateKeyModel{}
 
 func (m privateKeyModel) FromAPI(apiModel *api.PrivateKey) privateKeyModel {
 	return privateKeyModel{
