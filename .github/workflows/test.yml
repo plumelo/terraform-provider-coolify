@@ -76,7 +76,7 @@ jobs:
           $(go env GOPATH)/bin/go-junit-report -in test-output -set-exit-code -iocopy	-out junit.xml
 
       - uses: codecov/codecov-action@7f8b4b4bde536c465e797be725718b88c5d95e0e # v5.1.1
-        if: ${{ !startsWith(github.head_ref, 'renovate/') }}
+        if: ${{ !cancelled() && !startsWith(github.head_ref, 'renovate/') }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: unit
@@ -159,7 +159,7 @@ jobs:
         timeout-minutes: 10
 
       - uses: codecov/codecov-action@7f8b4b4bde536c465e797be725718b88c5d95e0e # v5.1.1
-        if: ${{ !startsWith(github.head_ref, 'renovate/') && matrix.tool == 'terraform' && matrix.version == 'v1.9.x' }}
+        if: ${{ !cancelled() && !startsWith(github.head_ref, 'renovate/') && matrix.tool == 'terraform' && matrix.version == 'v1.9.x' }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: acceptance
