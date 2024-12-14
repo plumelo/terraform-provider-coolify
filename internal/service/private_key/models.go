@@ -1,4 +1,4 @@
-package service
+package private_key
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -22,7 +22,12 @@ type privateKeyModel struct {
 	UpdatedAt    types.String `tfsdk:"updated_at"`
 }
 
-var _ filter.FilterableStructModel = privateKeyModel{}
+type privateKeyResourceModel = privateKeyModel
+type privateKeyDataSourceModel = privateKeyModel
+type privateKeysDataSourceModel struct {
+	PrivateKeys []privateKeyDataSourceModel `tfsdk:"private_keys"`
+	Filter      []filter.BlockModel         `tfsdk:"filter"`
+}
 
 func (m privateKeyModel) FromAPI(apiModel *api.PrivateKey) privateKeyModel {
 	return privateKeyModel{

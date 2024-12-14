@@ -21,6 +21,7 @@ import (
 	"terraform-provider-coolify/internal/api"
 	"terraform-provider-coolify/internal/consts"
 	"terraform-provider-coolify/internal/service"
+	"terraform-provider-coolify/internal/service/private_key"
 )
 
 // Ensure the implementation satisfies the expected interfaces.
@@ -210,7 +211,7 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 func (p *CoolifyProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
-		service.NewPrivateKeyResource,
+		private_key.NewPrivateKeyResource,
 		service.NewServerResource,
 		service.NewProjectResource,
 		service.NewApplicationEnvsResource,
@@ -222,8 +223,8 @@ func (p *CoolifyProvider) Resources(ctx context.Context) []func() resource.Resou
 
 func (p *CoolifyProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
-		service.NewPrivateKeyDataSource,
-		service.NewPrivateKeysDataSource,
+		private_key.NewPrivateKeyDataSource,
+		private_key.NewPrivateKeysDataSource,
 		service.NewTeamDataSource,
 		service.NewTeamsDataSource,
 		service.NewServerDataSource,

@@ -1,4 +1,4 @@
-package service
+package private_key
 
 import (
 	"context"
@@ -26,8 +26,6 @@ var (
 	_ resource.ResourceWithImportState = &privateKeyResource{}
 	_ resource.ResourceWithModifyPlan  = &privateKeyResource{}
 )
-
-type privateKeyResourceModel = privateKeyModel
 
 func NewPrivateKeyResource() resource.Resource {
 	return &privateKeyResource{}

@@ -1,4 +1,4 @@
-package service
+package private_key
 
 import (
 	"testing"

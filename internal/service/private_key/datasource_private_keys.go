@@ -1,4 +1,4 @@
-package service
+package private_key
 
 import (
 	"context"
@@ -16,11 +16,6 @@ import (
 
 var _ datasource.DataSource = &privateKeysDataSource{}
 var _ datasource.DataSourceWithConfigure = &privateKeysDataSource{}
-
-type privateKeysDataSourceModel struct {
-	PrivateKeys []privateKeyDataSourceModel `tfsdk:"private_keys"`
-	Filter      []filter.BlockModel         `tfsdk:"filter"`
-}
 
 func NewPrivateKeysDataSource() datasource.DataSource {
 	return &privateKeysDataSource{}
