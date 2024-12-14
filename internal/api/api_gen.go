@@ -2783,8 +2783,8 @@ type UpdateDatabaseByUuidJSONBody struct {
 	// MongoConf Mongo conf
 	MongoConf *string `json:"mongo_conf,omitempty"`
 
-	// MongoInitdbInitDatabase Mongo initdb init database
-	MongoInitdbInitDatabase *string `json:"mongo_initdb_init_database,omitempty"`
+	// MongoInitdbDatabase Mongo initdb init database
+	MongoInitdbDatabase *string `json:"mongo_initdb_database,omitempty"`
 
 	// MongoInitdbRootPassword Mongo initdb root password
 	MongoInitdbRootPassword *string `json:"mongo_initdb_root_password,omitempty"`

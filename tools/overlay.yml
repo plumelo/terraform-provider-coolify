@@ -3,6 +3,7 @@
 overlay: 1.0.0
 info:
   title: Fix upstream API issues
+  version: 1.0.0
 actions:
   - target: $.paths.*['post','get','put','patch','delete'].parameters[?(@.in=='path' && (@.name=='uuid' || @.name=='env_uuid'))]
     description: Replace "uuid" formats with "string". Coolify UUIDs are NOT correct UUID format.
