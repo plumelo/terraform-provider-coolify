@@ -142,10 +142,16 @@ jobs:
           authkey: ${{ secrets.TS_AUTHKEY }}
           statedir: /tmp/tailscale-state/
           tags: tag:ci
-          version: 1.76.6
-      - run: |
+          version: 1.78.1
+      - name: Check Coolify API health
+        run: curl --silent --fail --max-time 15 "${COOLIFY_ENDPOINT}/../health" | grep --quiet "^OK$"
+        env:
+          COOLIFY_ENDPOINT: ${{ secrets.ACC_COOLIFY_ENDPOINT }}
+
+      - name: Run go test
+        run: |
           go clean -testcache
-          go test -v \
+          go test -v -timeout=10m \
             -cover -coverprofile=coverage.txt -covermode=atomic \
             -run '^(TestAcc|TestProtocol6ProviderServerConfigure)' \
             ./... 2>&1 | tee test-output
@@ -156,7 +162,7 @@ jobs:
           TF_LOG: WARN
           COOLIFY_ENDPOINT: ${{ secrets.ACC_COOLIFY_ENDPOINT }}
           COOLIFY_TOKEN: ${{ secrets.ACC_COOLIFY_TOKEN }}
-        timeout-minutes: 10
+        timeout-minutes: 11
 
       - uses: codecov/codecov-action@1e68e06f1dbfde0e4cefc87efeba9e4643565303 # v5.1.2
         if: ${{ !cancelled() && !startsWith(github.head_ref, 'renovate/') && matrix.tool == 'terraform' && matrix.version == 'v1.9.x' }}
