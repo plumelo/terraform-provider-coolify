@@ -165,7 +165,7 @@ jobs:
         timeout-minutes: 11
 
       - uses: codecov/codecov-action@1e68e06f1dbfde0e4cefc87efeba9e4643565303 # v5.1.2
-        if: ${{ !cancelled() && !startsWith(github.head_ref, 'renovate/') && matrix.tool == 'terraform' && matrix.version == 'v1.9.x' }}
+        if: ${{ !cancelled() && !startsWith(github.head_ref, 'renovate/') && matrix.tool == 'terraform' && matrix.version == 'v1.10.x' }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: acceptance
