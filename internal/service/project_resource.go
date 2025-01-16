@@ -48,6 +48,11 @@ func (r *projectResource) Schema(ctx context.Context, req resource.SchemaRequest
 		nameAttr.Computed = false
 		resp.Schema.Attributes["name"] = nameAttr
 	}
+
+	validateNonEmptyStrings := []string{"name", "description"}
+	for _, attr := range validateNonEmptyStrings {
+		makeResourceAttributeNonEmpty(resp.Schema.Attributes, attr)
+	}
 }
 
 func (r *projectResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {

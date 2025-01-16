@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -13,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 
@@ -44,7 +46,8 @@ func (r *privateKeyResource) Schema(ctx context.Context, req resource.SchemaRequ
 		Description: "Create, read, update, and delete a Coolify private key resource.",
 		Attributes: map[string]schema.Attribute{
 			"description": schema.StringAttribute{
-				Optional: true,
+				Optional:   true,
+				Validators: []validator.String{stringvalidator.LengthAtLeast(1)},
 			},
 			"id": schema.Int64Attribute{
 				Computed:      true,
@@ -55,8 +58,9 @@ func (r *privateKeyResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Default:  booldefault.StaticBool(false),
 			},
 			"name": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
+				Optional:   true,
+				Computed:   true,
+				Validators: []validator.String{stringvalidator.LengthAtLeast(1)},
 			},
 			"private_key": schema.StringAttribute{
 				Required:  true,

@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	datasource_schema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resource_schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
@@ -118,6 +119,28 @@ func setResourceDefaultValue(attributes map[string]resource_schema.Attribute, at
 		attributes[attrName] = typedAttr
 	default:
 		return fmt.Errorf("unsupported attribute type for %s", attrName)
+	}
+
+	return nil
+}
+
+func makeResourceAttributeNonEmpty(
+	attributes map[string]resource_schema.Attribute,
+	attrName string,
+) error {
+	attr, ok := attributes[attrName]
+	if !ok {
+		return fmt.Errorf("attribute %s not found", attrName)
+	}
+
+	switch typedAttr := attr.(type) {
+	case resource_schema.StringAttribute:
+		typedAttr.Validators = append(typedAttr.Validators,
+			stringvalidator.LengthAtLeast(1),
+		)
+		attributes[attrName] = typedAttr
+	default:
+		return fmt.Errorf("non-empty validation only supported for string attributes: %s", attrName)
 	}
 
 	return nil

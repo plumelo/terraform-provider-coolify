@@ -45,6 +45,11 @@ func (r *serverResource) Schema(ctx context.Context, req resource.SchemaRequest,
 	for _, attr := range requiredAttrs {
 		makeResourceAttributeRequired(resp.Schema.Attributes, attr)
 	}
+
+	validateNonEmptyStrings := []string{"description", "user", ""}
+	for _, attr := range validateNonEmptyStrings {
+		makeResourceAttributeNonEmpty(resp.Schema.Attributes, attr)
+	}
 }
 
 func (r *serverResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
