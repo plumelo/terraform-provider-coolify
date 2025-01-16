@@ -37,6 +37,7 @@ func NewAPIClient(version, server, apiToken string, retry RetryConfig) (*ClientW
 	retryClient.Logger = nil
 
 	httpClient := retryClient.StandardClient()
+	httpClient.Timeout = 30 * time.Second
 
 	return NewClientWithResponses(server,
 		WithHTTPClient(httpClient),
