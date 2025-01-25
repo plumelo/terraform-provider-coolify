@@ -1,3 +1,4 @@
+terraform-provider-coolify
 dist/
 .vscode/
 .env
