@@ -551,23 +551,22 @@ type Environment struct {
 
 // EnvironmentVariable Environment Variable model
 type EnvironmentVariable struct {
-	ApplicationId *int    `json:"application_id,omitempty"`
-	CreatedAt     *string `json:"created_at,omitempty"`
-	DatabaseId    *int    `json:"database_id,omitempty"`
-	Id            *int    `json:"id,omitempty"`
-	IsBuildTime   *bool   `json:"is_build_time,omitempty"`
-	IsLiteral     *bool   `json:"is_literal,omitempty"`
-	IsMultiline   *bool   `json:"is_multiline,omitempty"`
-	IsPreview     *bool   `json:"is_preview,omitempty"`
-	IsShared      *bool   `json:"is_shared,omitempty"`
-	IsShownOnce   *bool   `json:"is_shown_once,omitempty"`
-	Key           *string `json:"key,omitempty"`
-	RealValue     *string `json:"real_value,omitempty"`
-	ServiceId     *int    `json:"service_id,omitempty"`
-	UpdatedAt     *string `json:"updated_at,omitempty"`
-	Uuid          *string `json:"uuid,omitempty"`
-	Value         *string `json:"value,omitempty"`
-	Version       *string `json:"version,omitempty"`
+	CreatedAt        *string `json:"created_at,omitempty"`
+	Id               *int    `json:"id,omitempty"`
+	IsBuildTime      *bool   `json:"is_build_time,omitempty"`
+	IsLiteral        *bool   `json:"is_literal,omitempty"`
+	IsMultiline      *bool   `json:"is_multiline,omitempty"`
+	IsPreview        *bool   `json:"is_preview,omitempty"`
+	IsShared         *bool   `json:"is_shared,omitempty"`
+	IsShownOnce      *bool   `json:"is_shown_once,omitempty"`
+	Key              *string `json:"key,omitempty"`
+	RealValue        *string `json:"real_value,omitempty"`
+	ResourceableId   *int    `json:"resourceable_id,omitempty"`
+	ResourceableType *string `json:"resourceable_type,omitempty"`
+	UpdatedAt        *string `json:"updated_at,omitempty"`
+	Uuid             *string `json:"uuid,omitempty"`
+	Value            *string `json:"value,omitempty"`
+	Version          *string `json:"version,omitempty"`
 }
 
 // MysqlDatabase defines model for MysqlDatabase.
@@ -813,30 +812,6 @@ type Team struct {
 	// Description The description of the team.
 	Description *string `json:"description,omitempty"`
 
-	// DiscordEnabled Whether Discord is enabled or not.
-	DiscordEnabled *bool `json:"discord_enabled,omitempty"`
-
-	// DiscordNotificationsDatabaseBackups Whether to send database backup notifications via Discord.
-	DiscordNotificationsDatabaseBackups *bool `json:"discord_notifications_database_backups,omitempty"`
-
-	// DiscordNotificationsDeployments Whether to send deployment notifications via Discord.
-	DiscordNotificationsDeployments *bool `json:"discord_notifications_deployments,omitempty"`
-
-	// DiscordNotificationsScheduledTasks Whether to send scheduled task notifications via Discord.
-	DiscordNotificationsScheduledTasks *bool `json:"discord_notifications_scheduled_tasks,omitempty"`
-
-	// DiscordNotificationsServerDiskUsage Whether to send server disk usage notifications via Discord.
-	DiscordNotificationsServerDiskUsage *bool `json:"discord_notifications_server_disk_usage,omitempty"`
-
-	// DiscordNotificationsStatusChanges Whether to send status change notifications via Discord.
-	DiscordNotificationsStatusChanges *bool `json:"discord_notifications_status_changes,omitempty"`
-
-	// DiscordNotificationsTest Whether to send test notifications via Discord.
-	DiscordNotificationsTest *bool `json:"discord_notifications_test,omitempty"`
-
-	// DiscordWebhookUrl The Discord webhook URL.
-	DiscordWebhookUrl *string `json:"discord_webhook_url,omitempty"`
-
 	// Id The unique identifier of the team.
 	Id *int `json:"id,omitempty"`
 
@@ -849,107 +824,11 @@ type Team struct {
 	// PersonalTeam Whether the team is personal or not.
 	PersonalTeam *bool `json:"personal_team,omitempty"`
 
-	// ResendApiKey The resending API key.
-	ResendApiKey *string `json:"resend_api_key,omitempty"`
-
-	// ResendEnabled Whether to enable resending or not.
-	ResendEnabled *bool `json:"resend_enabled,omitempty"`
-
 	// ShowBoarding Whether to show the boarding screen or not.
 	ShowBoarding *bool `json:"show_boarding,omitempty"`
 
-	// SmtpEnabled Whether SMTP is enabled or not.
-	SmtpEnabled *bool `json:"smtp_enabled,omitempty"`
-
-	// SmtpEncryption The SMTP encryption.
-	SmtpEncryption *string `json:"smtp_encryption,omitempty"`
-
-	// SmtpFromAddress The email address to send emails from.
-	SmtpFromAddress *string `json:"smtp_from_address,omitempty"`
-
-	// SmtpFromName The name to send emails from.
-	SmtpFromName *string `json:"smtp_from_name,omitempty"`
-
-	// SmtpHost The SMTP host.
-	SmtpHost *string `json:"smtp_host,omitempty"`
-
-	// SmtpNotificationsDatabaseBackups Whether to send database backup notifications via SMTP.
-	SmtpNotificationsDatabaseBackups *bool `json:"smtp_notifications_database_backups,omitempty"`
-
-	// SmtpNotificationsDeployments Whether to send deployment notifications via SMTP.
-	SmtpNotificationsDeployments *bool `json:"smtp_notifications_deployments,omitempty"`
-
-	// SmtpNotificationsScheduledTasks Whether to send scheduled task notifications via SMTP.
-	SmtpNotificationsScheduledTasks *bool `json:"smtp_notifications_scheduled_tasks,omitempty"`
-
-	// SmtpNotificationsServerDiskUsage Whether to send server disk usage notifications via SMTP.
-	SmtpNotificationsServerDiskUsage *bool `json:"smtp_notifications_server_disk_usage,omitempty"`
-
-	// SmtpNotificationsStatusChanges Whether to send status change notifications via SMTP.
-	SmtpNotificationsStatusChanges *bool `json:"smtp_notifications_status_changes,omitempty"`
-
-	// SmtpNotificationsTest Whether to send test notifications via SMTP.
-	SmtpNotificationsTest *bool `json:"smtp_notifications_test,omitempty"`
-
-	// SmtpPassword The SMTP password.
-	SmtpPassword *string `json:"smtp_password,omitempty"`
-
-	// SmtpPort The SMTP port.
-	SmtpPort *string `json:"smtp_port,omitempty"`
-
-	// SmtpRecipients The email addresses to send emails to.
-	SmtpRecipients *string `json:"smtp_recipients,omitempty"`
-
-	// SmtpTimeout The SMTP timeout.
-	SmtpTimeout *string `json:"smtp_timeout,omitempty"`
-
-	// SmtpUsername The SMTP username.
-	SmtpUsername *string `json:"smtp_username,omitempty"`
-
-	// TelegramChatId The Telegram chat ID.
-	TelegramChatId *string `json:"telegram_chat_id,omitempty"`
-
-	// TelegramEnabled Whether Telegram is enabled or not.
-	TelegramEnabled *bool `json:"telegram_enabled,omitempty"`
-
-	// TelegramNotificationsDatabaseBackups Whether to send database backup notifications via Telegram.
-	TelegramNotificationsDatabaseBackups *bool `json:"telegram_notifications_database_backups,omitempty"`
-
-	// TelegramNotificationsDatabaseBackupsMessageThreadId The Telegram database backup message thread ID.
-	TelegramNotificationsDatabaseBackupsMessageThreadId *string `json:"telegram_notifications_database_backups_message_thread_id,omitempty"`
-
-	// TelegramNotificationsDeployments Whether to send deployment notifications via Telegram.
-	TelegramNotificationsDeployments *bool `json:"telegram_notifications_deployments,omitempty"`
-
-	// TelegramNotificationsDeploymentsMessageThreadId The Telegram deployment message thread ID.
-	TelegramNotificationsDeploymentsMessageThreadId *string `json:"telegram_notifications_deployments_message_thread_id,omitempty"`
-
-	// TelegramNotificationsScheduledTasks Whether to send scheduled task notifications via Telegram.
-	TelegramNotificationsScheduledTasks *bool `json:"telegram_notifications_scheduled_tasks,omitempty"`
-
-	// TelegramNotificationsScheduledTasksThreadId The Telegram scheduled task message thread ID.
-	TelegramNotificationsScheduledTasksThreadId *string `json:"telegram_notifications_scheduled_tasks_thread_id,omitempty"`
-
-	// TelegramNotificationsStatusChanges Whether to send status change notifications via Telegram.
-	TelegramNotificationsStatusChanges *bool `json:"telegram_notifications_status_changes,omitempty"`
-
-	// TelegramNotificationsStatusChangesMessageThreadId The Telegram status change message thread ID.
-	TelegramNotificationsStatusChangesMessageThreadId *string `json:"telegram_notifications_status_changes_message_thread_id,omitempty"`
-
-	// TelegramNotificationsTest Whether to send test notifications via Telegram.
-	TelegramNotificationsTest *bool `json:"telegram_notifications_test,omitempty"`
-
-	// TelegramNotificationsTestMessageThreadId The Telegram test message thread ID.
-	TelegramNotificationsTestMessageThreadId *string `json:"telegram_notifications_test_message_thread_id,omitempty"`
-
-	// TelegramToken The Telegram token.
-	TelegramToken *string `json:"telegram_token,omitempty"`
-
 	// UpdatedAt The date and time the team was last updated.
 	UpdatedAt *string `json:"updated_at,omitempty"`
-
-	// UseInstanceEmailSettings Whether to use instance email settings or not.
-	UseInstanceEmailSettings *bool `json:"use_instance_email_settings,omitempty"`
 }
 
 // User User model
@@ -1008,8 +887,11 @@ type CreateDockercomposeApplicationJSONBody struct {
 	// DockerComposeRaw The Docker Compose raw content.
 	DockerComposeRaw string `json:"docker_compose_raw"`
 
-	// EnvironmentName The environment name.
+	// EnvironmentName The environment name. You need to provide at least one of environment_name or environment_uuid.
 	EnvironmentName string `json:"environment_name"`
+
+	// EnvironmentUuid The environment UUID. You need to provide at least one of environment_name or environment_uuid.
+	EnvironmentUuid string `json:"environment_uuid"`
 
 	// InstantDeploy The flag to indicate if the application should be deployed instantly.
 	InstantDeploy *bool `json:"instant_deploy,omitempty"`
@@ -1059,8 +941,11 @@ type CreateDockerfileApplicationJSONBody struct {
 	// Domains The application domains.
 	Domains *string `json:"domains,omitempty"`
 
-	// EnvironmentName The environment name.
+	// EnvironmentName The environment name. You need to provide at least one of environment_name or environment_uuid.
 	EnvironmentName string `json:"environment_name"`
+
+	// EnvironmentUuid The environment UUID. You need to provide at least one of environment_name or environment_uuid.
+	EnvironmentUuid string `json:"environment_uuid"`
 
 	// HealthCheckEnabled Health check enabled.
 	HealthCheckEnabled *bool `json:"health_check_enabled,omitempty"`
@@ -1197,8 +1082,11 @@ type CreateDockerimageApplicationJSONBody struct {
 	// Domains The application domains.
 	Domains *string `json:"domains,omitempty"`
 
-	// EnvironmentName The environment name.
+	// EnvironmentName The environment name. You need to provide at least one of environment_name or environment_uuid.
 	EnvironmentName string `json:"environment_name"`
+
+	// EnvironmentUuid The environment UUID. You need to provide at least one of environment_name or environment_uuid.
+	EnvironmentUuid string `json:"environment_uuid"`
 
 	// HealthCheckEnabled Health check enabled.
 	HealthCheckEnabled *bool `json:"health_check_enabled,omitempty"`
@@ -1359,8 +1247,11 @@ type CreatePrivateDeployKeyApplicationJSONBody struct {
 	// Domains The application domains.
 	Domains *string `json:"domains,omitempty"`
 
-	// EnvironmentName The environment name.
+	// EnvironmentName The environment name. You need to provide at least one of environment_name or environment_uuid.
 	EnvironmentName string `json:"environment_name"`
+
+	// EnvironmentUuid The environment UUID. You need to provide at least one of environment_name or environment_uuid.
+	EnvironmentUuid string `json:"environment_uuid"`
 
 	// GitBranch The git branch.
 	GitBranch string `json:"git_branch"`
@@ -1557,8 +1448,11 @@ type CreatePrivateGithubAppApplicationJSONBody struct {
 	// Domains The application domains.
 	Domains *string `json:"domains,omitempty"`
 
-	// EnvironmentName The environment name.
+	// EnvironmentName The environment name. You need to provide at least one of environment_name or environment_uuid.
 	EnvironmentName string `json:"environment_name"`
+
+	// EnvironmentUuid The environment UUID. You need to provide at least one of environment_name or environment_uuid.
+	EnvironmentUuid string `json:"environment_uuid"`
 
 	// GitBranch The git branch.
 	GitBranch string `json:"git_branch"`
@@ -1755,8 +1649,11 @@ type CreatePublicApplicationJSONBody struct {
 	// Domains The application domains.
 	Domains *string `json:"domains,omitempty"`
 
-	// EnvironmentName The environment name.
+	// EnvironmentName The environment name. You need to provide at least one of environment_name or environment_uuid.
 	EnvironmentName string `json:"environment_name"`
+
+	// EnvironmentUuid The environment UUID. You need to provide at least one of environment_name or environment_uuid.
+	EnvironmentUuid string `json:"environment_uuid"`
 
 	// GitBranch The git branch.
 	GitBranch string `json:"git_branch"`
@@ -2210,8 +2107,11 @@ type CreateDatabaseClickhouseJSONBody struct {
 	// DestinationUuid UUID of the destination if the server has multiple destinations
 	DestinationUuid *string `json:"destination_uuid,omitempty"`
 
-	// EnvironmentName Name of the environment
+	// EnvironmentName Name of the environment. You need to provide at least one of environment_name or environment_uuid.
 	EnvironmentName string `json:"environment_name"`
+
+	// EnvironmentUuid UUID of the environment. You need to provide at least one of environment_name or environment_uuid.
+	EnvironmentUuid string `json:"environment_uuid"`
 
 	// Image Docker Image of the database
 	Image *string `json:"image,omitempty"`
@@ -2267,8 +2167,11 @@ type CreateDatabaseDragonflyJSONBody struct {
 	// DragonflyPassword DragonFly password
 	DragonflyPassword *string `json:"dragonfly_password,omitempty"`
 
-	// EnvironmentName Name of the environment
+	// EnvironmentName Name of the environment. You need to provide at least one of environment_name or environment_uuid.
 	EnvironmentName string `json:"environment_name"`
+
+	// EnvironmentUuid UUID of the environment. You need to provide at least one of environment_name or environment_uuid.
+	EnvironmentUuid string `json:"environment_uuid"`
 
 	// Image Docker Image of the database
 	Image *string `json:"image,omitempty"`
@@ -2321,8 +2224,11 @@ type CreateDatabaseKeydbJSONBody struct {
 	// DestinationUuid UUID of the destination if the server has multiple destinations
 	DestinationUuid *string `json:"destination_uuid,omitempty"`
 
-	// EnvironmentName Name of the environment
+	// EnvironmentName Name of the environment. You need to provide at least one of environment_name or environment_uuid.
 	EnvironmentName string `json:"environment_name"`
+
+	// EnvironmentUuid UUID of the environment. You need to provide at least one of environment_name or environment_uuid.
+	EnvironmentUuid string `json:"environment_uuid"`
 
 	// Image Docker Image of the database
 	Image *string `json:"image,omitempty"`
@@ -2381,8 +2287,11 @@ type CreateDatabaseMariadbJSONBody struct {
 	// DestinationUuid UUID of the destination if the server has multiple destinations
 	DestinationUuid *string `json:"destination_uuid,omitempty"`
 
-	// EnvironmentName Name of the environment
+	// EnvironmentName Name of the environment. You need to provide at least one of environment_name or environment_uuid.
 	EnvironmentName string `json:"environment_name"`
+
+	// EnvironmentUuid UUID of the environment. You need to provide at least one of environment_name or environment_uuid.
+	EnvironmentUuid string `json:"environment_uuid"`
 
 	// Image Docker Image of the database
 	Image *string `json:"image,omitempty"`
@@ -2450,8 +2359,11 @@ type CreateDatabaseMongodbJSONBody struct {
 	// DestinationUuid UUID of the destination if the server has multiple destinations
 	DestinationUuid *string `json:"destination_uuid,omitempty"`
 
-	// EnvironmentName Name of the environment
+	// EnvironmentName Name of the environment. You need to provide at least one of environment_name or environment_uuid.
 	EnvironmentName string `json:"environment_name"`
+
+	// EnvironmentUuid UUID of the environment. You need to provide at least one of environment_name or environment_uuid.
+	EnvironmentUuid string `json:"environment_uuid"`
 
 	// Image Docker Image of the database
 	Image *string `json:"image,omitempty"`
@@ -2510,8 +2422,11 @@ type CreateDatabaseMysqlJSONBody struct {
 	// DestinationUuid UUID of the destination if the server has multiple destinations
 	DestinationUuid *string `json:"destination_uuid,omitempty"`
 
-	// EnvironmentName Name of the environment
+	// EnvironmentName Name of the environment. You need to provide at least one of environment_name or environment_uuid.
 	EnvironmentName string `json:"environment_name"`
+
+	// EnvironmentUuid UUID of the environment. You need to provide at least one of environment_name or environment_uuid.
+	EnvironmentUuid string `json:"environment_uuid"`
 
 	// Image Docker Image of the database
 	Image *string `json:"image,omitempty"`
@@ -2579,8 +2494,11 @@ type CreateDatabasePostgresqlJSONBody struct {
 	// DestinationUuid UUID of the destination if the server has multiple destinations
 	DestinationUuid *string `json:"destination_uuid,omitempty"`
 
-	// EnvironmentName Name of the environment
+	// EnvironmentName Name of the environment. You need to provide at least one of environment_name or environment_uuid.
 	EnvironmentName string `json:"environment_name"`
+
+	// EnvironmentUuid UUID of the environment. You need to provide at least one of environment_name or environment_uuid.
+	EnvironmentUuid string `json:"environment_uuid"`
 
 	// Image Docker Image of the database
 	Image *string `json:"image,omitempty"`
@@ -2651,8 +2569,11 @@ type CreateDatabaseRedisJSONBody struct {
 	// DestinationUuid UUID of the destination if the server has multiple destinations
 	DestinationUuid *string `json:"destination_uuid,omitempty"`
 
-	// EnvironmentName Name of the environment
+	// EnvironmentName Name of the environment. You need to provide at least one of environment_name or environment_uuid.
 	EnvironmentName string `json:"environment_name"`
+
+	// EnvironmentUuid UUID of the environment. You need to provide at least one of environment_name or environment_uuid.
+	EnvironmentUuid string `json:"environment_uuid"`
 
 	// Image Docker Image of the database
 	Image *string `json:"image,omitempty"`
@@ -2956,8 +2877,11 @@ type CreateServiceJSONBody struct {
 	// DestinationUuid Destination UUID. Required if server has multiple destinations.
 	DestinationUuid *string `json:"destination_uuid,omitempty"`
 
-	// EnvironmentName Environment name.
+	// EnvironmentName Environment name. You need to provide at least one of environment_name or environment_uuid.
 	EnvironmentName string `json:"environment_name"`
+
+	// EnvironmentUuid Environment UUID. You need to provide at least one of environment_name or environment_uuid.
+	EnvironmentUuid string `json:"environment_uuid"`
 
 	// InstantDeploy Start the service immediately after creation.
 	InstantDeploy *bool `json:"instant_deploy,omitempty"`
@@ -3528,8 +3452,8 @@ type ClientInterface interface {
 
 	UpdateProjectByUuid(ctx context.Context, uuid string, body UpdateProjectByUuidJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetEnvironmentByName request
-	GetEnvironmentByName(ctx context.Context, uuid string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// GetEnvironmentByNameOrUuid request
+	GetEnvironmentByNameOrUuid(ctx context.Context, uuid string, environmentNameOrUuid string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListResources request
 	ListResources(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -4448,8 +4372,8 @@ func (c *Client) UpdateProjectByUuid(ctx context.Context, uuid string, body Upda
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetEnvironmentByName(ctx context.Context, uuid string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetEnvironmentByNameRequest(c.Server, uuid, environmentName)
+func (c *Client) GetEnvironmentByNameOrUuid(ctx context.Context, uuid string, environmentNameOrUuid string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetEnvironmentByNameOrUuidRequest(c.Server, uuid, environmentNameOrUuid)
 	if err != nil {
 		return nil, err
 	}
@@ -6834,8 +6758,8 @@ func NewUpdateProjectByUuidRequestWithBody(server string, uuid string, contentTy
 	return req, nil
 }
 
-// NewGetEnvironmentByNameRequest generates requests for GetEnvironmentByName
-func NewGetEnvironmentByNameRequest(server string, uuid string, environmentName string) (*http.Request, error) {
+// NewGetEnvironmentByNameOrUuidRequest generates requests for GetEnvironmentByNameOrUuid
+func NewGetEnvironmentByNameOrUuidRequest(server string, uuid string, environmentNameOrUuid string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -6847,7 +6771,7 @@ func NewGetEnvironmentByNameRequest(server string, uuid string, environmentName 
 
 	var pathParam1 string
 
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "environment_name", runtime.ParamLocationPath, environmentName)
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "environment_name_or_uuid", runtime.ParamLocationPath, environmentNameOrUuid)
 	if err != nil {
 		return nil, err
 	}
@@ -8289,8 +8213,8 @@ type ClientWithResponsesInterface interface {
 
 	UpdateProjectByUuidWithResponse(ctx context.Context, uuid string, body UpdateProjectByUuidJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateProjectByUuidResponse, error)
 
-	// GetEnvironmentByNameWithResponse request
-	GetEnvironmentByNameWithResponse(ctx context.Context, uuid string, environmentName string, reqEditors ...RequestEditorFn) (*GetEnvironmentByNameResponse, error)
+	// GetEnvironmentByNameOrUuidWithResponse request
+	GetEnvironmentByNameOrUuidWithResponse(ctx context.Context, uuid string, environmentNameOrUuid string, reqEditors ...RequestEditorFn) (*GetEnvironmentByNameOrUuidResponse, error)
 
 	// ListResourcesWithResponse request
 	ListResourcesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListResourcesResponse, error)
@@ -8432,8 +8356,11 @@ func (r ListApplicationsResponse) StatusCode() int {
 type CreateDockercomposeApplicationResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON400      *N400
-	JSON401      *N401
+	JSON201      *struct {
+		Uuid *string `json:"uuid,omitempty"`
+	}
+	JSON400 *N400
+	JSON401 *N401
 }
 
 // Status returns HTTPResponse.Status
@@ -8455,8 +8382,11 @@ func (r CreateDockercomposeApplicationResponse) StatusCode() int {
 type CreateDockerfileApplicationResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON400      *N400
-	JSON401      *N401
+	JSON201      *struct {
+		Uuid *string `json:"uuid,omitempty"`
+	}
+	JSON400 *N400
+	JSON401 *N401
 }
 
 // Status returns HTTPResponse.Status
@@ -8478,8 +8408,11 @@ func (r CreateDockerfileApplicationResponse) StatusCode() int {
 type CreateDockerimageApplicationResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON400      *N400
-	JSON401      *N401
+	JSON201      *struct {
+		Uuid *string `json:"uuid,omitempty"`
+	}
+	JSON400 *N400
+	JSON401 *N401
 }
 
 // Status returns HTTPResponse.Status
@@ -8501,8 +8434,11 @@ func (r CreateDockerimageApplicationResponse) StatusCode() int {
 type CreatePrivateDeployKeyApplicationResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON400      *N400
-	JSON401      *N401
+	JSON201      *struct {
+		Uuid *string `json:"uuid,omitempty"`
+	}
+	JSON400 *N400
+	JSON401 *N401
 }
 
 // Status returns HTTPResponse.Status
@@ -8524,8 +8460,11 @@ func (r CreatePrivateDeployKeyApplicationResponse) StatusCode() int {
 type CreatePrivateGithubAppApplicationResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON400      *N400
-	JSON401      *N401
+	JSON201      *struct {
+		Uuid *string `json:"uuid,omitempty"`
+	}
+	JSON400 *N400
+	JSON401 *N401
 }
 
 // Status returns HTTPResponse.Status
@@ -8547,8 +8486,11 @@ func (r CreatePrivateGithubAppApplicationResponse) StatusCode() int {
 type CreatePublicApplicationResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON400      *N400
-	JSON401      *N401
+	JSON201      *struct {
+		Uuid *string `json:"uuid,omitempty"`
+	}
+	JSON400 *N400
+	JSON401 *N401
 }
 
 // Status returns HTTPResponse.Status
@@ -9560,7 +9502,7 @@ func (r UpdateProjectByUuidResponse) StatusCode() int {
 	return 0
 }
 
-type GetEnvironmentByNameResponse struct {
+type GetEnvironmentByNameOrUuidResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Environment
@@ -9570,7 +9512,7 @@ type GetEnvironmentByNameResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r GetEnvironmentByNameResponse) Status() string {
+func (r GetEnvironmentByNameOrUuidResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -9578,7 +9520,7 @@ func (r GetEnvironmentByNameResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r GetEnvironmentByNameResponse) StatusCode() int {
+func (r GetEnvironmentByNameOrUuidResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -10995,13 +10937,13 @@ func (c *ClientWithResponses) UpdateProjectByUuidWithResponse(ctx context.Contex
 	return ParseUpdateProjectByUuidResponse(rsp)
 }
 
-// GetEnvironmentByNameWithResponse request returning *GetEnvironmentByNameResponse
-func (c *ClientWithResponses) GetEnvironmentByNameWithResponse(ctx context.Context, uuid string, environmentName string, reqEditors ...RequestEditorFn) (*GetEnvironmentByNameResponse, error) {
-	rsp, err := c.GetEnvironmentByName(ctx, uuid, environmentName, reqEditors...)
+// GetEnvironmentByNameOrUuidWithResponse request returning *GetEnvironmentByNameOrUuidResponse
+func (c *ClientWithResponses) GetEnvironmentByNameOrUuidWithResponse(ctx context.Context, uuid string, environmentNameOrUuid string, reqEditors ...RequestEditorFn) (*GetEnvironmentByNameOrUuidResponse, error) {
+	rsp, err := c.GetEnvironmentByNameOrUuid(ctx, uuid, environmentNameOrUuid, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseGetEnvironmentByNameResponse(rsp)
+	return ParseGetEnvironmentByNameOrUuidResponse(rsp)
 }
 
 // ListResourcesWithResponse request returning *ListResourcesResponse
@@ -11410,6 +11352,15 @@ func ParseCreateDockercomposeApplicationResponse(rsp *http.Response) (*CreateDoc
 	}
 
 	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest struct {
+			Uuid *string `json:"uuid,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest N400
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -11443,6 +11394,15 @@ func ParseCreateDockerfileApplicationResponse(rsp *http.Response) (*CreateDocker
 	}
 
 	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest struct {
+			Uuid *string `json:"uuid,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest N400
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -11476,6 +11436,15 @@ func ParseCreateDockerimageApplicationResponse(rsp *http.Response) (*CreateDocke
 	}
 
 	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest struct {
+			Uuid *string `json:"uuid,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest N400
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -11509,6 +11478,15 @@ func ParseCreatePrivateDeployKeyApplicationResponse(rsp *http.Response) (*Create
 	}
 
 	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest struct {
+			Uuid *string `json:"uuid,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest N400
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -11542,6 +11520,15 @@ func ParseCreatePrivateGithubAppApplicationResponse(rsp *http.Response) (*Create
 	}
 
 	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest struct {
+			Uuid *string `json:"uuid,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest N400
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -11575,6 +11562,15 @@ func ParseCreatePublicApplicationResponse(rsp *http.Response) (*CreatePublicAppl
 	}
 
 	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest struct {
+			Uuid *string `json:"uuid,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest N400
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -13297,15 +13293,15 @@ func ParseUpdateProjectByUuidResponse(rsp *http.Response) (*UpdateProjectByUuidR
 	return response, nil
 }
 
-// ParseGetEnvironmentByNameResponse parses an HTTP response from a GetEnvironmentByNameWithResponse call
-func ParseGetEnvironmentByNameResponse(rsp *http.Response) (*GetEnvironmentByNameResponse, error) {
+// ParseGetEnvironmentByNameOrUuidResponse parses an HTTP response from a GetEnvironmentByNameOrUuidWithResponse call
+func ParseGetEnvironmentByNameOrUuidResponse(rsp *http.Response) (*GetEnvironmentByNameOrUuidResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &GetEnvironmentByNameResponse{
+	response := &GetEnvironmentByNameOrUuidResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}

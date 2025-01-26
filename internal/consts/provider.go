@@ -5,7 +5,7 @@ const (
 	ENV_KEY_TOKEN    = "COOLIFY_TOKEN"
 
 	DEFAULT_COOLIFY_ENDPOINT = "https://app.coolify.io/api/v1"
-	MIN_COOLIFY_VERSION      = "4.0.0-beta.373"
+	MIN_COOLIFY_VERSION      = "4.0.0-beta.381"
 
 	DEFAULT_RETRY_ATTEMPTS = 4
 	DEFAULT_RETRY_MIN_WAIT = 1

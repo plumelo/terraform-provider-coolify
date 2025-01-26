@@ -2359,62 +2359,6 @@
 						}
 					},
 					{
-						"name": "discord_enabled",
-						"bool": {
-							"computed_optional_required": "computed",
-							"description": "Whether Discord is enabled or not."
-						}
-					},
-					{
-						"name": "discord_notifications_database_backups",
-						"bool": {
-							"computed_optional_required": "computed",
-							"description": "Whether to send database backup notifications via Discord."
-						}
-					},
-					{
-						"name": "discord_notifications_deployments",
-						"bool": {
-							"computed_optional_required": "computed",
-							"description": "Whether to send deployment notifications via Discord."
-						}
-					},
-					{
-						"name": "discord_notifications_scheduled_tasks",
-						"bool": {
-							"computed_optional_required": "computed",
-							"description": "Whether to send scheduled task notifications via Discord."
-						}
-					},
-					{
-						"name": "discord_notifications_server_disk_usage",
-						"bool": {
-							"computed_optional_required": "computed",
-							"description": "Whether to send server disk usage notifications via Discord."
-						}
-					},
-					{
-						"name": "discord_notifications_status_changes",
-						"bool": {
-							"computed_optional_required": "computed",
-							"description": "Whether to send status change notifications via Discord."
-						}
-					},
-					{
-						"name": "discord_notifications_test",
-						"bool": {
-							"computed_optional_required": "computed",
-							"description": "Whether to send test notifications via Discord."
-						}
-					},
-					{
-						"name": "discord_webhook_url",
-						"string": {
-							"computed_optional_required": "computed",
-							"description": "The Discord webhook URL."
-						}
-					},
-					{
 						"name": "members",
 						"list_nested": {
 							"computed_optional_required": "computed",
@@ -2503,20 +2447,6 @@
 						}
 					},
 					{
-						"name": "resend_api_key",
-						"string": {
-							"computed_optional_required": "computed",
-							"description": "The resending API key."
-						}
-					},
-					{
-						"name": "resend_enabled",
-						"bool": {
-							"computed_optional_required": "computed",
-							"description": "Whether to enable resending or not."
-						}
-					},
-					{
 						"name": "show_boarding",
 						"bool": {
 							"computed_optional_required": "computed",
@@ -2524,220 +2454,10 @@
 						}
 					},
 					{
-						"name": "smtp_enabled",
-						"bool": {
-							"computed_optional_required": "computed",
-							"description": "Whether SMTP is enabled or not."
-						}
-					},
-					{
-						"name": "smtp_encryption",
-						"string": {
-							"computed_optional_required": "computed",
-							"description": "The SMTP encryption."
-						}
-					},
-					{
-						"name": "smtp_from_address",
-						"string": {
-							"computed_optional_required": "computed",
-							"description": "The email address to send emails from."
-						}
-					},
-					{
-						"name": "smtp_from_name",
-						"string": {
-							"computed_optional_required": "computed",
-							"description": "The name to send emails from."
-						}
-					},
-					{
-						"name": "smtp_host",
-						"string": {
-							"computed_optional_required": "computed",
-							"description": "The SMTP host."
-						}
-					},
-					{
-						"name": "smtp_notifications_database_backups",
-						"bool": {
-							"computed_optional_required": "computed",
-							"description": "Whether to send database backup notifications via SMTP."
-						}
-					},
-					{
-						"name": "smtp_notifications_deployments",
-						"bool": {
-							"computed_optional_required": "computed",
-							"description": "Whether to send deployment notifications via SMTP."
-						}
-					},
-					{
-						"name": "smtp_notifications_scheduled_tasks",
-						"bool": {
-							"computed_optional_required": "computed",
-							"description": "Whether to send scheduled task notifications via SMTP."
-						}
-					},
-					{
-						"name": "smtp_notifications_server_disk_usage",
-						"bool": {
-							"computed_optional_required": "computed",
-							"description": "Whether to send server disk usage notifications via SMTP."
-						}
-					},
-					{
-						"name": "smtp_notifications_status_changes",
-						"bool": {
-							"computed_optional_required": "computed",
-							"description": "Whether to send status change notifications via SMTP."
-						}
-					},
-					{
-						"name": "smtp_notifications_test",
-						"bool": {
-							"computed_optional_required": "computed",
-							"description": "Whether to send test notifications via SMTP."
-						}
-					},
-					{
-						"name": "smtp_password",
-						"string": {
-							"computed_optional_required": "computed",
-							"description": "The SMTP password."
-						}
-					},
-					{
-						"name": "smtp_port",
-						"string": {
-							"computed_optional_required": "computed",
-							"description": "The SMTP port."
-						}
-					},
-					{
-						"name": "smtp_recipients",
-						"string": {
-							"computed_optional_required": "computed",
-							"description": "The email addresses to send emails to."
-						}
-					},
-					{
-						"name": "smtp_timeout",
-						"string": {
-							"computed_optional_required": "computed",
-							"description": "The SMTP timeout."
-						}
-					},
-					{
-						"name": "smtp_username",
-						"string": {
-							"computed_optional_required": "computed",
-							"description": "The SMTP username."
-						}
-					},
-					{
-						"name": "telegram_chat_id",
-						"string": {
-							"computed_optional_required": "computed",
-							"description": "The Telegram chat ID."
-						}
-					},
-					{
-						"name": "telegram_enabled",
-						"bool": {
-							"computed_optional_required": "computed",
-							"description": "Whether Telegram is enabled or not."
-						}
-					},
-					{
-						"name": "telegram_notifications_database_backups",
-						"bool": {
-							"computed_optional_required": "computed",
-							"description": "Whether to send database backup notifications via Telegram."
-						}
-					},
-					{
-						"name": "telegram_notifications_database_backups_message_thread_id",
-						"string": {
-							"computed_optional_required": "computed",
-							"description": "The Telegram database backup message thread ID."
-						}
-					},
-					{
-						"name": "telegram_notifications_deployments",
-						"bool": {
-							"computed_optional_required": "computed",
-							"description": "Whether to send deployment notifications via Telegram."
-						}
-					},
-					{
-						"name": "telegram_notifications_deployments_message_thread_id",
-						"string": {
-							"computed_optional_required": "computed",
-							"description": "The Telegram deployment message thread ID."
-						}
-					},
-					{
-						"name": "telegram_notifications_scheduled_tasks",
-						"bool": {
-							"computed_optional_required": "computed",
-							"description": "Whether to send scheduled task notifications via Telegram."
-						}
-					},
-					{
-						"name": "telegram_notifications_scheduled_tasks_thread_id",
-						"string": {
-							"computed_optional_required": "computed",
-							"description": "The Telegram scheduled task message thread ID."
-						}
-					},
-					{
-						"name": "telegram_notifications_status_changes",
-						"bool": {
-							"computed_optional_required": "computed",
-							"description": "Whether to send status change notifications via Telegram."
-						}
-					},
-					{
-						"name": "telegram_notifications_status_changes_message_thread_id",
-						"string": {
-							"computed_optional_required": "computed",
-							"description": "The Telegram status change message thread ID."
-						}
-					},
-					{
-						"name": "telegram_notifications_test",
-						"bool": {
-							"computed_optional_required": "computed",
-							"description": "Whether to send test notifications via Telegram."
-						}
-					},
-					{
-						"name": "telegram_notifications_test_message_thread_id",
-						"string": {
-							"computed_optional_required": "computed",
-							"description": "The Telegram test message thread ID."
-						}
-					},
-					{
-						"name": "telegram_token",
-						"string": {
-							"computed_optional_required": "computed",
-							"description": "The Telegram token."
-						}
-					},
-					{
 						"name": "updated_at",
 						"string": {
 							"computed_optional_required": "computed",
 							"description": "The date and time the team was last updated."
-						}
-					},
-					{
-						"name": "use_instance_email_settings",
-						"bool": {
-							"computed_optional_required": "computed",
-							"description": "Whether to use instance email settings or not."
 						}
 					}
 				]
@@ -2772,62 +2492,6 @@
 										"string": {
 											"computed_optional_required": "computed",
 											"description": "The description of the team."
-										}
-									},
-									{
-										"name": "discord_enabled",
-										"bool": {
-											"computed_optional_required": "computed",
-											"description": "Whether Discord is enabled or not."
-										}
-									},
-									{
-										"name": "discord_notifications_database_backups",
-										"bool": {
-											"computed_optional_required": "computed",
-											"description": "Whether to send database backup notifications via Discord."
-										}
-									},
-									{
-										"name": "discord_notifications_deployments",
-										"bool": {
-											"computed_optional_required": "computed",
-											"description": "Whether to send deployment notifications via Discord."
-										}
-									},
-									{
-										"name": "discord_notifications_scheduled_tasks",
-										"bool": {
-											"computed_optional_required": "computed",
-											"description": "Whether to send scheduled task notifications via Discord."
-										}
-									},
-									{
-										"name": "discord_notifications_server_disk_usage",
-										"bool": {
-											"computed_optional_required": "computed",
-											"description": "Whether to send server disk usage notifications via Discord."
-										}
-									},
-									{
-										"name": "discord_notifications_status_changes",
-										"bool": {
-											"computed_optional_required": "computed",
-											"description": "Whether to send status change notifications via Discord."
-										}
-									},
-									{
-										"name": "discord_notifications_test",
-										"bool": {
-											"computed_optional_required": "computed",
-											"description": "Whether to send test notifications via Discord."
-										}
-									},
-									{
-										"name": "discord_webhook_url",
-										"string": {
-											"computed_optional_required": "computed",
-											"description": "The Discord webhook URL."
 										}
 									},
 									{
@@ -2926,20 +2590,6 @@
 										}
 									},
 									{
-										"name": "resend_api_key",
-										"string": {
-											"computed_optional_required": "computed",
-											"description": "The resending API key."
-										}
-									},
-									{
-										"name": "resend_enabled",
-										"bool": {
-											"computed_optional_required": "computed",
-											"description": "Whether to enable resending or not."
-										}
-									},
-									{
 										"name": "show_boarding",
 										"bool": {
 											"computed_optional_required": "computed",
@@ -2947,220 +2597,10 @@
 										}
 									},
 									{
-										"name": "smtp_enabled",
-										"bool": {
-											"computed_optional_required": "computed",
-											"description": "Whether SMTP is enabled or not."
-										}
-									},
-									{
-										"name": "smtp_encryption",
-										"string": {
-											"computed_optional_required": "computed",
-											"description": "The SMTP encryption."
-										}
-									},
-									{
-										"name": "smtp_from_address",
-										"string": {
-											"computed_optional_required": "computed",
-											"description": "The email address to send emails from."
-										}
-									},
-									{
-										"name": "smtp_from_name",
-										"string": {
-											"computed_optional_required": "computed",
-											"description": "The name to send emails from."
-										}
-									},
-									{
-										"name": "smtp_host",
-										"string": {
-											"computed_optional_required": "computed",
-											"description": "The SMTP host."
-										}
-									},
-									{
-										"name": "smtp_notifications_database_backups",
-										"bool": {
-											"computed_optional_required": "computed",
-											"description": "Whether to send database backup notifications via SMTP."
-										}
-									},
-									{
-										"name": "smtp_notifications_deployments",
-										"bool": {
-											"computed_optional_required": "computed",
-											"description": "Whether to send deployment notifications via SMTP."
-										}
-									},
-									{
-										"name": "smtp_notifications_scheduled_tasks",
-										"bool": {
-											"computed_optional_required": "computed",
-											"description": "Whether to send scheduled task notifications via SMTP."
-										}
-									},
-									{
-										"name": "smtp_notifications_server_disk_usage",
-										"bool": {
-											"computed_optional_required": "computed",
-											"description": "Whether to send server disk usage notifications via SMTP."
-										}
-									},
-									{
-										"name": "smtp_notifications_status_changes",
-										"bool": {
-											"computed_optional_required": "computed",
-											"description": "Whether to send status change notifications via SMTP."
-										}
-									},
-									{
-										"name": "smtp_notifications_test",
-										"bool": {
-											"computed_optional_required": "computed",
-											"description": "Whether to send test notifications via SMTP."
-										}
-									},
-									{
-										"name": "smtp_password",
-										"string": {
-											"computed_optional_required": "computed",
-											"description": "The SMTP password."
-										}
-									},
-									{
-										"name": "smtp_port",
-										"string": {
-											"computed_optional_required": "computed",
-											"description": "The SMTP port."
-										}
-									},
-									{
-										"name": "smtp_recipients",
-										"string": {
-											"computed_optional_required": "computed",
-											"description": "The email addresses to send emails to."
-										}
-									},
-									{
-										"name": "smtp_timeout",
-										"string": {
-											"computed_optional_required": "computed",
-											"description": "The SMTP timeout."
-										}
-									},
-									{
-										"name": "smtp_username",
-										"string": {
-											"computed_optional_required": "computed",
-											"description": "The SMTP username."
-										}
-									},
-									{
-										"name": "telegram_chat_id",
-										"string": {
-											"computed_optional_required": "computed",
-											"description": "The Telegram chat ID."
-										}
-									},
-									{
-										"name": "telegram_enabled",
-										"bool": {
-											"computed_optional_required": "computed",
-											"description": "Whether Telegram is enabled or not."
-										}
-									},
-									{
-										"name": "telegram_notifications_database_backups",
-										"bool": {
-											"computed_optional_required": "computed",
-											"description": "Whether to send database backup notifications via Telegram."
-										}
-									},
-									{
-										"name": "telegram_notifications_database_backups_message_thread_id",
-										"string": {
-											"computed_optional_required": "computed",
-											"description": "The Telegram database backup message thread ID."
-										}
-									},
-									{
-										"name": "telegram_notifications_deployments",
-										"bool": {
-											"computed_optional_required": "computed",
-											"description": "Whether to send deployment notifications via Telegram."
-										}
-									},
-									{
-										"name": "telegram_notifications_deployments_message_thread_id",
-										"string": {
-											"computed_optional_required": "computed",
-											"description": "The Telegram deployment message thread ID."
-										}
-									},
-									{
-										"name": "telegram_notifications_scheduled_tasks",
-										"bool": {
-											"computed_optional_required": "computed",
-											"description": "Whether to send scheduled task notifications via Telegram."
-										}
-									},
-									{
-										"name": "telegram_notifications_scheduled_tasks_thread_id",
-										"string": {
-											"computed_optional_required": "computed",
-											"description": "The Telegram scheduled task message thread ID."
-										}
-									},
-									{
-										"name": "telegram_notifications_status_changes",
-										"bool": {
-											"computed_optional_required": "computed",
-											"description": "Whether to send status change notifications via Telegram."
-										}
-									},
-									{
-										"name": "telegram_notifications_status_changes_message_thread_id",
-										"string": {
-											"computed_optional_required": "computed",
-											"description": "The Telegram status change message thread ID."
-										}
-									},
-									{
-										"name": "telegram_notifications_test",
-										"bool": {
-											"computed_optional_required": "computed",
-											"description": "Whether to send test notifications via Telegram."
-										}
-									},
-									{
-										"name": "telegram_notifications_test_message_thread_id",
-										"string": {
-											"computed_optional_required": "computed",
-											"description": "The Telegram test message thread ID."
-										}
-									},
-									{
-										"name": "telegram_token",
-										"string": {
-											"computed_optional_required": "computed",
-											"description": "The Telegram token."
-										}
-									},
-									{
 										"name": "updated_at",
 										"string": {
 											"computed_optional_required": "computed",
 											"description": "The date and time the team was last updated."
-										}
-									},
-									{
-										"name": "use_instance_email_settings",
-										"bool": {
-											"computed_optional_required": "computed",
-											"description": "Whether to use instance email settings or not."
 										}
 									}
 								]
@@ -3260,7 +2700,14 @@
 						"name": "environment_name",
 						"string": {
 							"computed_optional_required": "required",
-							"description": "Name of the environment"
+							"description": "Name of the environment. You need to provide at least one of environment_name or environment_uuid."
+						}
+					},
+					{
+						"name": "environment_uuid",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "UUID of the environment. You need to provide at least one of environment_name or environment_uuid."
 						}
 					},
 					{
@@ -3428,7 +2875,14 @@
 						"name": "environment_name",
 						"string": {
 							"computed_optional_required": "required",
-							"description": "Name of the environment"
+							"description": "Name of the environment. You need to provide at least one of environment_name or environment_uuid."
+						}
+					},
+					{
+						"name": "environment_uuid",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "UUID of the environment. You need to provide at least one of environment_name or environment_uuid."
 						}
 					},
 					{
