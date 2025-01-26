@@ -58,16 +58,4 @@ func TestTeamDataSourceSchema(t *testing.T) {
 	if !idAttr.Optional {
 		t.Error("id field should be marked as optional in schema")
 	}
-
-	// Test sensitive fields
-	sensitiveFields := []string{"discord_webhook_url", "smtp_password", "telegram_token", "resend_api_key"}
-	for _, field := range sensitiveFields {
-		if attr, ok := resp.Schema.Attributes[field].(schema.StringAttribute); ok {
-			if !attr.Sensitive {
-				t.Errorf("%s field should be marked as sensitive in schema", field)
-			}
-		} else {
-			t.Errorf("%s field should be a string attribute in schema", field)
-		}
-	}
 }

@@ -33,46 +33,6 @@ func TeamDataSourceSchema(ctx context.Context) schema.Schema {
 				Description:         "The description of the team.",
 				MarkdownDescription: "The description of the team.",
 			},
-			"discord_enabled": schema.BoolAttribute{
-				Computed:            true,
-				Description:         "Whether Discord is enabled or not.",
-				MarkdownDescription: "Whether Discord is enabled or not.",
-			},
-			"discord_notifications_database_backups": schema.BoolAttribute{
-				Computed:            true,
-				Description:         "Whether to send database backup notifications via Discord.",
-				MarkdownDescription: "Whether to send database backup notifications via Discord.",
-			},
-			"discord_notifications_deployments": schema.BoolAttribute{
-				Computed:            true,
-				Description:         "Whether to send deployment notifications via Discord.",
-				MarkdownDescription: "Whether to send deployment notifications via Discord.",
-			},
-			"discord_notifications_scheduled_tasks": schema.BoolAttribute{
-				Computed:            true,
-				Description:         "Whether to send scheduled task notifications via Discord.",
-				MarkdownDescription: "Whether to send scheduled task notifications via Discord.",
-			},
-			"discord_notifications_server_disk_usage": schema.BoolAttribute{
-				Computed:            true,
-				Description:         "Whether to send server disk usage notifications via Discord.",
-				MarkdownDescription: "Whether to send server disk usage notifications via Discord.",
-			},
-			"discord_notifications_status_changes": schema.BoolAttribute{
-				Computed:            true,
-				Description:         "Whether to send status change notifications via Discord.",
-				MarkdownDescription: "Whether to send status change notifications via Discord.",
-			},
-			"discord_notifications_test": schema.BoolAttribute{
-				Computed:            true,
-				Description:         "Whether to send test notifications via Discord.",
-				MarkdownDescription: "Whether to send test notifications via Discord.",
-			},
-			"discord_webhook_url": schema.StringAttribute{
-				Computed:            true,
-				Description:         "The Discord webhook URL.",
-				MarkdownDescription: "The Discord webhook URL.",
-			},
 			"id": schema.Int64Attribute{
 				Required:            true,
 				Description:         "Team ID",
@@ -147,230 +107,30 @@ func TeamDataSourceSchema(ctx context.Context) schema.Schema {
 				Description:         "Whether the team is personal or not.",
 				MarkdownDescription: "Whether the team is personal or not.",
 			},
-			"resend_api_key": schema.StringAttribute{
-				Computed:            true,
-				Description:         "The resending API key.",
-				MarkdownDescription: "The resending API key.",
-			},
-			"resend_enabled": schema.BoolAttribute{
-				Computed:            true,
-				Description:         "Whether to enable resending or not.",
-				MarkdownDescription: "Whether to enable resending or not.",
-			},
 			"show_boarding": schema.BoolAttribute{
 				Computed:            true,
 				Description:         "Whether to show the boarding screen or not.",
 				MarkdownDescription: "Whether to show the boarding screen or not.",
-			},
-			"smtp_enabled": schema.BoolAttribute{
-				Computed:            true,
-				Description:         "Whether SMTP is enabled or not.",
-				MarkdownDescription: "Whether SMTP is enabled or not.",
-			},
-			"smtp_encryption": schema.StringAttribute{
-				Computed:            true,
-				Description:         "The SMTP encryption.",
-				MarkdownDescription: "The SMTP encryption.",
-			},
-			"smtp_from_address": schema.StringAttribute{
-				Computed:            true,
-				Description:         "The email address to send emails from.",
-				MarkdownDescription: "The email address to send emails from.",
-			},
-			"smtp_from_name": schema.StringAttribute{
-				Computed:            true,
-				Description:         "The name to send emails from.",
-				MarkdownDescription: "The name to send emails from.",
-			},
-			"smtp_host": schema.StringAttribute{
-				Computed:            true,
-				Description:         "The SMTP host.",
-				MarkdownDescription: "The SMTP host.",
-			},
-			"smtp_notifications_database_backups": schema.BoolAttribute{
-				Computed:            true,
-				Description:         "Whether to send database backup notifications via SMTP.",
-				MarkdownDescription: "Whether to send database backup notifications via SMTP.",
-			},
-			"smtp_notifications_deployments": schema.BoolAttribute{
-				Computed:            true,
-				Description:         "Whether to send deployment notifications via SMTP.",
-				MarkdownDescription: "Whether to send deployment notifications via SMTP.",
-			},
-			"smtp_notifications_scheduled_tasks": schema.BoolAttribute{
-				Computed:            true,
-				Description:         "Whether to send scheduled task notifications via SMTP.",
-				MarkdownDescription: "Whether to send scheduled task notifications via SMTP.",
-			},
-			"smtp_notifications_server_disk_usage": schema.BoolAttribute{
-				Computed:            true,
-				Description:         "Whether to send server disk usage notifications via SMTP.",
-				MarkdownDescription: "Whether to send server disk usage notifications via SMTP.",
-			},
-			"smtp_notifications_status_changes": schema.BoolAttribute{
-				Computed:            true,
-				Description:         "Whether to send status change notifications via SMTP.",
-				MarkdownDescription: "Whether to send status change notifications via SMTP.",
-			},
-			"smtp_notifications_test": schema.BoolAttribute{
-				Computed:            true,
-				Description:         "Whether to send test notifications via SMTP.",
-				MarkdownDescription: "Whether to send test notifications via SMTP.",
-			},
-			"smtp_password": schema.StringAttribute{
-				Computed:            true,
-				Description:         "The SMTP password.",
-				MarkdownDescription: "The SMTP password.",
-			},
-			"smtp_port": schema.StringAttribute{
-				Computed:            true,
-				Description:         "The SMTP port.",
-				MarkdownDescription: "The SMTP port.",
-			},
-			"smtp_recipients": schema.StringAttribute{
-				Computed:            true,
-				Description:         "The email addresses to send emails to.",
-				MarkdownDescription: "The email addresses to send emails to.",
-			},
-			"smtp_timeout": schema.StringAttribute{
-				Computed:            true,
-				Description:         "The SMTP timeout.",
-				MarkdownDescription: "The SMTP timeout.",
-			},
-			"smtp_username": schema.StringAttribute{
-				Computed:            true,
-				Description:         "The SMTP username.",
-				MarkdownDescription: "The SMTP username.",
-			},
-			"telegram_chat_id": schema.StringAttribute{
-				Computed:            true,
-				Description:         "The Telegram chat ID.",
-				MarkdownDescription: "The Telegram chat ID.",
-			},
-			"telegram_enabled": schema.BoolAttribute{
-				Computed:            true,
-				Description:         "Whether Telegram is enabled or not.",
-				MarkdownDescription: "Whether Telegram is enabled or not.",
-			},
-			"telegram_notifications_database_backups": schema.BoolAttribute{
-				Computed:            true,
-				Description:         "Whether to send database backup notifications via Telegram.",
-				MarkdownDescription: "Whether to send database backup notifications via Telegram.",
-			},
-			"telegram_notifications_database_backups_message_thread_id": schema.StringAttribute{
-				Computed:            true,
-				Description:         "The Telegram database backup message thread ID.",
-				MarkdownDescription: "The Telegram database backup message thread ID.",
-			},
-			"telegram_notifications_deployments": schema.BoolAttribute{
-				Computed:            true,
-				Description:         "Whether to send deployment notifications via Telegram.",
-				MarkdownDescription: "Whether to send deployment notifications via Telegram.",
-			},
-			"telegram_notifications_deployments_message_thread_id": schema.StringAttribute{
-				Computed:            true,
-				Description:         "The Telegram deployment message thread ID.",
-				MarkdownDescription: "The Telegram deployment message thread ID.",
-			},
-			"telegram_notifications_scheduled_tasks": schema.BoolAttribute{
-				Computed:            true,
-				Description:         "Whether to send scheduled task notifications via Telegram.",
-				MarkdownDescription: "Whether to send scheduled task notifications via Telegram.",
-			},
-			"telegram_notifications_scheduled_tasks_thread_id": schema.StringAttribute{
-				Computed:            true,
-				Description:         "The Telegram scheduled task message thread ID.",
-				MarkdownDescription: "The Telegram scheduled task message thread ID.",
-			},
-			"telegram_notifications_status_changes": schema.BoolAttribute{
-				Computed:            true,
-				Description:         "Whether to send status change notifications via Telegram.",
-				MarkdownDescription: "Whether to send status change notifications via Telegram.",
-			},
-			"telegram_notifications_status_changes_message_thread_id": schema.StringAttribute{
-				Computed:            true,
-				Description:         "The Telegram status change message thread ID.",
-				MarkdownDescription: "The Telegram status change message thread ID.",
-			},
-			"telegram_notifications_test": schema.BoolAttribute{
-				Computed:            true,
-				Description:         "Whether to send test notifications via Telegram.",
-				MarkdownDescription: "Whether to send test notifications via Telegram.",
-			},
-			"telegram_notifications_test_message_thread_id": schema.StringAttribute{
-				Computed:            true,
-				Description:         "The Telegram test message thread ID.",
-				MarkdownDescription: "The Telegram test message thread ID.",
-			},
-			"telegram_token": schema.StringAttribute{
-				Computed:            true,
-				Description:         "The Telegram token.",
-				MarkdownDescription: "The Telegram token.",
 			},
 			"updated_at": schema.StringAttribute{
 				Computed:            true,
 				Description:         "The date and time the team was last updated.",
 				MarkdownDescription: "The date and time the team was last updated.",
 			},
-			"use_instance_email_settings": schema.BoolAttribute{
-				Computed:            true,
-				Description:         "Whether to use instance email settings or not.",
-				MarkdownDescription: "Whether to use instance email settings or not.",
-			},
 		},
 	}
 }
 
 type TeamModel struct {
-	CreatedAt                                           types.String `tfsdk:"created_at"`
-	CustomServerLimit                                   types.String `tfsdk:"custom_server_limit"`
-	Description                                         types.String `tfsdk:"description"`
-	DiscordEnabled                                      types.Bool   `tfsdk:"discord_enabled"`
-	DiscordNotificationsDatabaseBackups                 types.Bool   `tfsdk:"discord_notifications_database_backups"`
-	DiscordNotificationsDeployments                     types.Bool   `tfsdk:"discord_notifications_deployments"`
-	DiscordNotificationsScheduledTasks                  types.Bool   `tfsdk:"discord_notifications_scheduled_tasks"`
-	DiscordNotificationsServerDiskUsage                 types.Bool   `tfsdk:"discord_notifications_server_disk_usage"`
-	DiscordNotificationsStatusChanges                   types.Bool   `tfsdk:"discord_notifications_status_changes"`
-	DiscordNotificationsTest                            types.Bool   `tfsdk:"discord_notifications_test"`
-	DiscordWebhookUrl                                   types.String `tfsdk:"discord_webhook_url"`
-	Id                                                  types.Int64  `tfsdk:"id"`
-	Members                                             types.List   `tfsdk:"members"`
-	Name                                                types.String `tfsdk:"name"`
-	PersonalTeam                                        types.Bool   `tfsdk:"personal_team"`
-	ResendApiKey                                        types.String `tfsdk:"resend_api_key"`
-	ResendEnabled                                       types.Bool   `tfsdk:"resend_enabled"`
-	ShowBoarding                                        types.Bool   `tfsdk:"show_boarding"`
-	SmtpEnabled                                         types.Bool   `tfsdk:"smtp_enabled"`
-	SmtpEncryption                                      types.String `tfsdk:"smtp_encryption"`
-	SmtpFromAddress                                     types.String `tfsdk:"smtp_from_address"`
-	SmtpFromName                                        types.String `tfsdk:"smtp_from_name"`
-	SmtpHost                                            types.String `tfsdk:"smtp_host"`
-	SmtpNotificationsDatabaseBackups                    types.Bool   `tfsdk:"smtp_notifications_database_backups"`
-	SmtpNotificationsDeployments                        types.Bool   `tfsdk:"smtp_notifications_deployments"`
-	SmtpNotificationsScheduledTasks                     types.Bool   `tfsdk:"smtp_notifications_scheduled_tasks"`
-	SmtpNotificationsServerDiskUsage                    types.Bool   `tfsdk:"smtp_notifications_server_disk_usage"`
-	SmtpNotificationsStatusChanges                      types.Bool   `tfsdk:"smtp_notifications_status_changes"`
-	SmtpNotificationsTest                               types.Bool   `tfsdk:"smtp_notifications_test"`
-	SmtpPassword                                        types.String `tfsdk:"smtp_password"`
-	SmtpPort                                            types.String `tfsdk:"smtp_port"`
-	SmtpRecipients                                      types.String `tfsdk:"smtp_recipients"`
-	SmtpTimeout                                         types.String `tfsdk:"smtp_timeout"`
-	SmtpUsername                                        types.String `tfsdk:"smtp_username"`
-	TelegramChatId                                      types.String `tfsdk:"telegram_chat_id"`
-	TelegramEnabled                                     types.Bool   `tfsdk:"telegram_enabled"`
-	TelegramNotificationsDatabaseBackups                types.Bool   `tfsdk:"telegram_notifications_database_backups"`
-	TelegramNotificationsDatabaseBackupsMessageThreadId types.String `tfsdk:"telegram_notifications_database_backups_message_thread_id"`
-	TelegramNotificationsDeployments                    types.Bool   `tfsdk:"telegram_notifications_deployments"`
-	TelegramNotificationsDeploymentsMessageThreadId     types.String `tfsdk:"telegram_notifications_deployments_message_thread_id"`
-	TelegramNotificationsScheduledTasks                 types.Bool   `tfsdk:"telegram_notifications_scheduled_tasks"`
-	TelegramNotificationsScheduledTasksThreadId         types.String `tfsdk:"telegram_notifications_scheduled_tasks_thread_id"`
-	TelegramNotificationsStatusChanges                  types.Bool   `tfsdk:"telegram_notifications_status_changes"`
-	TelegramNotificationsStatusChangesMessageThreadId   types.String `tfsdk:"telegram_notifications_status_changes_message_thread_id"`
-	TelegramNotificationsTest                           types.Bool   `tfsdk:"telegram_notifications_test"`
-	TelegramNotificationsTestMessageThreadId            types.String `tfsdk:"telegram_notifications_test_message_thread_id"`
-	TelegramToken                                       types.String `tfsdk:"telegram_token"`
-	UpdatedAt                                           types.String `tfsdk:"updated_at"`
-	UseInstanceEmailSettings                            types.Bool   `tfsdk:"use_instance_email_settings"`
+	CreatedAt         types.String `tfsdk:"created_at"`
+	CustomServerLimit types.String `tfsdk:"custom_server_limit"`
+	Description       types.String `tfsdk:"description"`
+	Id                types.Int64  `tfsdk:"id"`
+	Members           types.List   `tfsdk:"members"`
+	Name              types.String `tfsdk:"name"`
+	PersonalTeam      types.Bool   `tfsdk:"personal_team"`
+	ShowBoarding      types.Bool   `tfsdk:"show_boarding"`
+	UpdatedAt         types.String `tfsdk:"updated_at"`
 }
 
 var _ basetypes.ObjectTypable = MembersType{}
