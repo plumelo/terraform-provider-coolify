@@ -49,6 +49,7 @@ resource "coolify_mysql_database" "example" {
 
 - `description` (String) Description of the database
 - `destination_uuid` (String) UUID of the destination if the server has multiple destinations
+- `environment_uuid` (String) UUID of the environment. Will replace environment_name in future.
 - `image` (String) Docker Image of the database
 - `instant_deploy` (Boolean) Instant deploy the database
 - `is_public` (Boolean) Is the database public?

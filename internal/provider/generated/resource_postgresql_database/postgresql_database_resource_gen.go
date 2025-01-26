@@ -26,8 +26,13 @@ func PostgresqlDatabaseResourceSchema(ctx context.Context) schema.Schema {
 			},
 			"environment_name": schema.StringAttribute{
 				Required:            true,
-				Description:         "Name of the environment",
-				MarkdownDescription: "Name of the environment",
+				Description:         "Name of the environment. You need to provide at least one of environment_name or environment_uuid.",
+				MarkdownDescription: "Name of the environment. You need to provide at least one of environment_name or environment_uuid.",
+			},
+			"environment_uuid": schema.StringAttribute{
+				Required:            true,
+				Description:         "UUID of the environment. You need to provide at least one of environment_name or environment_uuid.",
+				MarkdownDescription: "UUID of the environment. You need to provide at least one of environment_name or environment_uuid.",
 			},
 			"image": schema.StringAttribute{
 				Optional:            true,
@@ -161,6 +166,7 @@ type PostgresqlDatabaseModel struct {
 	Description             types.String `tfsdk:"description"`
 	DestinationUuid         types.String `tfsdk:"destination_uuid"`
 	EnvironmentName         types.String `tfsdk:"environment_name"`
+	EnvironmentUuid         types.String `tfsdk:"environment_uuid"`
 	Image                   types.String `tfsdk:"image"`
 	InstantDeploy           types.Bool   `tfsdk:"instant_deploy"`
 	IsPublic                types.Bool   `tfsdk:"is_public"`

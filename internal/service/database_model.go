@@ -19,6 +19,7 @@ type commonDatabaseModel struct {
 	Description             types.String `tfsdk:"description"`
 	DestinationUuid         types.String `tfsdk:"destination_uuid"`
 	EnvironmentName         types.String `tfsdk:"environment_name"`
+	EnvironmentUuid         types.String `tfsdk:"environment_uuid"`
 	Image                   types.String `tfsdk:"image"`
 	InstantDeploy           types.Bool   `tfsdk:"instant_deploy"`
 	IsPublic                types.Bool   `tfsdk:"is_public"`
@@ -55,6 +56,11 @@ func (m commonDatabaseModel) CommonSchema(ctx context.Context) schema.Schema {
 			"environment_name": schema.StringAttribute{
 				Required:      true,
 				Description:   "Name of the environment",
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
+			},
+			"environment_uuid": schema.StringAttribute{
+				Optional:      true, // todo: should change this to required and optional environment name
+				Description:   "UUID of the environment. Will replace environment_name in future.",
 				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 			"image": schema.StringAttribute{
@@ -158,6 +164,7 @@ func (m commonDatabaseModel) FromAPI(apiModel *api.Database, state commonDatabas
 		ServerUuid:              state.ServerUuid, // Values not returned by API, so use the plan value
 		ProjectUuid:             state.ProjectUuid,
 		EnvironmentName:         state.EnvironmentName,
+		EnvironmentUuid:         state.EnvironmentUuid,
 		DestinationUuid:         state.DestinationUuid,
 		InstantDeploy:           state.InstantDeploy,
 		InternalDbUrl:           flatten.String(db.InternalDbUrl),

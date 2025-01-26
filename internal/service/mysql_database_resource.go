@@ -93,6 +93,7 @@ func (r *mysqlDatabaseResource) Create(ctx context.Context, req resource.CreateR
 		Name:                    plan.Name.ValueStringPointer(),
 		DestinationUuid:         plan.DestinationUuid.ValueStringPointer(),
 		EnvironmentName:         plan.EnvironmentName.ValueString(),
+		EnvironmentUuid:         plan.EnvironmentUuid.ValueString(),
 		Image:                   plan.Image.ValueStringPointer(),
 		InstantDeploy:           plan.InstantDeploy.ValueBoolPointer(),
 		IsPublic:                plan.IsPublic.ValueBoolPointer(),

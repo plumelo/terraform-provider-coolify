@@ -95,6 +95,7 @@ func (r *postgresqlDatabaseResource) Create(ctx context.Context, req resource.Cr
 		Name:            plan.Name.ValueStringPointer(),
 		DestinationUuid: plan.DestinationUuid.ValueStringPointer(),
 		EnvironmentName: plan.EnvironmentName.ValueString(),
+		EnvironmentUuid: plan.EnvironmentUuid.ValueString(),
 		Image:           plan.Image.ValueStringPointer(),
 		InstantDeploy:   plan.InstantDeploy.ValueBoolPointer(),
 		IsPublic:        plan.IsPublic.ValueBoolPointer(),
