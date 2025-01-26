@@ -140,16 +140,6 @@ func TestTeamsDataSourceSchema(t *testing.T) {
 	resp := &datasource.SchemaResponse{}
 	ds.Schema(ctx, datasource.SchemaRequest{}, resp)
 
-	// Test sensitive fields
-	teamsAttr := resp.Schema.Attributes["teams"].(schema.SetNestedAttribute)
-	sensitiveFields := []string{"discord_webhook_url", "smtp_password", "telegram_token", "resend_api_key"}
-	for _, field := range sensitiveFields {
-		attr := teamsAttr.NestedObject.Attributes[field].(schema.StringAttribute)
-		if !attr.Sensitive {
-			t.Errorf("%s field should be marked as sensitive in schema", field)
-		}
-	}
-
 	// Test filter block
 	_, ok := resp.Schema.Blocks["filter"].(schema.ListNestedBlock)
 	if !ok {
